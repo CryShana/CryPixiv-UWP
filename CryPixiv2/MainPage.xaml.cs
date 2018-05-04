@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CryPixivAPI;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace CryPixiv2
         {
             this.InitializeComponent();
 
-            var pixiv = new CryPixiv_API.CryPixivAPI("3b1c31a804e9f2b624837f683ef06a55");         
+            var pixiv = new PixivAccount("3b1c31a804e9f2b624837f683ef06a55");             
             pixiv.Login("IuEsI8_15UjDFtSfaOcqJkPCK3oe12IzQDMwP4mz_qA");
         }
     }

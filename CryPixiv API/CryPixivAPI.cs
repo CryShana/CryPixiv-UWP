@@ -1,4 +1,4 @@
-﻿using CryPixiv_API.Classes;
+﻿using CryPixivAPI.Classes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace CryPixiv_API
+namespace CryPixivAPI
 {
-    public class CryPixivAPI
+    public class PixivAccount
     {
         #region Private Constants
         private const string BaseUrl = "https://app-api.pixiv.net";
@@ -23,11 +23,10 @@ namespace CryPixiv_API
 
         #region Public Properties
         public AuthResponse AuthInfo { get; private set; }
-        public string LastError { get; private set; } 
         #endregion
 
 
-        public CryPixivAPI(string deviceToken = null)
+        public PixivAccount(string deviceToken = null)
         {
             InitializeHttpClient();
 
@@ -48,7 +47,7 @@ namespace CryPixiv_API
         }
 
         #region Public Methods
-        public async Task<bool> Login(string username, string password)
+        public async Task Login(string username, string password)
         {
             var response = await authClient.PostAsync("/auth/token",
                 new FormUrlEncodedContent(new Dictionary<string, string>()
@@ -66,16 +65,14 @@ namespace CryPixiv_API
             {
                 content = JObject.Parse(content).SelectToken("response").ToString();
                 AuthInfo = JsonConvert.DeserializeObject<AuthResponse>(content);
-                return true;
             }
             else
             {
                 var error = JsonConvert.DeserializeObject<ErrorResponse>(content);
-                LastError = error.Errors.System.Message;
-                return false;
+                throw new LoginException(error.Errors.System.Message);
             }
         }
-        public async Task<bool> Login(string refreshToken)
+        public async Task Login(string refreshToken)
         {
             var response = await authClient.PostAsync("/auth/token",
                 new FormUrlEncodedContent(new Dictionary<string, string>()
@@ -92,13 +89,11 @@ namespace CryPixiv_API
             {
                 content = JObject.Parse(content).SelectToken("response").ToString();
                 AuthInfo = JsonConvert.DeserializeObject<AuthResponse>(content);
-                return true;
             }
             else
             {
                 var error = JsonConvert.DeserializeObject<ErrorResponse>(content);
-                LastError = error.Errors.System.Message;
-                return false;
+                throw new LoginException(error.Errors.System.Message);
             }
         } 
         #endregion

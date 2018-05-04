@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CryPixiv_API.Classes
+namespace CryPixivAPI.Classes
 {
     public class ErrorResponse
     {
