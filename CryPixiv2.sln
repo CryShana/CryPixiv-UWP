@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryPixiv2", "CryPixiv2\CryPixiv2.csproj", "{1DDD306A-EB49-457D-9B73-4D240B57766C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryPixivAPI", "CryPixiv API\CryPixivAPI.csproj", "{CFF1955C-0639-4F3B-98BF-A735D3DC3FDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryPixivAPI", "CryPixivAPI\CryPixivAPI.csproj", "{CFF1955C-0639-4F3B-98BF-A735D3DC3FDB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
