@@ -18,7 +18,11 @@ namespace CryPixivAPI.Classes
         public int SearchSpanLimit { get; set; }
 
         public Func<string, Task<IllustrationResponse>> GetNextPageAction { get; set; }
-        public async Task<IllustrationResponse> NextPage() => await GetNextPageAction(NextUrl);
+        public async Task<IllustrationResponse> NextPage()
+        {
+            if (string.IsNullOrEmpty(NextUrl)) throw new EndReachedException();
+            return await GetNextPageAction(NextUrl);
+        }
     }
 
     public class Illustration
@@ -30,7 +34,7 @@ namespace CryPixivAPI.Classes
         [JsonProperty("type")]
         public string Type { get; set; }
         [JsonProperty("image_urls")]
-        public Dictionary<string,string> ImageUrls { get; set; }
+        public Dictionary<string, string> ImageUrls { get; set; }
         [JsonProperty("caption")]
         public string Caption { get; set; }
         [JsonProperty("restrict")]
@@ -54,7 +58,7 @@ namespace CryPixivAPI.Classes
         [JsonProperty("series")]
         public object Series { get; set; }
         [JsonProperty("meta_single_page")]
-        public Dictionary<string,string> MetaSinglePage { get; set; }
+        public Dictionary<string, string> MetaSinglePage { get; set; }
         [JsonProperty("meta_pages")]
         public List<object> MetaPages { get; set; }
         [JsonProperty("total_view")]
@@ -67,6 +71,8 @@ namespace CryPixivAPI.Classes
         public bool Visible { get; set; }
         [JsonProperty("is_muted")]
         public bool Muted { get; set; }
+
+        public string ThumbnailImagePath => ImageUrls["square_medium"];
     }
     public class Tag
     {

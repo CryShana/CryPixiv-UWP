@@ -46,8 +46,9 @@ namespace CryPixivAPI
                 BaseAddress = new Uri(BaseUrl)
             };
             httpClient.DefaultRequestHeaders.Add("User-Agent", UserAgent);
-            httpClient.DefaultRequestHeaders.Add("Referrer", BaseUrl);
+            httpClient.DefaultRequestHeaders.Add("Referer", BaseUrl);
         }
+        public async Task<byte[]> GetData(string uri) => await httpClient.GetByteArrayAsync(uri);      
         private async Task Login(string username, string password, string refreshToken = null)
         {
             var values = (refreshToken == null) ? new Dictionary<string, string>()

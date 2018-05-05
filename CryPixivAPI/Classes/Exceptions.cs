@@ -8,4 +8,8 @@ namespace CryPixivAPI.Classes
     {
         public LoginException(string message) : base(message) { }
     }
+    public class EndReachedException : Exception
+    {
+        public EndReachedException() : base() { }
+    }
 }
