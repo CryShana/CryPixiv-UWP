@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryPixivAPI.Classes
 {
-    public class IllustsResponse
+    public class IllustrationResponse
     {
         [JsonProperty("illusts")]
         public List<Illustration> Illustrations { get; set; }
@@ -17,7 +17,8 @@ namespace CryPixivAPI.Classes
         [JsonProperty("search_span_limit")]
         public int SearchSpanLimit { get; set; }
 
-        public PixivAccount AssociatedAccount { get; set; }
+        public Func<string, Task<IllustrationResponse>> GetNextPageAction { get; set; }
+        public async Task<IllustrationResponse> NextPage() => await GetNextPageAction(NextUrl);
     }
 
     public class Illustration

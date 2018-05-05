@@ -86,7 +86,7 @@ namespace CryPixivAPI
                 throw new LoginException(error.Errors.System.Message);
             }
         }
-        private async Task<T> GetAsync<T>(string requestUri, Dictionary<string, string> values, string rootPropertyName = null)
+        private async Task<T> GetAsync<T>(string requestUri, Dictionary<string, string> values = null, string rootPropertyName = null)
         {
             if (AuthInfo == null || AuthInfo?.AccessToken == null) throw new LoginException("User must be logged in!");
 
@@ -120,11 +120,11 @@ namespace CryPixivAPI
         public async Task Login(string username, string password) => await Login(username, password);
         public async Task Login(string refreshToken) => await Login(null, null, refreshToken);
 
-        public async Task<IllustsResponse> SearchPosts(string query, string sortmode = PixivParameters.SearchSortMode.Descending,
-            string target = PixivParameters.SearchTarget.PartialMatchForTags, string duration = PixivParameters.SearchDuration.None, 
+        public async Task<IllustrationResponse> SearchPosts(string query, string sortmode = PixivParameters.SearchSortMode.Descending,
+            string target = PixivParameters.SearchTarget.PartialMatchForTags, string duration = PixivParameters.SearchDuration.None,
             string overrideRequestUri = null)
         {
-            var response = await GetAsync<IllustsResponse>(overrideRequestUri ?? "/v1/search/illust",
+            var response = await GetAsync<IllustrationResponse>(overrideRequestUri ?? "/v1/search/illust",
                 overrideRequestUri != null ? null : new Dictionary<string, string>()
             {
                 { "word", query },
@@ -133,15 +133,38 @@ namespace CryPixivAPI
                 // { "bookmark_num", "0" },
                 { "duration", duration }
             });
-            response.AssociatedAccount = this;
+            response.GetNextPageAction = (x) => SearchPosts("", overrideRequestUri: x);
             return response;
         }
-        #endregion
-    }
 
-    public static class PixivExtensions
-    {
-        public static async Task<IllustsResponse> GetNextPage(this IllustsResponse response)
-            => await response.AssociatedAccount.SearchPosts("", overrideRequestUri: response.NextUrl);
+        public async Task<IllustrationResponse> GetBookmarks(bool isPublic = true, string tag = null, string overrideRequestUri = null)
+        {
+            var response = await GetAsync<IllustrationResponse>(overrideRequestUri ?? "/v1/user/bookmarks/illust",
+               overrideRequestUri != null ? null : new Dictionary<string, string>()
+           {
+                { "user_id", AuthInfo.User.Id },
+                { "restrict", isPublic ? "public" : "private" },
+                { "tag", tag }
+           });
+            response.GetNextPageAction = (x) => GetBookmarks(isPublic, overrideRequestUri: x);
+            return response;
+        }
+
+        public async Task<IllustrationResponse> GetRecommended(string overrideRequestUri = null)
+        {
+            var response = await GetAsync<IllustrationResponse>(overrideRequestUri ?? "/v1/illust/recommended");
+            response.GetNextPageAction = (x) => GetRecommended(overrideRequestUri: x);
+            return response;
+        }
+
+        // get related illusts ->/v2/illust/related  (parameter 'illust_id' (long) - GET)
+        // get bookmark details -> /v2/illust/bookmark/detail (parameter 'illust_id' (long) - GET)
+
+        // get popular ->/v1/illust/popular - GET ('content_type')
+        // get ranking -> /v1/illust/ranking - GET ('mode' and 'date')  -- mode is "illust"
+
+        // get user illusts -> /v1/user/illusts - (parameter 'user_id' (long) and 'type' - GET)
+        // get user details -> /v1/user/detail - (parameter 'user_id' (long) - GET)
+        #endregion
     }
 }
