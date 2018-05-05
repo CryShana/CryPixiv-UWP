@@ -234,8 +234,23 @@ namespace CryPixivAPI
                 });
         }
 
-        // POST /v1/user/follow/add ('user_id', 'restrict')
-        // POST /v1/user/follow/delete ('user_id')
+        public async Task FollowUser(long user_id, bool isPublic = true)
+        {
+            var response = await PostAsync<object>("/v1/user/follow/add",
+                new Dictionary<string, string>()
+                {
+                    { "user_id", user_id.ToString() },
+                    { "restrict",  isPublic ? "public" : "private" }
+                });
+        }
+        public async Task UnfollowUser(long user_id)
+        {
+            var response = await PostAsync<object>("/v1/user/follow/delete",
+                new Dictionary<string, string>()
+                {
+                    { "user_id", user_id.ToString() }
+                });
+        }
         #endregion
     }
 }
