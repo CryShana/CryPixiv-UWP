@@ -28,5 +28,8 @@ namespace CryPixivAPI.Classes
 
         [JsonProperty("user")]
         public User User { get; set; } 
+
+        public DateTime TimeIssued { get; set; }
+        public bool IsExpired => DateTime.Now.Subtract(TimeIssued).TotalSeconds >= ExpiresIn;
     }
 }

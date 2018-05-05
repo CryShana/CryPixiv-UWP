@@ -132,7 +132,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CryPixiv API\CryPixivAPI.csproj">
+    <ProjectReference Include="..\CryPixivAPI\CryPixivAPI.csproj">
       <Project>{cff1955c-0639-4f3b-98bf-a735d3dc3fdb}</Project>
       <Name>CryPixivAPI</Name>
     </ProjectReference>

@@ -27,8 +27,16 @@ namespace CryPixiv2
         {
             this.InitializeComponent();
 
-            var pixiv = new PixivAccount("3b1c31a804e9f2b624837f683ef06a55");             
-            pixiv.Login("IuEsI8_15UjDFtSfaOcqJkPCK3oe12IzQDMwP4mz_qA");
+            Hello();
+        }
+
+        public async void Hello()
+        {
+            var pixiv = new PixivAccount("3b1c31a804e9f2b624837f683ef06a55");
+
+            await pixiv.Login("IuEsI8_15UjDFtSfaOcqJkPCK3oe12IzQDMwP4mz_qA");
+            var response = await pixiv.SearchPosts("elf");
+            await response.GetNextPage();
         }
     }
 }

@@ -30,5 +30,8 @@ namespace CryPixivAPI.Classes
 
         [JsonProperty("profile_image_urls")]
         public Dictionary<string,string> ProfileImageUrls { get; set; }
+
+        [JsonProperty("is_followed")]
+        public bool IsFollowed { get; set; }
     }
 }
