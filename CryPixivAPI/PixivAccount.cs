@@ -26,7 +26,6 @@ namespace CryPixivAPI
         public AuthResponse AuthInfo { get; private set; }
         #endregion
 
-
         public PixivAccount(string deviceToken = null)
         {
             InitializeHttpClient();
@@ -141,7 +140,7 @@ namespace CryPixivAPI
         #endregion
 
         #region Public Methods
-        public async Task Login(string username, string password) => await Login(username, password);
+        public async Task Login(string username, string password) => await Login(username, password, null);
         public async Task Login(string refreshToken) => await Login(null, null, refreshToken);
 
         public async Task<IllustrationResponse> SearchPosts(string query, string sortmode = PixivParameters.SearchSortMode.Descending,
