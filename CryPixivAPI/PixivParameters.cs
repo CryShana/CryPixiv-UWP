@@ -32,5 +32,21 @@ namespace CryPixivAPI
             public const string ExactMatchForTags = "exact_match_for_tags";
             public const string PartialMatchForTags = "partial_match_for_tags";
         }
+
+        public static class RankingMode
+        {
+            public const string Daily = "day";
+            public const string Weekly = "week";
+            public const string Monthly = "month";
+            public const string Daily_Male = "day_male";
+            public const string Daily_Female = "day_female";
+            public const string Weekly_Rookie = "week_rookie";
+            public const string Weekly_Original = "week_original";
+            public const string Daily_R18 = "day_r18";
+            public const string Weekly_R18 = "week_r18";
+            public const string Daily_Male_R18 = "day_male_r18";
+            public const string Daily_Female_R18 = "day_female_r18";
+            public const string Weekly_R18G = "week_r18g";
+        }
     }
 }

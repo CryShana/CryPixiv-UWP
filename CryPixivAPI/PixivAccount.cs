@@ -110,7 +110,10 @@ namespace CryPixivAPI
             }
             else
             {
-                var msg = JObject.Parse(content).SelectToken("error").SelectToken("message").ToString();
+                var err = JObject.Parse(content).SelectToken("error");
+                var msg = err.SelectToken("message").ToString();
+                if (string.IsNullOrEmpty(msg)) msg = err.SelectToken("user_message").ToString();
+
                 throw new Exception(msg);
             }
         }
@@ -126,13 +129,13 @@ namespace CryPixivAPI
         {
             var response = await GetAsync<IllustrationResponse>(overrideRequestUri ?? "/v1/search/illust",
                 overrideRequestUri != null ? null : new Dictionary<string, string>()
-            {
-                { "word", query },
-                { "sort", sortmode },
-                { "search_target", target },
-                // { "bookmark_num", "0" },
-                { "duration", duration }
-            });
+                {
+                    { "word", query },
+                    { "sort", sortmode },
+                    { "search_target", target },
+                    // { "bookmark_num", "0" },
+                    { "duration", duration }
+                });
             response.GetNextPageAction = (x) => SearchPosts("", overrideRequestUri: x);
             return response;
         }
@@ -141,11 +144,11 @@ namespace CryPixivAPI
         {
             var response = await GetAsync<IllustrationResponse>(overrideRequestUri ?? "/v1/user/bookmarks/illust",
                overrideRequestUri != null ? null : new Dictionary<string, string>()
-           {
-                { "user_id", AuthInfo.User.Id },
-                { "restrict", isPublic ? "public" : "private" },
-                { "tag", tag }
-           });
+               {
+                   { "user_id", AuthInfo.User.Id },
+                   { "restrict", isPublic ? "public" : "private" },
+                   { "tag", tag }
+               });
             response.GetNextPageAction = (x) => GetBookmarks(isPublic, overrideRequestUri: x);
             return response;
         }
@@ -156,15 +159,43 @@ namespace CryPixivAPI
             response.GetNextPageAction = (x) => GetRecommended(overrideRequestUri: x);
             return response;
         }
+        public async Task<IllustrationResponse> GetUserIllustrations(long user_id, string overrideRequestUri = null)
+        {
+            var response = await GetAsync<IllustrationResponse>(overrideRequestUri ?? "/v1/user/illusts",
+               overrideRequestUri != null ? null : new Dictionary<string, string>()
+               {
+                   { "user_id", user_id.ToString() }
+                   //{ "type", "" }
+               });
+            response.GetNextPageAction = (x) => GetUserIllustrations(user_id, overrideRequestUri: x);
+            return response;
+        }
+        public async Task<IllustrationResponse> GetRelatedIllustrations(long illust_id, string overrideRequestUri = null)
+        {
+            throw new NotImplementedException("Specified endpoint does not exist yet!");
 
-        // get related illusts ->/v2/illust/related  (parameter 'illust_id' (long) - GET)
-        // get bookmark details -> /v2/illust/bookmark/detail (parameter 'illust_id' (long) - GET)
+            var response = await GetAsync<IllustrationResponse>(overrideRequestUri ?? "/v2/illust/related ",
+               overrideRequestUri != null ? null : new Dictionary<string, string>()
+               {
+                   { "illust_id", illust_id.ToString() }
+               });
+            response.GetNextPageAction = (x) => GetRelatedIllustrations(illust_id, overrideRequestUri: x);
+            return response;
+        }
+        public async Task<IllustrationResponse> GetRankedIllustrations(string mode = PixivParameters.RankingMode.Daily, string overrideRequestUri = null)
+        {
+            var response = await GetAsync<IllustrationResponse>(overrideRequestUri ?? "/v1/illust/ranking",
+                new Dictionary<string, string>()
+                {
+                    { "mode", mode }
+                });
 
-        // get popular ->/v1/illust/popular - GET ('content_type')
-        // get ranking -> /v1/illust/ranking - GET ('mode' and 'date')  -- mode is "illust"
+            response.GetNextPageAction = (x) => GetRankedIllustrations(overrideRequestUri: x);
+            return response;
+        }
 
-        // get user illusts -> /v1/user/illusts - (parameter 'user_id' (long) and 'type' - GET)
         // get user details -> /v1/user/detail - (parameter 'user_id' (long) - GET)
+        // get bookmark details -> /v2/illust/bookmark/detail (parameter 'illust_id' (long) - GET)
         #endregion
     }
 }
