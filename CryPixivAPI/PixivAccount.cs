@@ -117,6 +117,27 @@ namespace CryPixivAPI
                 throw new Exception(msg);
             }
         }
+        private async Task<T> PostAsync<T>(string requestUri, Dictionary<string, string> values = null, string rootPropertyName = null)
+        {
+            if (AuthInfo == null || AuthInfo?.AccessToken == null) throw new LoginException("User must be logged in!");
+
+            var response = await httpClient.PostAsync(requestUri, new FormUrlEncodedContent(values ?? new Dictionary<string, string>()));
+            var content = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                if (rootPropertyName != null) content = JObject.Parse(content).SelectToken(rootPropertyName).ToString();
+                var obj = JsonConvert.DeserializeObject<T>(content);
+                return obj;
+            }
+            else
+            {
+                var err = JObject.Parse(content).SelectToken("error");
+                var msg = err.SelectToken("message").ToString();
+                if (string.IsNullOrEmpty(msg)) msg = err.SelectToken("user_message").ToString();
+
+                throw new Exception(msg);
+            }
+        }
         #endregion
 
         #region Public Methods
@@ -152,7 +173,6 @@ namespace CryPixivAPI
             response.GetNextPageAction = (x) => GetBookmarks(isPublic, overrideRequestUri: x);
             return response;
         }
-
         public async Task<IllustrationResponse> GetRecommended(string overrideRequestUri = null)
         {
             var response = await GetAsync<IllustrationResponse>(overrideRequestUri ?? "/v1/illust/recommended");
@@ -194,8 +214,28 @@ namespace CryPixivAPI
             return response;
         }
 
-        // get user details -> /v1/user/detail - (parameter 'user_id' (long) - GET)
-        // get bookmark details -> /v2/illust/bookmark/detail (parameter 'illust_id' (long) - GET)
+        public async Task AddBookmark(long illust_id, bool isPublic = true)
+        {
+            var response = await PostAsync<object>("/v2/illust/bookmark/add",
+                new Dictionary<string, string>()
+                {
+                    { "illust_id", illust_id.ToString() },
+                    { "restrict",  isPublic ? "public" : "private" }
+                });
+
+            // can also accept 'tags[]' or 'tags' parameter (list of strings) ?
+        }
+        public async Task RemoveBookmark(long illust_id)
+        {
+            var response = await PostAsync<object>("/v1/illust/bookmark/delete",
+                new Dictionary<string, string>()
+                {
+                    { "illust_id", illust_id.ToString() }
+                });
+        }
+
+        // POST /v1/user/follow/add ('user_id', 'restrict')
+        // POST /v1/user/follow/delete ('user_id')
         #endregion
     }
 }
