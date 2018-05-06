@@ -32,23 +32,6 @@ namespace CryPixiv2
         public static MainPage CurrentInstance;
         public MainViewModel ViewModel;
 
-        static CompositionAnimationGroup CreateOffsetAnimation(Compositor compositor)
-        {
-            // Define Offset Animation for the Animation group
-            var offsetAnimation = compositor.CreateVector3KeyFrameAnimation();
-            offsetAnimation.InsertExpressionKeyFrame(1, "this.FinalValue");
-            offsetAnimation.Duration = TimeSpan.FromSeconds(.8);
-
-            // Define Animation Target for this animation to animate using definition. 
-            offsetAnimation.Target = "Offset";
-
-            // Add Animations to Animation group. 
-            var animationGroup = compositor.CreateAnimationGroup();
-            animationGroup.Add(offsetAnimation);
-
-            return animationGroup;
-        }
-
         public MainPage()
         {
             this.InitializeComponent();
@@ -70,23 +53,53 @@ namespace CryPixiv2
                 dialog.ShowAsync();
             };
             mylist.IsItemClickEnabled = true;
-            
+
             DoStuff();
         }
 
+        private static CompositionAnimationGroup CreateOffsetAnimation(Compositor compositor)
+        {
+            // Define Offset Animation for the Animation group
+            var offsetAnimation = compositor.CreateVector3KeyFrameAnimation();
+            offsetAnimation.InsertExpressionKeyFrame(1, "this.FinalValue");
+            offsetAnimation.Duration = TimeSpan.FromSeconds(.8);
+
+            // Define Animation Target for this animation to animate using definition. 
+            offsetAnimation.Target = "Offset";
+
+            // Add Animations to Animation group. 
+            var animationGroup = compositor.CreateAnimationGroup();
+            animationGroup.Add(offsetAnimation);
+
+            return animationGroup;
+        }
+
+        int index = 0;
         private void ItemsWrapGrid_Loaded(object sender, RoutedEventArgs e)
         {
+            
             var compositor = ElementCompositionPreview.GetElementVisual(mylist).Compositor;
             var elementImplicitAnimation = compositor.CreateImplicitAnimationCollection();
             elementImplicitAnimation["Offset"] = CreateOffsetAnimation(compositor);
 
-            mylist.ChoosingItemContainer += async (a, b) =>
+            var panel = (ItemsWrapGrid)sender;
+            panel.LayoutUpdated += (a, b) =>
             {
-                await Task.Delay(1000);
-                var itemContainer = (GridViewItem)mylist.ContainerFromItem(b.Item);
-                var visual = ElementCompositionPreview.GetElementVisual(itemContainer);
-                visual.ImplicitAnimations = elementImplicitAnimation;
-            };          
+                for (int i = index; i < ViewModel.Illusts.Collection.Count; i++)
+                {
+                    var itemContainer = (GridViewItem)mylist.ContainerFromItem(ViewModel.Illusts.Collection[i]);
+                    if (itemContainer == null)
+                    {
+                        index = i;
+                        break;
+                    }
+
+                    var visual = ElementCompositionPreview.GetElementVisual(itemContainer);
+
+                    if (visual.ImplicitAnimations != null) continue;
+                    visual.ImplicitAnimations = elementImplicitAnimation;
+                }
+            };
         }
 
         public async void DoStuff()
