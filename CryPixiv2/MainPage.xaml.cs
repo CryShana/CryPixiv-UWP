@@ -69,9 +69,7 @@ namespace CryPixiv2
 
                 dialog.ShowAsync();
             };
-
             mylist.IsItemClickEnabled = true;
-
             
             DoStuff();
         }
@@ -84,7 +82,7 @@ namespace CryPixiv2
 
             mylist.ChoosingItemContainer += async (a, b) =>
             {
-                await Task.Delay(400);
+                await Task.Delay(1000);
                 var itemContainer = (GridViewItem)mylist.ContainerFromItem(b.Item);
                 var visual = ElementCompositionPreview.GetElementVisual(itemContainer);
                 visual.ImplicitAnimations = elementImplicitAnimation;
@@ -96,7 +94,7 @@ namespace CryPixiv2
             ViewModel.Account = new PixivAccount("fa2226814b46768e9f0ea3aafac61eb6");
             await ViewModel.Account.Login("IuEsI8_15UjDFtSfaOcqJkPCK3oe12IzQDMwP4mz_qA");
             
-            var ill = await ViewModel.Account.GetRecommended();
+            var ill = await ViewModel.Account.GetBookmarks();
             addStuff(ill);
 
             async void addStuff(IllustrationResponse r)

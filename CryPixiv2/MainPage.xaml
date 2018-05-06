@@ -9,7 +9,7 @@
     DataContext="{StaticResource mainViewModel}">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <GridView ItemsSource="{Binding Illusts.Collection}" x:Name="mylist" CanReorderItems="True" CanDragItems="True">
+        <GridView ItemsSource="{Binding Illusts.Collection}" x:Name="mylist">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center" Loaded="ItemsWrapGrid_Loaded" />
