@@ -53,6 +53,27 @@ namespace CryPixiv2
                 dialog.ShowAsync();
             };
             mylist.IsItemClickEnabled = true;
+            var compositor = ElementCompositionPreview.GetElementVisual(mylist).Compositor;
+            var elementImplicitAnimation = compositor.CreateImplicitAnimationCollection();
+            elementImplicitAnimation["Offset"] = CreateOffsetAnimation(compositor);
+
+            mylist.LayoutUpdated += (a, b) =>
+            {
+                for (int i = index; i < ViewModel.Illusts.Collection.Count; i++)
+                {
+                    var itemContainer = (GridViewItem)mylist.ContainerFromItem(ViewModel.Illusts.Collection[i]);
+                    if (itemContainer == null)
+                    {
+                        index = i;
+                        break;
+                    }
+
+                    var visual = ElementCompositionPreview.GetElementVisual(itemContainer);
+
+                    if (visual.ImplicitAnimations != null) continue;
+                    visual.ImplicitAnimations = elementImplicitAnimation;
+                }
+            };
 
             DoStuff();
         }
@@ -75,32 +96,7 @@ namespace CryPixiv2
         }
 
         int index = 0;
-        private void ItemsWrapGrid_Loaded(object sender, RoutedEventArgs e)
-        {
-            
-            var compositor = ElementCompositionPreview.GetElementVisual(mylist).Compositor;
-            var elementImplicitAnimation = compositor.CreateImplicitAnimationCollection();
-            elementImplicitAnimation["Offset"] = CreateOffsetAnimation(compositor);
 
-            var panel = (ItemsWrapGrid)sender;
-            panel.LayoutUpdated += (a, b) =>
-            {
-                for (int i = index; i < ViewModel.Illusts.Collection.Count; i++)
-                {
-                    var itemContainer = (GridViewItem)mylist.ContainerFromItem(ViewModel.Illusts.Collection[i]);
-                    if (itemContainer == null)
-                    {
-                        index = i;
-                        break;
-                    }
-
-                    var visual = ElementCompositionPreview.GetElementVisual(itemContainer);
-
-                    if (visual.ImplicitAnimations != null) continue;
-                    visual.ImplicitAnimations = elementImplicitAnimation;
-                }
-            };
-        }
 
         public async void DoStuff()
         {
@@ -113,9 +109,13 @@ namespace CryPixiv2
             async void addStuff(IllustrationResponse r)
             {
                 foreach (var l in r.Illustrations) ViewModel.Illusts.Add(new IllustrationWrapper(l, ViewModel.Account));
-                
-                var np = await r.NextPage();
-                addStuff(np);
+
+                try
+                {
+                    var np = await r.NextPage();
+                    addStuff(np);
+                }
+                catch { }
             }        
         }
     }
