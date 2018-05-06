@@ -17,6 +17,7 @@ namespace CryPixiv2.Wrappers
         public Illustration WrappedIllustration { get; set; }
 
         BitmapImage thumbnailImage = null;
+        public bool ThumbnailImageLoading => thumbnailImage == null;
         public BitmapImage ThumbnailImage
         {
             get
@@ -30,6 +31,7 @@ namespace CryPixiv2.Wrappers
             {
                 thumbnailImage = value;
                 Changed();
+                Changed("ThumbnailImageLoading");
             }
         }
 

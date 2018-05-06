@@ -9,20 +9,22 @@
     DataContext="{StaticResource mainViewModel}">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListView ItemsSource="{Binding Illusts}" >
-            <ListView.ItemsPanel>
+        <GridView ItemsSource="{Binding Illusts.Collection}" x:Name="mylist" CanReorderItems="True" CanDragItems="True">
+            <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center" />
+                    <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center" Loaded="ItemsWrapGrid_Loaded" />
                 </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            <ListView.ItemTemplate>
+            </GridView.ItemsPanel>
+            <GridView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
-                        <Image Source="{Binding ThumbnailImage}" Width="300" Height="300" />
-                    </StackPanel>
+                    <Grid Width="300" Height="300" Background="Gainsboro">
+                        <ProgressRing IsActive="{Binding ThumbnailImageLoading}" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                      Height="70" Width="70" Foreground="Black" />
+                        <Image Source="{Binding ThumbnailImage}" />
+                    </Grid>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </GridView.ItemTemplate>
+        </GridView>
 
     </Grid>
 </Page>

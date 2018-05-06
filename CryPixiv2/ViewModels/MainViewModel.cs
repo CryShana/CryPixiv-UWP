@@ -1,4 +1,5 @@
-﻿using CryPixiv2.Wrappers;
+﻿using CryPixiv2.Classes;
+using CryPixiv2.Wrappers;
 using CryPixivAPI;
 using CryPixivAPI.Classes;
 using System;
@@ -16,8 +17,8 @@ namespace CryPixiv2.ViewModels
     {
         public PixivAccount Account { get; set; }
 
-        private ObservableCollection<IllustrationWrapper> illusts = new ObservableCollection<IllustrationWrapper>();
-        public ObservableCollection<IllustrationWrapper> Illusts { get => illusts; set { illusts = value; Changed(); } }
+        private SlowObservableCollection<IllustrationWrapper> illusts = new SlowObservableCollection<IllustrationWrapper>();
+        public SlowObservableCollection<IllustrationWrapper> Illusts { get => illusts; set { illusts = value; Changed(); } }
 
     }
 }

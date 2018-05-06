@@ -73,6 +73,7 @@ namespace CryPixivAPI.Classes
         public bool Muted { get; set; }
 
         public string ThumbnailImagePath => ImageUrls["square_medium"];
+        public string BigThumbnailImagePath => ImageUrls["medium"];
     }
     public class Tag
     {
