@@ -38,64 +38,9 @@ namespace CryPixiv2
 
             CurrentInstance = this;
             ViewModel = (MainViewModel)Application.Current.Resources["mainViewModel"];
-
-            mylist.ItemClick += (a, b) =>
-            {
-                var item = b.ClickedItem as IllustrationWrapper;
-                var dialog = new MessageDialog(item.WrappedIllustration.Id.ToString(), "Selected Item");
-
-                var package = new DataPackage();
-                package.SetText("https://www.pixiv.net/member_illust.php?mode=medium&illust_id=" + item.WrappedIllustration.Id.ToString());
-                package.RequestedOperation = DataPackageOperation.Copy;
-                Clipboard.SetContent(package);
-                Clipboard.Flush();
-
-                dialog.ShowAsync();
-            };
-            mylist.IsItemClickEnabled = true;
-            var compositor = ElementCompositionPreview.GetElementVisual(mylist).Compositor;
-            var elementImplicitAnimation = compositor.CreateImplicitAnimationCollection();
-            elementImplicitAnimation["Offset"] = CreateOffsetAnimation(compositor);
-
-            mylist.LayoutUpdated += (a, b) =>
-            {
-                for (int i = index; i < ViewModel.Illusts.Collection.Count; i++)
-                {
-                    var itemContainer = (GridViewItem)mylist.ContainerFromItem(ViewModel.Illusts.Collection[i]);
-                    if (itemContainer == null)
-                    {
-                        index = i;
-                        break;
-                    }
-
-                    var visual = ElementCompositionPreview.GetElementVisual(itemContainer);
-
-                    if (visual.ImplicitAnimations != null) continue;
-                    visual.ImplicitAnimations = elementImplicitAnimation;
-                }
-            };
-
+           
             DoStuff();
         }
-
-        private static CompositionAnimationGroup CreateOffsetAnimation(Compositor compositor)
-        {
-            // Define Offset Animation for the Animation group
-            var offsetAnimation = compositor.CreateVector3KeyFrameAnimation();
-            offsetAnimation.InsertExpressionKeyFrame(1, "this.FinalValue");
-            offsetAnimation.Duration = TimeSpan.FromSeconds(.8);
-
-            // Define Animation Target for this animation to animate using definition. 
-            offsetAnimation.Target = "Offset";
-
-            // Add Animations to Animation group. 
-            var animationGroup = compositor.CreateAnimationGroup();
-            animationGroup.Add(offsetAnimation);
-
-            return animationGroup;
-        }
-
-        int index = 0;
 
 
         public async void DoStuff()

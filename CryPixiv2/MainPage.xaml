@@ -5,25 +5,11 @@
     xmlns:local="using:CryPixiv2"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:cnt="using:CryPixiv2.Controls"
     mc:Ignorable="d"
     DataContext="{StaticResource mainViewModel}">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <GridView ItemsSource="{Binding Illusts.Collection}" x:Name="mylist">
-            <!--<GridView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center" />
-                </ItemsPanelTemplate>
-            </GridView.ItemsPanel>-->
-            <GridView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Width="300" Height="300" Background="Gainsboro">
-                        <ProgressRing IsActive="{Binding ThumbnailImageLoading}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" />
-                        <Image Source="{Binding ThumbnailImage}" />
-                    </Grid>
-                </DataTemplate>
-            </GridView.ItemTemplate>
-        </GridView>
-
+        <cnt:IllustrationGrid ItemSource="{Binding Illusts}" />
     </Grid>
 </Page>

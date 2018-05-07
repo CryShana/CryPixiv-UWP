@@ -19,6 +19,5 @@ namespace CryPixiv2.ViewModels
 
         private SlowObservableCollection<IllustrationWrapper> illusts = new SlowObservableCollection<IllustrationWrapper>();
         public SlowObservableCollection<IllustrationWrapper> Illusts { get => illusts; set { illusts = value; Changed(); } }
-
     }
 }
