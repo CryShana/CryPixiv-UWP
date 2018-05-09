@@ -22,6 +22,7 @@ namespace CryPixiv2.Classes
         public ObservableCollection<T> Collection { get; }
         public ConcurrentQueue<T> EnqueuedItems { get; }
         public event EventHandler<T> ItemAdded;
+        public event EventHandler<T[]> ItemsEnqueued;
         #endregion
 
         public SlowObservableCollection()
@@ -48,6 +49,8 @@ namespace CryPixiv2.Classes
         public void Add(params T[] items)
         {
             foreach (var i in items) EnqueuedItems.Enqueue(i);
+
+            ItemsEnqueued?.Invoke(this, items);
         }
     }
 }
