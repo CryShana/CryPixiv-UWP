@@ -61,7 +61,7 @@
             <PivotItem Header="Bookmarks">
                 <Pivot>
                     <PivotItem Header="Public">
-                        <cnt:IllustrationGrid ItemSource="{Binding BookmarksPublic}"/>
+                        <cnt:IllustrationGrid ItemSource="{Binding BookmarksPublic}" />
                     </PivotItem>
                     <PivotItem Header="Private">
                         <cnt:IllustrationGrid ItemSource="{Binding BookmarksPrivate}"/>
@@ -69,6 +69,5 @@
                 </Pivot>
             </PivotItem>
         </Pivot>
-        
     </Grid>
 </Page>

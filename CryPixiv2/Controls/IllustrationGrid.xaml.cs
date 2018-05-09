@@ -1,6 +1,7 @@
 ﻿using CryPixiv2.Classes;
 using CryPixiv2.Wrappers;
 using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.Toolkit.Uwp.UI.Animations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,19 +23,11 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 namespace CryPixiv2.Controls
 {
-    public class BookmarkComparer : IComparer
-    {
-        public int Compare(object x, object y)
-        {
-            var a = (IllustrationWrapper)x;
-            var b = (IllustrationWrapper)y;
-            return a.WrappedIllustration.TotalBookmarks.CompareTo(b.WrappedIllustration.TotalBookmarks);
-        }
-    }
     public sealed partial class IllustrationGrid : UserControl, INotifyPropertyChanged
     {
         #region Private Fields and PropertyChanged methods
@@ -116,6 +109,57 @@ namespace CryPixiv2.Controls
             // panel animations
             ElementCompositionPreview.GetElementVisual(panel).ImplicitAnimations = elementImplicitAnimation;
         }
+
+        private void DataTemplate_Loaded(object sender, RoutedEventArgs e)
+        {
+            TimeSpan duration = TimeSpan.FromMilliseconds(900);
+
+            var element = (Grid)sender;
+
+            var visual = ElementCompositionPreview.GetElementVisual(element);
+            ElementCompositionPreview.SetIsTranslationEnabled(element, true); // if using Translation
+            var compositor = visual.Compositor;
+
+            var group = compositor.CreateAnimationGroup(); // if using multiple animations
+
+            // prepare the opacity animation
+            var opacityAnimation = compositor.CreateScalarKeyFrameAnimation();
+            opacityAnimation.Duration = duration;
+            opacityAnimation.InsertKeyFrame(0f, 0);
+            opacityAnimation.InsertKeyFrame(1f, 1);
+            opacityAnimation.Target = "Opacity";
+            group.Add(opacityAnimation);
+
+            // prepare the scale transform
+            var scaleTransform = new ScaleTransform();
+            element.RenderTransform = scaleTransform;
+
+            var storyboard = new Storyboard();
+
+            var scaleAnimationY = new DoubleAnimation();
+            scaleAnimationY.From = 0.3;
+            scaleAnimationY.To = 1;
+            scaleAnimationY.Duration = duration;
+            scaleAnimationY.EasingFunction = new CubicEase();
+            Storyboard.SetTarget(scaleAnimationY, scaleTransform);
+            Storyboard.SetTargetProperty(scaleAnimationY, "ScaleY");
+
+            var scaleAnimationX = new DoubleAnimation();
+            scaleAnimationX.From = 0.3;
+            scaleAnimationX.To = 1;
+            scaleAnimationX.Duration = duration;
+            scaleAnimationX.EasingFunction = new CubicEase();
+            Storyboard.SetTarget(scaleAnimationX, scaleTransform);
+            Storyboard.SetTargetProperty(scaleAnimationX, "ScaleX");
+
+            storyboard.Children.Add(scaleAnimationY);
+            storyboard.Children.Add(scaleAnimationX);
+
+            // start all the animations
+            storyboard.Begin();
+            visual.StartAnimationGroup(group);                               
+        }
+
         private void ItemsWrapGrid_Loaded(object sender, RoutedEventArgs e) => InitializeAnimations((Panel)sender);
         private static CompositionAnimationGroup CreateOffsetAnimation(Compositor compositor)
         {
@@ -134,5 +178,15 @@ namespace CryPixiv2.Controls
             return animationGroup;
         }
         #endregion
+    }
+
+    public class BookmarkComparer : IComparer
+    {
+        public int Compare(object x, object y)
+        {
+            var a = (IllustrationWrapper)x;
+            var b = (IllustrationWrapper)y;
+            return a.WrappedIllustration.TotalBookmarks.CompareTo(b.WrappedIllustration.TotalBookmarks);
+        }
     }
 }

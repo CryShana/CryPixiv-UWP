@@ -25,7 +25,7 @@
             </GridView.ItemsPanel>
             <GridView.ItemTemplate>
                 <DataTemplate>
-                    <Grid Width="300" Height="300" Background="Gainsboro">
+                    <Grid Width="300" Height="300" Background="Gainsboro" Loaded="DataTemplate_Loaded" RenderTransformOrigin="0.5,0.5">
                         <ProgressRing IsActive="{Binding ThumbnailImageLoading}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" />
                         <Image Source="{Binding ThumbnailImage}" />
                     </Grid>
