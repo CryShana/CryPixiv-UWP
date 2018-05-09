@@ -2,6 +2,7 @@
 using CryPixiv2.Wrappers;
 using CryPixivAPI;
 using CryPixivAPI.Classes;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -48,7 +49,8 @@ namespace CryPixiv2
             ViewModel.Account = new PixivAccount("fa2226814b46768e9f0ea3aafac61eb6");
             await ViewModel.Account.Login("IuEsI8_15UjDFtSfaOcqJkPCK3oe12IzQDMwP4mz_qA");
             
-            var ill = await ViewModel.Account.GetNewestFollowingWorks();
+            /*
+            var ill = await ViewModel.Account.GetRankedIllustrations();
             addStuff(ill);
 
             async void addStuff(IllustrationResponse r)
@@ -61,7 +63,7 @@ namespace CryPixiv2
                     addStuff(np);
                 }
                 catch { }
-            }        
+            }  */      
         }
     }
 }

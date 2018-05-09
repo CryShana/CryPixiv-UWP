@@ -10,6 +10,65 @@
     DataContext="{StaticResource mainViewModel}">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <cnt:IllustrationGrid x:Name="mainl" ItemSource="{Binding Illusts}" SortByBookmarks="False"/>
+        <Pivot>
+            <PivotItem Header="Search">
+                <Grid/>
+            </PivotItem>
+            <PivotItem Header="Ranking">
+                <Pivot>
+                    <PivotItem Header="Daily">
+                        <cnt:IllustrationGrid />
+                    </PivotItem>
+                    <PivotItem Header="Weekly">
+                        <cnt:IllustrationGrid />
+                    </PivotItem>
+                    <PivotItem Header="Monthly">
+                        <cnt:IllustrationGrid />
+                    </PivotItem>
+                    <PivotItem Header="Daily (Male)">
+                        <cnt:IllustrationGrid />
+                    </PivotItem>
+                    <PivotItem Header="Daily (Female)">
+                        <cnt:IllustrationGrid />
+                    </PivotItem>
+                    <PivotItem Header="Daily R18">
+                        <cnt:IllustrationGrid />
+                    </PivotItem>
+                    <PivotItem Header="Weekly R18">
+                        <cnt:IllustrationGrid />
+                    </PivotItem>
+                    <PivotItem Header="Daily R18 (Male)">
+                        <cnt:IllustrationGrid />
+                    </PivotItem>
+                    <PivotItem Header="Daily R18 (Female)">
+                        <cnt:IllustrationGrid />
+                    </PivotItem>
+                </Pivot>
+            </PivotItem>
+            <PivotItem Header="Following">
+                <Pivot>
+                    <PivotItem Header="Public">
+                        <cnt:IllustrationGrid ItemSource="{Binding FollowingPublic}" />
+                    </PivotItem>
+                    <PivotItem Header="Private">
+                        <cnt:IllustrationGrid ItemSource="{Binding FollowingPrivate}"/>
+                    </PivotItem>
+                </Pivot>
+            </PivotItem>
+            <PivotItem Header="Recommended">
+                <cnt:IllustrationGrid ItemSource="{Binding Recommended}" />
+            </PivotItem>
+            <PivotItem Header="Bookmarks">
+                <Pivot>
+                    <PivotItem Header="Public">
+                        <cnt:IllustrationGrid ItemSource="{Binding BookmarksPublic}"/>
+                    </PivotItem>
+                    <PivotItem Header="Private">
+                        <cnt:IllustrationGrid ItemSource="{Binding BookmarksPrivate}"/>
+                    </PivotItem>
+                </Pivot>
+            </PivotItem>
+        </Pivot>
+        
     </Grid>
 </Page>
