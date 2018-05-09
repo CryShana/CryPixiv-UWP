@@ -48,7 +48,7 @@ namespace CryPixiv2
             ViewModel.Account = new PixivAccount("fa2226814b46768e9f0ea3aafac61eb6");
             await ViewModel.Account.Login("IuEsI8_15UjDFtSfaOcqJkPCK3oe12IzQDMwP4mz_qA");
             
-            var ill = await ViewModel.Account.GetBookmarks();
+            var ill = await ViewModel.Account.GetNewestFollowingWorks();
             addStuff(ill);
 
             async void addStuff(IllustrationResponse r)

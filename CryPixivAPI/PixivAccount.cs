@@ -213,7 +213,17 @@ namespace CryPixivAPI
             response.GetNextPageAction = (x) => GetRankedIllustrations(overrideRequestUri: x);
             return response;
         }
+        public async Task<IllustrationResponse> GetNewestFollowingWorks(bool isPublic = true, string overrideRequestUri = null)
+        {
+            var response = await GetAsync<IllustrationResponse>(overrideRequestUri ?? "/v2/illust/follow",
+                new Dictionary<string, string>()
+                {
+                    { "restrict", isPublic ? "public" : "private" }
+                });
 
+            response.GetNextPageAction = (x) => GetNewestFollowingWorks(isPublic, overrideRequestUri: x);
+            return response;
+        }
         public async Task AddBookmark(long illust_id, bool isPublic = true)
         {
             var response = await PostAsync<object>("/v2/illust/bookmark/add",
