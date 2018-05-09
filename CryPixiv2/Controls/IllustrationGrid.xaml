@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -15,7 +16,8 @@
         <controls:AdvancedCollectionView x:Key="viewSource" Source="{x:Bind ItemSource.Collection}" />
     </UserControl.Resources>
     <Grid>
-        <GridView x:Name="mylist" Loaded="GridView_Loaded" ItemsSource="{Binding Source={StaticResource viewSource}}">
+        <GridView x:Name="mylist" Loaded="GridView_Loaded" animations:ReorderGridAnimation.Duration="500"
+                  ItemsSource="{Binding Source={StaticResource viewSource}}">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsWrapGrid x:Name="stack" Orientation="Horizontal" HorizontalAlignment="Center" Loaded="ItemsWrapGrid_Loaded"/>

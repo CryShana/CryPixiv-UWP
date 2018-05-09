@@ -2,6 +2,7 @@
 using CryPixiv2.Wrappers;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -24,6 +25,15 @@ using Windows.UI.Xaml.Navigation;
 
 namespace CryPixiv2.Controls
 {
+    public class BookmarkComparer : IComparer
+    {
+        public int Compare(object x, object y)
+        {
+            var a = (IllustrationWrapper)x;
+            var b = (IllustrationWrapper)y;
+            return a.WrappedIllustration.TotalBookmarks.CompareTo(b.WrappedIllustration.TotalBookmarks);
+        }
+    }
     public sealed partial class IllustrationGrid : UserControl, INotifyPropertyChanged
     {
         #region Private Fields and PropertyChanged methods
@@ -50,8 +60,8 @@ namespace CryPixiv2.Controls
         {
             this.InitializeComponent();
             viewSource = Resources["viewSource"] as AdvancedCollectionView;
-            
-            // viewSource.SortDescriptions.Add(new SortDescription("WrappedIllustration.TotalBookmarks", SortDirection.Descending));
+
+            // viewSource.SortDescriptions.Add(new SortDescription(SortDirection.Descending, new BookmarkComparer()));
         }
 
         public static void ItemSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
@@ -100,6 +110,7 @@ namespace CryPixiv2.Controls
             ElementCompositionPreview.GetElementVisual(panel).ImplicitAnimations = elementImplicitAnimation;
 
             // item animations
+            /*
             mylist.LayoutUpdated += (a, b) =>
             {               
                 // try to optimize this
@@ -112,7 +123,7 @@ namespace CryPixiv2.Controls
                     if (visual.ImplicitAnimations != null) continue;
                     visual.ImplicitAnimations = elementImplicitAnimation;
                 }
-            };
+            };*/
         }
         private void ItemsWrapGrid_Loaded(object sender, RoutedEventArgs e) => InitializeAnimations((Panel)sender);
         private static CompositionAnimationGroup CreateOffsetAnimation(Compositor compositor)
