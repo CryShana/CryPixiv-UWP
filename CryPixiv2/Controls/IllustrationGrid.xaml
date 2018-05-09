@@ -16,7 +16,7 @@
         <controls:AdvancedCollectionView x:Key="viewSource" Source="{x:Bind ItemSource.Collection}" />
     </UserControl.Resources>
     <Grid>
-        <GridView x:Name="mylist" Loaded="GridView_Loaded" animations:ReorderGridAnimation.Duration="500"
+        <GridView x:Name="mylist" Loaded="GridView_Loaded" animations:ReorderGridAnimation.Duration="600"
                   ItemsSource="{Binding Source={StaticResource viewSource}}">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>

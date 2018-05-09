@@ -49,13 +49,13 @@ namespace CryPixiv2
             ViewModel.Account = new PixivAccount("fa2226814b46768e9f0ea3aafac61eb6");
             await ViewModel.Account.Login("IuEsI8_15UjDFtSfaOcqJkPCK3oe12IzQDMwP4mz_qA");
             
-            /*
-            var ill = await ViewModel.Account.GetRankedIllustrations();
+            
+            var ill = await ViewModel.Account.GetBookmarks();
             addStuff(ill);
 
             async void addStuff(IllustrationResponse r)
             {
-                foreach (var l in r.Illustrations) ViewModel.Illusts.Add(new IllustrationWrapper(l, ViewModel.Account));
+                foreach (var l in r.Illustrations) ViewModel.BookmarksPublic.Add(new IllustrationWrapper(l, ViewModel.Account));
 
                 try
                 {
@@ -63,7 +63,7 @@ namespace CryPixiv2
                     addStuff(np);
                 }
                 catch { }
-            }  */      
+            }    
         }
     }
 }
