@@ -1,5 +1,6 @@
 ﻿using CryPixiv2.Classes;
 using CryPixiv2.Wrappers;
+using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -35,7 +36,8 @@ namespace CryPixiv2.Controls
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
         private int dspCount = 0, ldCount = 0, toldCount = 0;
-        private string status = "Idle."; 
+        private string status = "Idle.";
+        private AdvancedCollectionView viewSource = null;
         #endregion
 
         public SlowObservableCollection<IllustrationWrapper> ItemSource { get => (SlowObservableCollection<IllustrationWrapper>)GetValue(ItemSourceProperty); set => SetValue(ItemSourceProperty, value); }
@@ -46,7 +48,10 @@ namespace CryPixiv2.Controls
 
         public IllustrationGrid()
         {
-            this.InitializeComponent();      
+            this.InitializeComponent();
+            viewSource = Resources["viewSource"] as AdvancedCollectionView;
+            
+            // viewSource.SortDescriptions.Add(new SortDescription("WrappedIllustration.TotalBookmarks", SortDirection.Descending));
         }
 
         public static void ItemSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)

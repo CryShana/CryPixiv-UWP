@@ -5,13 +5,17 @@
     xmlns:local="using:CryPixiv2.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400"
     x:Name="myelement">
 
+    <UserControl.Resources>
+        <controls:AdvancedCollectionView x:Key="viewSource" Source="{x:Bind ItemSource.Collection}" />
+    </UserControl.Resources>
     <Grid>
-        <GridView x:Name="mylist" Loaded="GridView_Loaded" ItemsSource="{Binding ItemSource.Collection, ElementName=myelement}">
+        <GridView x:Name="mylist" Loaded="GridView_Loaded" ItemsSource="{Binding Source={StaticResource viewSource}}">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsWrapGrid x:Name="stack" Orientation="Horizontal" HorizontalAlignment="Center" Loaded="ItemsWrapGrid_Loaded"/>
