@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -46,6 +47,7 @@ namespace CryPixiv2.Controls
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
         private int dspCount = 0, ldCount = 0, toldCount = 0;
+        bool sortbkm = false;
         private string status = "Idle.";
         private AdvancedCollectionView viewSource = null;
         #endregion
@@ -55,13 +57,12 @@ namespace CryPixiv2.Controls
         public int LoadedCount { get => ldCount; private set { ldCount = value; Changed(); } }
         public int ToLoadCount { get => toldCount; private set { toldCount = value; Changed(); } }
         public string Status { get => status; private set { status = value; Changed(); } }
+        public bool SortByBookmarks { get => sortbkm; set { sortbkm = value; Changed(); SortByBookmarkCount(value); } }
 
         public IllustrationGrid()
         {
             this.InitializeComponent();
             viewSource = Resources["viewSource"] as AdvancedCollectionView;
-
-            // viewSource.SortDescriptions.Add(new SortDescription(SortDirection.Descending, new BookmarkComparer()));
         }
 
         public static void ItemSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
@@ -81,6 +82,12 @@ namespace CryPixiv2.Controls
             };
         }
 
+        private void SortByBookmarkCount(bool sort = true)
+        {
+            viewSource.SortDescriptions.Clear();
+            if (sort) viewSource.SortDescriptions.Add(new SortDescription(SortDirection.Descending, new BookmarkComparer()));
+            viewSource.Refresh();
+        }
         #region Animations
         private void GridView_Loaded(object sender, RoutedEventArgs e)
         {
@@ -108,22 +115,6 @@ namespace CryPixiv2.Controls
 
             // panel animations
             ElementCompositionPreview.GetElementVisual(panel).ImplicitAnimations = elementImplicitAnimation;
-
-            // item animations
-            /*
-            mylist.LayoutUpdated += (a, b) =>
-            {               
-                // try to optimize this
-                for (int i = 0; i < ItemSource.Collection.Count; i++)
-                {
-                    var itemContainer = (GridViewItem)mylist.ContainerFromItem(ItemSource.Collection[i]);
-                    if (itemContainer == null) break;
-                    
-                    var visual = ElementCompositionPreview.GetElementVisual(itemContainer);
-                    if (visual.ImplicitAnimations != null) continue;
-                    visual.ImplicitAnimations = elementImplicitAnimation;
-                }
-            };*/
         }
         private void ItemsWrapGrid_Loaded(object sender, RoutedEventArgs e) => InitializeAnimations((Panel)sender);
         private static CompositionAnimationGroup CreateOffsetAnimation(Compositor compositor)

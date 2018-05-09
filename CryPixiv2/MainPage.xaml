@@ -10,6 +10,6 @@
     DataContext="{StaticResource mainViewModel}">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <cnt:IllustrationGrid x:Name="mainl" ItemSource="{Binding Illusts}" />
+        <cnt:IllustrationGrid x:Name="mainl" ItemSource="{Binding Illusts}" SortByBookmarks="False"/>
     </Grid>
 </Page>
