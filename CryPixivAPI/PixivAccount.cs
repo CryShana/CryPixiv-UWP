@@ -166,7 +166,7 @@ namespace CryPixivAPI
             var response = await GetAsync<IllustrationResponse>(overrideRequestUri ?? "/v1/user/bookmarks/illust",
                overrideRequestUri != null ? null : new Dictionary<string, string>()
                {
-                   { "user_id", AuthInfo.User.Id },
+                   { "user_id", AuthInfo?.User?.Id },
                    { "restrict", isPublic ? "public" : "private" },
                    { "tag", tag }
                });

@@ -10,43 +10,43 @@
     DataContext="{StaticResource mainViewModel}">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Pivot>
+        <Pivot x:Name="mainPivot" SelectionChanged="mainPivot_SelectionChanged">
             <PivotItem Header="Search">
                 <Grid/>
             </PivotItem>
             <PivotItem Header="Ranking">
-                <Pivot>
+                <Pivot x:Name="rankingPivot" SelectionChanged="rankingPivot_SelectionChanged">
                     <PivotItem Header="Daily">
-                        <cnt:IllustrationGrid />
+                        <cnt:IllustrationGrid ItemSource="{Binding RankingDaily}" />
                     </PivotItem>
                     <PivotItem Header="Weekly">
-                        <cnt:IllustrationGrid />
+                        <cnt:IllustrationGrid ItemSource="{Binding RankingWeekly}" />
                     </PivotItem>
                     <PivotItem Header="Monthly">
-                        <cnt:IllustrationGrid />
+                        <cnt:IllustrationGrid ItemSource="{Binding RankingMonthly}" />
                     </PivotItem>
                     <PivotItem Header="Daily (Male)">
-                        <cnt:IllustrationGrid />
+                        <cnt:IllustrationGrid ItemSource="{Binding RankingDailyMale}" />
                     </PivotItem>
                     <PivotItem Header="Daily (Female)">
-                        <cnt:IllustrationGrid />
+                        <cnt:IllustrationGrid ItemSource="{Binding RankingDailyFemale}" />
                     </PivotItem>
                     <PivotItem Header="Daily R18">
-                        <cnt:IllustrationGrid />
+                        <cnt:IllustrationGrid ItemSource="{Binding RankingDaily18}" />
                     </PivotItem>
                     <PivotItem Header="Weekly R18">
-                        <cnt:IllustrationGrid />
+                        <cnt:IllustrationGrid ItemSource="{Binding RankingWeekly18}" />
                     </PivotItem>
                     <PivotItem Header="Daily R18 (Male)">
-                        <cnt:IllustrationGrid />
+                        <cnt:IllustrationGrid ItemSource="{Binding RankingDailyMale18}" />
                     </PivotItem>
                     <PivotItem Header="Daily R18 (Female)">
-                        <cnt:IllustrationGrid />
+                        <cnt:IllustrationGrid ItemSource="{Binding RankingDailyFemale18}"  />
                     </PivotItem>
                 </Pivot>
             </PivotItem>
             <PivotItem Header="Following">
-                <Pivot>
+                <Pivot x:Name="followingPivot" SelectionChanged="followingPivot_SelectionChanged">
                     <PivotItem Header="Public">
                         <cnt:IllustrationGrid ItemSource="{Binding FollowingPublic}" />
                     </PivotItem>
@@ -59,7 +59,7 @@
                 <cnt:IllustrationGrid ItemSource="{Binding Recommended}" />
             </PivotItem>
             <PivotItem Header="Bookmarks">
-                <Pivot>
+                <Pivot x:Name="bookmarksPivot" SelectionChanged="bookmarksPivot_SelectionChanged">
                     <PivotItem Header="Public">
                         <cnt:IllustrationGrid ItemSource="{Binding BookmarksPublic}" />
                     </PivotItem>

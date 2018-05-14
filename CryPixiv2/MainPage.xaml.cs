@@ -1,4 +1,5 @@
-﻿using CryPixiv2.ViewModels;
+﻿using CryPixiv2.Classes;
+using CryPixiv2.ViewModels;
 using CryPixiv2.Wrappers;
 using CryPixivAPI;
 using CryPixivAPI.Classes;
@@ -47,9 +48,9 @@ namespace CryPixiv2
         public async void DoStuff()
         {
             ViewModel.Account = new PixivAccount("fa2226814b46768e9f0ea3aafac61eb6");
-            await ViewModel.Account.Login("IuEsI8_15UjDFtSfaOcqJkPCK3oe12IzQDMwP4mz_qA");
+            await ViewModel.Account.Login("IuEsI8_15UjDFtSfaOcqJkPCK3oe12IzQDMwP4mz_qA");          
             
-            
+            /*
             var ill = await ViewModel.Account.GetBookmarks();
             addStuff(ill);
 
@@ -63,7 +64,116 @@ namespace CryPixiv2
                     addStuff(np);
                 }
                 catch { }
-            }    
+            }    */
         }
+
+        #region Download Switching
+        private void mainPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var pivot = (Pivot)sender;
+            var pivotItem = pivot.SelectedItem as PivotItem;
+            if (pivotItem == null) return;
+
+            var header = pivotItem.Header.ToString().ToLower();
+            switch (header)
+            {
+                case "search":
+                    // switch to Searching
+                    break;
+                case "ranking":
+                    rankingPivot_SelectionChanged(rankingPivot, null);
+                    break;
+                case "following":
+                    followingPivot_SelectionChanged(followingPivot, null);
+                    break;
+                case "recommended":
+                    DownloadManager.SwitchTo(ViewModel.Recommended, ViewModel.Account);
+                    break;
+                case "bookmarks":
+                    bookmarksPivot_SelectionChanged(bookmarksPivot, null);
+                    break;
+                default:
+                    throw new NotImplementedException("This should not happen. Please check pivot item headers!");
+            }
+        }
+        private void rankingPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var pivot = (Pivot)sender;
+            var pivotItem = pivot.SelectedItem as PivotItem;
+            if (pivotItem == null) return;
+
+            var header = pivotItem.Header.ToString().ToLower().Replace(" ", "");
+            switch (header)
+            {
+                case "daily":
+                    DownloadManager.SwitchTo(ViewModel.RankingDaily, ViewModel.Account);
+                    break;
+                case "weekly":
+                    DownloadManager.SwitchTo(ViewModel.RankingWeekly, ViewModel.Account);
+                    break;
+                case "monthly":
+                    DownloadManager.SwitchTo(ViewModel.RankingMonthly, ViewModel.Account);
+                    break;
+                case "daily(male)":
+                    DownloadManager.SwitchTo(ViewModel.RankingDailyMale, ViewModel.Account);
+                    break;
+                case "daily(female)":
+                    DownloadManager.SwitchTo(ViewModel.RankingDailyFemale, ViewModel.Account);
+                    break;
+                case "dailyr18":
+                    DownloadManager.SwitchTo(ViewModel.RankingDaily18, ViewModel.Account);
+                    break;
+                case "weeklyr18":
+                    DownloadManager.SwitchTo(ViewModel.RankingWeekly18, ViewModel.Account);
+                    break;
+                case "dailyr18male":
+                    DownloadManager.SwitchTo(ViewModel.RankingDailyMale18, ViewModel.Account);
+                    break;
+                case "dailyr18female":
+                    DownloadManager.SwitchTo(ViewModel.RankingDailyFemale18, ViewModel.Account);
+                    break;
+                default:
+                    throw new NotImplementedException("This should not happen. Please check pivot item headers!");
+            }
+        }
+        private void bookmarksPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var pivot = (Pivot)sender;
+            var pivotItem = pivot.SelectedItem as PivotItem;
+            if (pivotItem == null) return;
+
+            var header = pivotItem.Header.ToString().ToLower();
+            switch (header)
+            {
+                case "public":
+                    DownloadManager.SwitchTo(ViewModel.BookmarksPublic, ViewModel.Account);
+                    break;
+                case "private":
+                    DownloadManager.SwitchTo(ViewModel.BookmarksPrivate, ViewModel.Account);
+                    break;
+                default:
+                    throw new NotImplementedException("This should not happen. Please check pivot item headers!");
+            }
+        }
+        private void followingPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var pivot = (Pivot)sender;
+            var pivotItem = pivot.SelectedItem as PivotItem;
+            if (pivotItem == null) return;
+
+            var header = pivotItem.Header.ToString().ToLower();
+            switch (header)
+            {
+                case "public":
+                    DownloadManager.SwitchTo(ViewModel.FollowingPublic, ViewModel.Account);
+                    break;
+                case "private":
+                    DownloadManager.SwitchTo(ViewModel.FollowingPrivate, ViewModel.Account);
+                    break;
+                default:
+                    throw new NotImplementedException("This should not happen. Please check pivot item headers!");
+            }
+        } 
+        #endregion
     }
 }

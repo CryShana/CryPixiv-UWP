@@ -32,7 +32,7 @@ namespace CryPixiv2.Controls
     {
         #region Private Fields and PropertyChanged methods
         public static readonly DependencyProperty ItemSourceProperty =
-            DependencyProperty.Register("ItemSource", typeof(SlowObservableCollection<IllustrationWrapper>), 
+            DependencyProperty.Register("ItemSource", typeof(PixivObservableCollection), 
                 typeof(IllustrationGrid), new PropertyMetadata(null, new PropertyChangedCallback(ItemSourceChanged)));
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -45,10 +45,10 @@ namespace CryPixiv2.Controls
         private AdvancedCollectionView viewSource = null;
         #endregion
 
-        public SlowObservableCollection<IllustrationWrapper> ItemSource { get => (SlowObservableCollection<IllustrationWrapper>)GetValue(ItemSourceProperty); set => SetValue(ItemSourceProperty, value); }
-        public int DisplayedCount { get => dspCount; private set { dspCount = value; Changed(); } }
-        public int LoadedCount { get => ldCount; private set { ldCount = value; Changed(); } }
-        public int ToLoadCount { get => toldCount; private set { toldCount = value; Changed(); } }
+        public PixivObservableCollection ItemSource { get => (PixivObservableCollection)GetValue(ItemSourceProperty); set => SetValue(ItemSourceProperty, value); }
+        public int DisplayedCount => ItemSource.Collection.Count;
+        public int LoadedCount => DisplayedCount + ToLoadCount;
+        public int ToLoadCount => ItemSource.EnqueuedItems.Count;
         public string Status { get => status; private set { status = value; Changed(); } }
         public bool SortByBookmarks { get => sortbkm; set { sortbkm = value; Changed(); SortByBookmarkCount(value); } }
 
@@ -65,13 +65,13 @@ namespace CryPixiv2.Controls
            
             src.ItemAdded += (a, b) =>
             {
-                o.ToLoadCount = o.ItemSource.EnqueuedItems.Count;
-                o.DisplayedCount = o.ItemSource.Collection.Count;
+                o.Changed("ToLoadCount");
+                o.Changed("DisplayedCount");
             };
             src.ItemsEnqueued += (a, b) =>
             {
-                o.ToLoadCount = o.ItemSource.EnqueuedItems.Count;
-                o.LoadedCount = o.DisplayedCount + o.ToLoadCount;
+                o.Changed("ToLoadCount");
+                o.Changed("LoadedCount");
             };
         }
 
@@ -81,7 +81,6 @@ namespace CryPixiv2.Controls
             if (sort) viewSource.SortDescriptions.Add(new SortDescription(SortDirection.Descending, new BookmarkComparer()));
             viewSource.Refresh();
         }
-        #region Animations
         private void GridView_Loaded(object sender, RoutedEventArgs e)
         {
             mylist.ItemClick += (a, b) =>
@@ -100,6 +99,7 @@ namespace CryPixiv2.Controls
             mylist.IsItemClickEnabled = true;
         }
 
+        #region Animations
         private void InitializeAnimations(Panel panel)
         {
             var compositor = ElementCompositionPreview.GetElementVisual(mylist).Compositor;
@@ -109,7 +109,6 @@ namespace CryPixiv2.Controls
             // panel animations
             ElementCompositionPreview.GetElementVisual(panel).ImplicitAnimations = elementImplicitAnimation;
         }
-
         private void DataTemplate_Loaded(object sender, RoutedEventArgs e)
         {
             TimeSpan duration = TimeSpan.FromMilliseconds(900);
@@ -159,7 +158,6 @@ namespace CryPixiv2.Controls
             storyboard.Begin();
             visual.StartAnimationGroup(group);                               
         }
-
         private void ItemsWrapGrid_Loaded(object sender, RoutedEventArgs e) => InitializeAnimations((Panel)sender);
         private static CompositionAnimationGroup CreateOffsetAnimation(Compositor compositor)
         {

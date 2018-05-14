@@ -95,7 +95,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Classes\SlowObservableCollection.cs" />
+    <Compile Include="Classes\DownloadManager.cs" />
+    <Compile Include="Classes\PixivObservableCollection.cs" />
     <Compile Include="Controls\IllustrationGrid.xaml.cs">
       <DependentUpon>IllustrationGrid.xaml</DependentUpon>
     </Compile>
