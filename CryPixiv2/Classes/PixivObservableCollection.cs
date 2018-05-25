@@ -20,6 +20,7 @@ namespace CryPixiv2.Classes
         private TimeSpan interval = TimeSpan.FromMilliseconds(50);
         private Func<PixivAccount, Task<IllustrationResponse>> getItems;
         private IllustrationResponse lastResponse;
+        private HashSet<int> addedIds = new HashSet<int>();
         #endregion
 
         #region Public Properties
@@ -46,8 +47,13 @@ namespace CryPixiv2.Classes
         {
             if (EnqueuedItems.IsEmpty) return;
             if (EnqueuedItems.TryDequeue(out IllustrationWrapper item) == false) return;
-            
+
+            // check for duplicates
+            if (addedIds.Contains(item.WrappedIllustration.Id)) return;
+
+            // add to collection and register illustration ID as added to avoid adding duplicates
             Collection.Add(item);
+            addedIds.Add(item.WrappedIllustration.Id);
 
             ItemAdded?.Invoke(this, item);
         }

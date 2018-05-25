@@ -36,12 +36,14 @@ namespace CryPixiv2.Classes
             {
                 try
                 {
+                    bool started = false;
                     while (true)
                     {
-                        IllustrationResponse r = collection.Collection.Count == 0 ?
+                        IllustrationResponse r = started == false ?
                             await collection.GetItems(acc) :
                             await collection.GetNextItems();
 
+                        started = true;
                         foreach (var l in r.Illustrations)
                         {
                             src.Token.ThrowIfCancellationRequested();

@@ -57,7 +57,7 @@ namespace CryPixiv2.Wrappers
             }
         }
 
-        public bool IsBookmarked => true; // { get => WrappedIllustration.IsBookmarked; set { WrappedIllustration.IsBookmarked = value; Changed(); } }
+        public bool IsBookmarked { get => WrappedIllustration.IsBookmarked; set { WrappedIllustration.IsBookmarked = value; Changed(); } }
 
         public IllustrationWrapper(Illustration illustration, PixivAccount account)
         {
