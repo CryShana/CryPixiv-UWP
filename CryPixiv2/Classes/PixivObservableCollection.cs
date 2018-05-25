@@ -27,7 +27,6 @@ namespace CryPixiv2.Classes
         public ObservableCollection<IllustrationWrapper> Collection { get; }
         public ConcurrentQueue<IllustrationWrapper> EnqueuedItems { get; }
         public event EventHandler<IllustrationWrapper> ItemAdded; 
-        public event EventHandler<IllustrationWrapper[]> ItemsEnqueued;
         #endregion
 
         public PixivObservableCollection(
@@ -56,8 +55,6 @@ namespace CryPixiv2.Classes
         public void Add(params IllustrationWrapper[] items)
         {
             foreach (var i in items) EnqueuedItems.Enqueue(i);
-
-            ItemsEnqueued?.Invoke(this, items);
         }
 
         public async Task<IllustrationResponse> GetItems(PixivAccount account)

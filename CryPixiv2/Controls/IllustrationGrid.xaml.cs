@@ -66,16 +66,7 @@ namespace CryPixiv2.Controls
             {
                 o.Changed("ToLoadCount");
                 o.Changed("DisplayedCount");
-            };
-            src.ItemsEnqueued += (a, b) =>
-            {
-                // this works for controls created statically and NOT for controls created dynamically.
-                try
-                {
-                    o.Changed("ToLoadCount");
-                    o.Changed("LoadedCount");
-                }
-                catch { }
+                o.Changed("LoadedCount");
             };
         }
 
