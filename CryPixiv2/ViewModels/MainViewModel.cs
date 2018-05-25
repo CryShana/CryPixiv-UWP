@@ -33,6 +33,8 @@ namespace CryPixiv2.ViewModels
             rankingWeekly18 =       new PixivObservableCollection(a => a.GetRankedIllustrations(PixivParameters.RankingMode.Weekly_R18)),
             rankingDailyMale18 =    new PixivObservableCollection(a => a.GetRankedIllustrations(PixivParameters.RankingMode.Daily_Male_R18)),
             rankingDailyFemale18 =  new PixivObservableCollection(a => a.GetRankedIllustrations(PixivParameters.RankingMode.Daily_Female_R18));
+
+        private ObservableCollection<SearchSession> searches = new ObservableCollection<SearchSession>();
         #endregion
 
         #region Public Properties
@@ -50,6 +52,8 @@ namespace CryPixiv2.ViewModels
         public PixivObservableCollection RankingWeekly18        { get => rankingWeekly18;       set { rankingWeekly18 = value; Changed(); } }
         public PixivObservableCollection RankingDailyMale18     { get => rankingDailyMale18;    set { rankingDailyMale18 = value; Changed(); } }
         public PixivObservableCollection RankingDailyFemale18   { get => rankingDailyFemale18;  set { rankingDailyFemale18 = value; Changed(); } }
+
+        public ObservableCollection<SearchSession> Searches { get => searches; set { searches = value; Changed(); } }
         #endregion
     }
 }

@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -48,23 +49,7 @@ namespace CryPixiv2
         public async void DoStuff()
         {
             ViewModel.Account = new PixivAccount("fa2226814b46768e9f0ea3aafac61eb6");
-            await ViewModel.Account.Login("IuEsI8_15UjDFtSfaOcqJkPCK3oe12IzQDMwP4mz_qA");          
-            
-            /*
-            var ill = await ViewModel.Account.GetBookmarks();
-            addStuff(ill);
-
-            async void addStuff(IllustrationResponse r)
-            {
-                foreach (var l in r.Illustrations) ViewModel.BookmarksPublic.Add(new IllustrationWrapper(l, ViewModel.Account));
-
-                try
-                {
-                    var np = await r.NextPage();
-                    addStuff(np);
-                }
-                catch { }
-            }    */
+            await ViewModel.Account.Login("IuEsI8_15UjDFtSfaOcqJkPCK3oe12IzQDMwP4mz_qA");              
         }
 
         #region Download Switching
@@ -78,7 +63,7 @@ namespace CryPixiv2
             switch (header)
             {
                 case "search":
-                    // switch to Searching
+                    searchPivot_SelectionChanged(searchPivot, null);
                     break;
                 case "ranking":
                     rankingPivot_SelectionChanged(rankingPivot, null);
@@ -126,10 +111,10 @@ namespace CryPixiv2
                 case "weeklyr18":
                     DownloadManager.SwitchTo(ViewModel.RankingWeekly18, ViewModel.Account);
                     break;
-                case "dailyr18male":
+                case "dailyr18(male)":
                     DownloadManager.SwitchTo(ViewModel.RankingDailyMale18, ViewModel.Account);
                     break;
-                case "dailyr18female":
+                case "dailyr18(female)":
                     DownloadManager.SwitchTo(ViewModel.RankingDailyFemale18, ViewModel.Account);
                     break;
                 default:
@@ -173,7 +158,41 @@ namespace CryPixiv2
                 default:
                     throw new NotImplementedException("This should not happen. Please check pivot item headers!");
             }
-        } 
+        }
+        private void searchPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var pivot = (Pivot)sender;
+            var session = pivot.SelectedItem as SearchSession;
+            if (session == null) return;
+
+            DownloadManager.SwitchTo(session.Collection, ViewModel.Account);
+        }
         #endregion
+
+        private async void _searchQuery_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key != Windows.System.VirtualKey.Enter) return;
+
+            var query = _searchQuery.Text;
+            query = Regex.Replace(query, @"\s{2,}", " "); // remove unnecessary extra spaces
+
+            if (query.Length == 0) return;
+
+            var sq = new SearchQuery() { Query = query };
+            if (ViewModel.Searches.Count(x => x.Query == sq) > 0)
+            {
+                new MessageDialog("Specified query already exists! Check existing tabs.", "Query exists").ShowAsync();
+                return;
+            }
+
+            // add new tab
+            var q = new SearchSession(sq);
+            ViewModel.Searches.Add(q);
+            _searchQuery.Text = "";
+
+            // select new tab
+            await Task.Delay(200);
+            searchPivot.SelectedItem = q;
+        }
     }
 }

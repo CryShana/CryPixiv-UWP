@@ -47,7 +47,7 @@ namespace CryPixiv2.Classes
         {
             if (EnqueuedItems.IsEmpty) return;
             if (EnqueuedItems.TryDequeue(out IllustrationWrapper item) == false) return;
-
+            
             Collection.Add(item);
 
             ItemAdded?.Invoke(this, item);

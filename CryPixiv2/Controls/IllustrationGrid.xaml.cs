@@ -83,18 +83,16 @@ namespace CryPixiv2.Controls
         }
         private void GridView_Loaded(object sender, RoutedEventArgs e)
         {
+            
             mylist.ItemClick += (a, b) =>
-            {
-                var item = b.ClickedItem as IllustrationWrapper;
-                var dialog = new MessageDialog(item.WrappedIllustration.Id.ToString(), "Selected Item");
+            {               
+                var item = b.ClickedItem as IllustrationWrapper; 
 
                 var package = new DataPackage();
-                package.SetText("https://www.pixiv.net/member_illust.php?mode=medium&illust_id=" + item.WrappedIllustration.Id.ToString());
+                package.SetText(item.IllustrationLink);
                 package.RequestedOperation = DataPackageOperation.Copy;
                 Clipboard.SetContent(package);
                 Clipboard.Flush();
-
-                dialog.ShowAsync();
             };
             mylist.IsItemClickEnabled = true;
         }

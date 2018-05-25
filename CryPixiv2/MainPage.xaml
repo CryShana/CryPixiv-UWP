@@ -12,7 +12,25 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Pivot x:Name="mainPivot" SelectionChanged="mainPivot_SelectionChanged">
             <PivotItem Header="Search">
-                <Grid/>
+                <Grid>
+                    <TextBox x:Name="_searchQuery" HorizontalAlignment="Left" VerticalAlignment="Top" PlaceholderText="Search query" 
+                             Width="387" Height="22" Margin="10,10,0,0" KeyDown="_searchQuery_KeyDown" MaxLength="200"/>
+                    <Pivot x:Name="searchPivot" ItemsSource="{Binding Searches}" Margin="10,53,0,0"
+                           SelectionChanged="searchPivot_SelectionChanged">
+                        <Pivot.HeaderTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="{Binding Query.Query}" />
+                                </Grid>
+                            </DataTemplate>
+                        </Pivot.HeaderTemplate>
+                        <Pivot.ItemTemplate>
+                            <DataTemplate>
+                                <cnt:IllustrationGrid ItemSource="{Binding Collection}" />
+                            </DataTemplate>
+                        </Pivot.ItemTemplate>
+                    </Pivot>
+                </Grid>
             </PivotItem>
             <PivotItem Header="Ranking">
                 <Pivot x:Name="rankingPivot" SelectionChanged="rankingPivot_SelectionChanged">

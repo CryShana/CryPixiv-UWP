@@ -16,6 +16,9 @@ namespace CryPixiv2.Wrappers
         public PixivAccount AssociatedAccount { get; set; }
         public Illustration WrappedIllustration { get; set; }
 
+        public string IllustrationLink => WrappedIllustration == null ? "" : 
+            $"https://www.pixiv.net/member_illust.php?mode=medium&illust_id={WrappedIllustration.Id.ToString()}";
+
         BitmapImage thumbnailImage = null;
         public bool ThumbnailImageLoading => thumbnailImage == null;
         public BitmapImage ThumbnailImage

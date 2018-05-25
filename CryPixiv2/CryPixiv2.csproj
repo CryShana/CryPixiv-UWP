@@ -97,6 +97,7 @@
     </Compile>
     <Compile Include="Classes\DownloadManager.cs" />
     <Compile Include="Classes\PixivObservableCollection.cs" />
+    <Compile Include="Classes\SearchQuery.cs" />
     <Compile Include="Controls\IllustrationGrid.xaml.cs">
       <DependentUpon>IllustrationGrid.xaml</DependentUpon>
     </Compile>
