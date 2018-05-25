@@ -169,6 +169,45 @@ namespace CryPixiv2.Controls
             return animationGroup;
         }
         #endregion
+
+        private async void btnImage_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            e.Handled = true;
+
+            var work = ((Image)sender).DataContext as IllustrationWrapper;
+            if (work.IsBookmarked)
+            {
+                // unbookmark it
+                work.IsBookmarked = false;
+
+                try
+                {
+                    // public bookmark
+                    await work.AssociatedAccount.RemoveBookmark(work.WrappedIllustration.Id);
+                }
+                catch
+                {
+                    // fail - restore previous value
+                    work.IsBookmarked = true;
+                }
+            }
+            else
+            {
+                // bookmark it
+                work.IsBookmarked = true;
+
+                try
+                {
+                    // public bookmark
+                    await work.AssociatedAccount.AddBookmark(work.WrappedIllustration.Id, true);
+                }
+                catch
+                {
+                    // fail - restore previous value
+                    work.IsBookmarked = false;
+                }
+            }
+        }
     }
 
     public class BookmarkComparer : IComparer

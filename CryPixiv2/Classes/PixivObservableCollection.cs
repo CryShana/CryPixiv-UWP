@@ -34,6 +34,7 @@ namespace CryPixiv2.Classes
             Func<PixivAccount, Task<IllustrationResponse>> getItems = null)
         {
             this.getItems = getItems;
+
             Collection = new ObservableCollection<IllustrationWrapper>();
             EnqueuedItems = new ConcurrentQueue<IllustrationWrapper>();
 
