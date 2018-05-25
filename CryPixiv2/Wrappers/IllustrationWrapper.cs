@@ -40,7 +40,6 @@ namespace CryPixiv2.Wrappers
                 Changed("ThumbnailImageLoading");
             }
         }
-
         async Task GetThumbnailImage()
         {
             var data = await AssociatedAccount.GetData(WrappedIllustration.ThumbnailImagePath);
@@ -57,6 +56,8 @@ namespace CryPixiv2.Wrappers
                 ThumbnailImage = image;
             }
         }
+
+        public bool IsBookmarked => true; // { get => WrappedIllustration.IsBookmarked; set { WrappedIllustration.IsBookmarked = value; Changed(); } }
 
         public IllustrationWrapper(Illustration illustration, PixivAccount account)
         {

@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:converters="using:CryPixiv2.Converters"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -26,8 +27,27 @@
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <Grid Width="300" Height="300" Background="Gainsboro" Loaded="DataTemplate_Loaded" RenderTransformOrigin="0.5,0.5">
-                        <ProgressRing IsActive="{Binding ThumbnailImageLoading}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" />
-                        <Image Source="{Binding ThumbnailImage}" />
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState>
+                                    <VisualState.StateTriggers>
+                                        <StateTrigger IsActive="{Binding IsBookmarked}" />
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Target="txtBlock.Text" Value="BUUKMAKER"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        
+                        <ProgressRing IsActive="{Binding ThumbnailImageLoading}" HorizontalAlignment="Center" Canvas.ZIndex="3" 
+                                      VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" />
+
+                        <TextBlock FontSize="18" Text="Hello World" x:Name="txtBlock" Canvas.ZIndex="6" />
+                        <Image x:Name="btnImage" Canvas.ZIndex="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="40" Width="40" Margin="0,0,8,8"
+                               Source="ms-appx:///Assets/Images/heart-empty.png"/>
+
+                        <Image Source="{Binding ThumbnailImage}" Canvas.ZIndex="4"/>
                     </Grid>
                 </DataTemplate>
             </GridView.ItemTemplate>

@@ -101,6 +101,7 @@
     <Compile Include="Controls\IllustrationGrid.xaml.cs">
       <DependentUpon>IllustrationGrid.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\InvertBoolConverter.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -116,6 +117,9 @@
     <None Include="CryPixiv2_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Images\heart-empty.png" />
+    <Content Include="Assets\Images\heart-purple.png" />
+    <Content Include="Assets\Images\heart-red.png" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />
     <Content Include="Assets\LargeTile.scale-150.png" />
@@ -195,6 +199,7 @@
       <Name>CryPixivAPI</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
