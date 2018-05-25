@@ -26,7 +26,12 @@
                         </Pivot.HeaderTemplate>
                         <Pivot.ItemTemplate>
                             <DataTemplate>
-                                <cnt:IllustrationGrid ItemSource="{Binding Collection}" />
+                                <Grid>
+                                    <CheckBox HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10, 10, 0, 0" Content="Sort by Score" 
+                                              IsChecked="{Binding ElementName=collection, Path=SortByScore, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <cnt:IllustrationGrid  Name="collection" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0, 45, 0, 0"
+                                                           ItemSource="{Binding Collection}" />
+                                </Grid>
                             </DataTemplate>
                         </Pivot.ItemTemplate>
                     </Pivot>

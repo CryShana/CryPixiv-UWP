@@ -177,15 +177,14 @@ namespace CryPixiv2
             query = Regex.Replace(query, @"\s{2,}", " "); // remove unnecessary extra spaces
 
             if (query.Length == 0) return;
-
-            var sq = new SearchQuery() { Query = query };
-            if (ViewModel.Searches.Count(x => x.Query == sq) > 0)
+            if (ViewModel.Searches.Count(x => x.Query.Query == query) > 0)
             {
                 new MessageDialog("Specified query already exists! Check existing tabs.", "Query exists").ShowAsync();
                 return;
             }
 
             // add new tab
+            var sq = new SearchQuery() { Query = query };
             var q = new SearchSession(sq);
             ViewModel.Searches.Add(q);
             _searchQuery.Text = "";

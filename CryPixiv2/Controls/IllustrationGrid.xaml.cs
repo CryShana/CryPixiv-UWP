@@ -39,8 +39,7 @@ namespace CryPixiv2.Controls
         private void Changed([CallerMemberName]string name = "") =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-        private int dspCount = 0, ldCount = 0, toldCount = 0;
-        bool sortbkm = false;
+        bool? sortbkm = false;
         private string status = "Idle.";
         private AdvancedCollectionView viewSource = null;
         #endregion
@@ -50,7 +49,7 @@ namespace CryPixiv2.Controls
         public int LoadedCount => DisplayedCount + ToLoadCount;
         public int ToLoadCount => ItemSource.EnqueuedItems.Count;
         public string Status { get => status; private set { status = value; Changed(); } }
-        public bool SortByBookmarks { get => sortbkm; set { sortbkm = value; Changed(); SortByBookmarkCount(value); } }
+        public bool? SortByScore { get => sortbkm; set { sortbkm = value ?? false; Changed(); SortByBookmarkCount(value == true); } }
 
         public IllustrationGrid()
         {
@@ -70,8 +69,13 @@ namespace CryPixiv2.Controls
             };
             src.ItemsEnqueued += (a, b) =>
             {
-                o.Changed("ToLoadCount");
-                o.Changed("LoadedCount");
+                // this works for controls created statically and NOT for controls created dynamically.
+                try
+                {
+                    o.Changed("ToLoadCount");
+                    o.Changed("LoadedCount");
+                }
+                catch { }
             };
         }
 

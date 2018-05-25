@@ -2,6 +2,7 @@
 using CryPixivAPI.Classes;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,8 @@ namespace CryPixiv2.Wrappers
 
         BitmapImage thumbnailImage = null;
         public bool ThumbnailImageLoading => thumbnailImage == null;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public BitmapImage ThumbnailImage
         {
             get

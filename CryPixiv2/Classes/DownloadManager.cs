@@ -52,6 +52,10 @@ namespace CryPixiv2.Classes
                 {
 
                 }
+                catch (System.Runtime.InteropServices.COMException)
+                {
+
+                }
                 catch
                 {
 
