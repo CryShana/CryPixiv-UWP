@@ -2,7 +2,9 @@
 using CryPixivAPI;
 using CryPixivAPI.Classes;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -14,6 +16,7 @@ namespace CryPixiv2.Classes
     public static class DownloadManager
     {
         static Queue<CancellationTokenSource> tokens = new Queue<CancellationTokenSource>();
+        static ConcurrentDictionary<int, IllustrationWrapper> addedIllustrations = new ConcurrentDictionary<int, IllustrationWrapper>();
 
         public static void Stop()
         {
@@ -47,7 +50,19 @@ namespace CryPixiv2.Classes
                         foreach (var l in r.Illustrations)
                         {
                             src.Token.ThrowIfCancellationRequested();
-                            var wr = new IllustrationWrapper(l, acc);
+
+                            IllustrationWrapper wr = null;
+                            if (addedIllustrations.ContainsKey(l.Id))
+                            {
+                                // take existing Illustration
+                                wr = addedIllustrations[l.Id];
+                            }
+                            else
+                            {
+                                wr = new IllustrationWrapper(l, acc);
+                                addedIllustrations.TryAdd(l.Id, wr);
+                            }
+
                             collection.Add(wr);
                         }
                     }
@@ -58,15 +73,15 @@ namespace CryPixiv2.Classes
                 }
                 catch (EndReachedException)
                 {
-
+                    Debug.WriteLine("End Reached!");
                 }
                 catch (COMException)
                 {
-
+                    Debug.WriteLine("COM Exception!");
                 }
-                catch
+                catch (Exception ex)
                 {
-
+                    Debug.WriteLine("Unknown exception! " + ex.Message);
                 }                
             }, src.Token);
         }
