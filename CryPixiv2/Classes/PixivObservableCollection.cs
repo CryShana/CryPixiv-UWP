@@ -21,10 +21,12 @@ namespace CryPixiv2.Classes
         private Func<PixivAccount, Task<IllustrationResponse>> getItems;
         private IllustrationResponse lastResponse;
         private HashSet<int> addedIds = new HashSet<int>();
+        private const int SpeedUpLimit = 100;
         #endregion
 
         #region Public Properties
         public TimeSpan Interval { get => interval; set { interval = value; AddTimer.Interval = value; } }
+        public TimeSpan FastInterval => TimeSpan.FromMilliseconds(5);
         public ObservableCollection<IllustrationWrapper> Collection { get; }
         public ConcurrentQueue<IllustrationWrapper> EnqueuedItems { get; }
         public event EventHandler<IllustrationWrapper> ItemAdded; 
@@ -49,6 +51,10 @@ namespace CryPixiv2.Classes
             if (EnqueuedItems.IsEmpty) return;
             if (EnqueuedItems.TryDequeue(out IllustrationWrapper item) == false) return;
 
+            // speed up adder when threshold is exceeded
+            if (EnqueuedItems.Count > SpeedUpLimit) AddTimer.Interval = FastInterval;          
+            else AddTimer.Interval = Interval;
+            
             // check for duplicates
             if (addedIds.Contains(item.WrappedIllustration.Id)) return;
 

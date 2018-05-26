@@ -45,10 +45,9 @@ namespace CryPixiv2.Controls
         #endregion
 
         public PixivObservableCollection ItemSource { get => (PixivObservableCollection)GetValue(ItemSourceProperty); set => SetValue(ItemSourceProperty, value); }
-        public int DisplayedCount => ItemSource.Collection.Count;
+        public int DisplayedCount => ItemSource?.Collection?.Count ?? 0;
         public int LoadedCount => DisplayedCount + ToLoadCount;
-        public int ToLoadCount => ItemSource.EnqueuedItems.Count;
-        public string Status { get => status; private set { status = value; Changed(); } }
+        public int ToLoadCount => ItemSource?.EnqueuedItems?.Count ?? 0;
         public bool? SortByScore { get => sortbkm; set { sortbkm = value ?? false; Changed(); SortByBookmarkCount(value == true); } }
 
         public IllustrationGrid()

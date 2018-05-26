@@ -15,7 +15,7 @@
                 <Grid>
                     <TextBox x:Name="_searchQuery" HorizontalAlignment="Left" VerticalAlignment="Top" PlaceholderText="Search query" 
                              Width="387" Height="22" Margin="10,10,0,0" KeyDown="_searchQuery_KeyDown" MaxLength="200"/>
-                    <Pivot x:Name="searchPivot" ItemsSource="{Binding Searches}" Margin="10,53,0,0"
+                    <Pivot x:Name="searchPivot" ItemsSource="{Binding Searches}" Margin="10,50,0,0"
                            SelectionChanged="searchPivot_SelectionChanged">
                         <Pivot.HeaderTemplate>
                             <DataTemplate>
@@ -27,9 +27,9 @@
                         <Pivot.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
-                                    <CheckBox HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10, 10, 0, 0" Content="Sort by Score" 
+                                    <CheckBox HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10, 5, 0, 0" Content="Sort by Score" 
                                               IsChecked="{Binding ElementName=collection, Path=SortByScore, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <cnt:IllustrationGrid  Name="collection" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0, 45, 0, 0"
+                                    <cnt:IllustrationGrid  Name="collection" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0, 45, 0, 0"
                                                            ItemSource="{Binding Collection}" />
                                 </Grid>
                             </DataTemplate>

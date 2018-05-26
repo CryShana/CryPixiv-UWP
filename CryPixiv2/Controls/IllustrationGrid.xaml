@@ -14,12 +14,12 @@
     x:Name="myelement">
 
     <UserControl.Resources>
-        <controls:AdvancedCollectionView x:Key="viewSource" Source="{x:Bind ItemSource.Collection}" />
+        <controls:AdvancedCollectionView x:Key="viewSource" Source="{x:Bind ItemSource.Collection, Mode=OneWay}" />
         <converters:InvertBoolConverter  x:Key="invConverter"/>
     </UserControl.Resources>
     <Grid>
         <GridView x:Name="mylist" Loaded="GridView_Loaded" animations:ReorderGridAnimation.Duration="600"
-                  ItemsSource="{Binding Source={StaticResource viewSource}}">
+                  ItemsSource="{Binding Source={StaticResource viewSource}}" Margin="0,0,0,20">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsWrapGrid x:Name="stack" Orientation="Horizontal" HorizontalAlignment="Center" Loaded="ItemsWrapGrid_Loaded"/>
@@ -51,9 +51,18 @@
                             <Image Source="{Binding ThumbnailImage}" Canvas.ZIndex="4"/>
                         </Grid>
                     </UserControl>
-                    
+
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+            <TextBlock Text="Displayed:" VerticalAlignment="Bottom" Margin="0,0,8,0" Foreground="#FF616161"/>
+            <TextBlock Text="{x:Bind DisplayedCount, Mode=OneWay}" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
+            <TextBlock Text="Queued:" VerticalAlignment="Bottom" Margin="0,0,8,0" Foreground="#FF616161"/>
+            <TextBlock Text="{x:Bind ToLoadCount, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
+            <TextBlock Text="Found:"  VerticalAlignment="Bottom" Margin="0,0,8,0" Foreground="#FF616161"/>
+            <TextBlock Text="{x:Bind LoadedCount, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
+        </StackPanel>
+        
     </Grid>
 </UserControl>
