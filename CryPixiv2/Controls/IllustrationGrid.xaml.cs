@@ -40,7 +40,6 @@ namespace CryPixiv2.Controls
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
         bool? sortbkm = false;
-        private string status = "Idle.";
         private AdvancedCollectionView viewSource = null;
         #endregion
 
@@ -49,6 +48,7 @@ namespace CryPixiv2.Controls
         public int LoadedCount => DisplayedCount + ToLoadCount;
         public int ToLoadCount => ItemSource?.EnqueuedItems?.Count ?? 0;
         public bool? SortByScore { get => sortbkm; set { sortbkm = value ?? false; Changed(); SortByBookmarkCount(value == true); } }
+        public static event EventHandler<Tuple<IllustrationWrapper, bool>> IllustrationBookmarkChange;
 
         public IllustrationGrid()
         {
@@ -183,6 +183,7 @@ namespace CryPixiv2.Controls
                 {
                     // public bookmark
                     await work.AssociatedAccount.RemoveBookmark(work.WrappedIllustration.Id);
+                    IllustrationBookmarkChange?.Invoke(this, new Tuple<IllustrationWrapper, bool>(work, true));
                 }
                 catch
                 {
@@ -199,6 +200,7 @@ namespace CryPixiv2.Controls
                 {
                     // public bookmark
                     await work.AssociatedAccount.AddBookmark(work.WrappedIllustration.Id, true);
+                    IllustrationBookmarkChange?.Invoke(this, new Tuple<IllustrationWrapper, bool>(work, true));
                 }
                 catch
                 {

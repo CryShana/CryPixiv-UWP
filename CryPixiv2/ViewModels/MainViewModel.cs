@@ -54,5 +54,10 @@ namespace CryPixiv2.ViewModels
         public PixivObservableCollection RankingDailyFemale18   { get => rankingDailyFemale18;  set { rankingDailyFemale18 = value; Changed(); } }
         public ObservableCollection<SearchSession> Searches     { get => searches;              set { searches = value; Changed(); } }
         #endregion
+
+        public MainViewModel()
+        {
+
+        }
     }
 }

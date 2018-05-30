@@ -1,4 +1,5 @@
 ﻿using CryPixiv2.Classes;
+using CryPixiv2.Controls;
 using CryPixiv2.ViewModels;
 using CryPixiv2.Wrappers;
 using CryPixivAPI;
@@ -41,10 +42,19 @@ namespace CryPixiv2
 
             CurrentInstance = this;
             ViewModel = (MainViewModel)Application.Current.Resources["mainViewModel"];
+            IllustrationGrid.IllustrationBookmarkChange += IllustrationGrid_IllustrationBookmarkChange;
            
             DoStuff();
         }
 
+        void IllustrationGrid_IllustrationBookmarkChange(object sender, Tuple<IllustrationWrapper, bool> e)
+        {
+            if (e.Item1.IsBookmarked)
+            {
+                if (e.Item2) ViewModel.BookmarksPublic.Insert(e.Item1);
+                else ViewModel.BookmarksPrivate.Insert(e.Item1);
+            }
+        }
 
         public async void DoStuff()
         {
@@ -192,6 +202,11 @@ namespace CryPixiv2
             // select new tab
             await Task.Delay(200);
             searchPivot.SelectedItem = q;
+        }
+
+        private void collection_IllustrationBookmarkChange(object sender, IllustrationWrapper e)
+        {
+
         }
     }
 }

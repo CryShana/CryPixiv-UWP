@@ -29,6 +29,7 @@ namespace CryPixiv2.Classes
         public TimeSpan FastInterval => TimeSpan.FromMilliseconds(5);
         public ObservableCollection<IllustrationWrapper> Collection { get; }
         public ConcurrentQueue<IllustrationWrapper> EnqueuedItems { get; }
+        public ConcurrentQueue<IllustrationWrapper> EnqueuedItemsForDirectInsertion { get; }
         public event EventHandler<IllustrationWrapper> ItemAdded; 
         #endregion
 
@@ -39,6 +40,7 @@ namespace CryPixiv2.Classes
 
             Collection = new ObservableCollection<IllustrationWrapper>();
             EnqueuedItems = new ConcurrentQueue<IllustrationWrapper>();
+            EnqueuedItemsForDirectInsertion = new ConcurrentQueue<IllustrationWrapper>();
 
             AddTimer = new DispatcherTimer();
             AddTimer.Interval = Interval;
@@ -48,7 +50,18 @@ namespace CryPixiv2.Classes
 
         private void AddTimer_Tick(object sender, object e)
         {
-            if (EnqueuedItems.IsEmpty) return;
+            if (EnqueuedItemsForDirectInsertion.IsEmpty == false)
+            {
+                if (EnqueuedItemsForDirectInsertion.TryDequeue(out IllustrationWrapper it) == false) return;
+                Collection.Add(it);
+                Collection.Move(Collection.IndexOf(it), 0);
+
+                addedIds.Add(it.WrappedIllustration.Id);
+                ItemAdded?.Invoke(this, it);
+                return;
+            }
+
+            if (EnqueuedItems.IsEmpty) return;           
             if (EnqueuedItems.TryDequeue(out IllustrationWrapper item) == false) return;
 
             // speed up adder when threshold is exceeded
@@ -63,6 +76,11 @@ namespace CryPixiv2.Classes
             addedIds.Add(item.WrappedIllustration.Id);
 
             ItemAdded?.Invoke(this, item);
+        }
+
+        public void Insert(params IllustrationWrapper[] items)
+        {
+            foreach (var i in items) EnqueuedItemsForDirectInsertion.Enqueue(i);
         }
 
         public void Add(params IllustrationWrapper[] items)
