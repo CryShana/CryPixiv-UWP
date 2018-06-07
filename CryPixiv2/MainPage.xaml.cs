@@ -28,7 +28,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-
 namespace CryPixiv2
 {
     public sealed partial class MainPage : Page
@@ -44,7 +43,7 @@ namespace CryPixiv2
             ViewModel = (MainViewModel)Application.Current.Resources["mainViewModel"];
             IllustrationGrid.IllustrationBookmarkChange += IllustrationGrid_IllustrationBookmarkChange;
            
-            DoStuff();
+            AttemptToLogin();
         }
 
         void IllustrationGrid_IllustrationBookmarkChange(object sender, Tuple<IllustrationWrapper, bool> e)
@@ -56,10 +55,13 @@ namespace CryPixiv2
             }
         }
 
-        public async void DoStuff()
+        public async void AttemptToLogin()
         {
+            // TODO: Load device token
+            // TODO: Load refresh token
+            // TODO: If both present - attempt login directly - if one of them is missing - REQUIRE LOGIN WITH USERNAME and PASSWORD
             ViewModel.Account = new PixivAccount("fa2226814b46768e9f0ea3aafac61eb6");
-            await ViewModel.Account.Login("IuEsI8_15UjDFtSfaOcqJkPCK3oe12IzQDMwP4mz_qA");              
+            await ViewModel.Login("IuEsI8_15UjDFtSfaOcqJkPCK3oe12IzQDMwP4mz_qA");
         }
 
         #region Download Switching
@@ -201,7 +203,7 @@ namespace CryPixiv2
 
             // select new tab
             await Task.Delay(200);
-            searchPivot.SelectedItem = q;
+            searchPivot.SelectedItem = q; 
         }
 
         private void collection_IllustrationBookmarkChange(object sender, IllustrationWrapper e)

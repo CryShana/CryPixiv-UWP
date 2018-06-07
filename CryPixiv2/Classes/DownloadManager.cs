@@ -79,6 +79,11 @@ namespace CryPixiv2.Classes
                 {
                     Debug.WriteLine("COM Exception!");
                 }
+                catch (LoginException)
+                {
+                    // user is not logged in
+                    Debug.WriteLine("User not logged in!");
+                }
                 catch (Exception ex)
                 {
                     Debug.WriteLine("Unknown exception! " + ex.Message);

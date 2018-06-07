@@ -88,7 +88,6 @@ namespace CryPixiv2.Controls
                 Clipboard.SetContent(package);
                 Clipboard.Flush();
             };
-            mylist.IsItemClickEnabled = true;
         }
 
         #region Animations

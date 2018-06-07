@@ -18,7 +18,7 @@
         <converters:InvertBoolConverter  x:Key="invConverter"/>
     </UserControl.Resources>
     <Grid>
-        <GridView x:Name="mylist" Loaded="GridView_Loaded" animations:ReorderGridAnimation.Duration="600"
+        <GridView x:Name="mylist" Loaded="GridView_Loaded" animations:ReorderGridAnimation.Duration="600" IsItemClickEnabled="True"
                   ItemsSource="{Binding Source={StaticResource viewSource}}" Margin="0,0,0,20">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
