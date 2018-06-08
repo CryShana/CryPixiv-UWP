@@ -208,17 +208,17 @@ namespace CryPixiv2
             await Task.Delay(200);
             searchPivot.SelectedItem = q; 
         }
-
         private void collection_IllustrationBookmarkChange(object sender, IllustrationWrapper e)
         {
 
         }
 
+        #region Login Buttons
         private void PasswordBox_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Enter) LoginClick(null, null);
         }
-        private void LoginClick(object sender, RoutedEventArgs e)
+        private async void LoginClick(object sender, RoutedEventArgs e)
         {
             var username = _username.Text;
             var password = _password.Password;
@@ -228,7 +228,9 @@ namespace CryPixiv2
                 return;
             }
 
-            ViewModel.Login(username, password);
-        }
+            await ViewModel.Login(username, password);
+            if (ViewModel.LoginFormShown) _username.Focus(FocusState.Keyboard);
+        } 
+        #endregion
     }
 }

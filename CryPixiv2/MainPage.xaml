@@ -7,9 +7,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:cnt="using:CryPixiv2.Controls"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:converters="using:CryPixiv2.Converters"
     mc:Ignorable="d"
     DataContext="{StaticResource mainViewModel}">
-
+    
+    <Page.Resources>
+        <converters:InvertBoolConverter x:Key="invConverter" />
+    </Page.Resources>
+    
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <controls:Loading x:Name="loadingControl" IsLoading="{Binding IsLoggingIn}" Canvas.ZIndex="1000" Background="#7F000000">
             <Grid>
@@ -33,7 +38,7 @@
             </Grid>
         </controls:Loading>
 
-        <Pivot x:Name="mainPivot" SelectionChanged="mainPivot_SelectionChanged">
+        <Pivot x:Name="mainPivot" SelectionChanged="mainPivot_SelectionChanged" IsEnabled="{Binding LoginFormShown, Converter={StaticResource invConverter}}">
             <PivotItem Header="Search">
                 <Grid>
                     <TextBox x:Name="_searchQuery" HorizontalAlignment="Left" VerticalAlignment="Top" PlaceholderText="Search query" 
