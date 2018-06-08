@@ -33,16 +33,19 @@ namespace CryPixiv2
     public sealed partial class MainPage : Page
     {
         public static MainPage CurrentInstance;
+
         public MainViewModel ViewModel;
+        public ApplicationDataContainer LocalStorage;
 
         public MainPage()
         {
             this.InitializeComponent();
 
             CurrentInstance = this;
+            LocalStorage = ApplicationData.Current.LocalSettings;
             ViewModel = (MainViewModel)Application.Current.Resources["mainViewModel"];
             IllustrationGrid.IllustrationBookmarkChange += IllustrationGrid_IllustrationBookmarkChange;
-           
+            
             AttemptToLogin();
         }
 
@@ -57,11 +60,9 @@ namespace CryPixiv2
 
         public async void AttemptToLogin()
         {
-            var localStorage = ApplicationData.Current.LocalSettings;
+            var deviceToken = LocalStorage.Values[Constants.StorageDeviceToken] as string;
+            var refreshToken = LocalStorage.Values[Constants.StorageRefreshToken] as string;
 
-            var deviceToken = localStorage.Values[Constants.StorageDeviceToken] as string;
-            var refreshToken = localStorage.Values[Constants.StorageRefreshToken] as string;
-            
             ViewModel.Account = new PixivAccount(deviceToken);
             await ViewModel.Login(refreshToken);
         }

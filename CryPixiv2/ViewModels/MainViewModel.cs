@@ -64,7 +64,15 @@ namespace CryPixiv2.ViewModels
 
         public MainViewModel()
         {
+            
+        }
 
+        private void SaveAuthInfo()
+        {
+            var ls = MainPage.CurrentInstance.LocalStorage;
+
+            ls.Values[Constants.StorageDeviceToken] = Account.AuthInfo.DeviceToken;
+            ls.Values[Constants.StorageRefreshToken] = Account.AuthInfo.RefreshToken;
         }
 
         public async Task Login(string username, string password)
@@ -76,9 +84,7 @@ namespace CryPixiv2.ViewModels
                 LoginFormErrorMessage = "";
                 await Account.Login(username, password);
 
-                var localStorage = ApplicationData.Current.LocalSettings;
-                localStorage.Values[Constants.StorageDeviceToken] = Account.AuthInfo.DeviceToken;
-                localStorage.Values[Constants.StorageRefreshToken] = Account.AuthInfo.RefreshToken;
+                SaveAuthInfo();
             }
             catch (LoginException lex)
             {
@@ -99,6 +105,8 @@ namespace CryPixiv2.ViewModels
 
                 IsLoggingIn = true;
                 await Account.Login(refreshToken);
+
+                SaveAuthInfo();
             }
             catch (LoginException lex)
             {

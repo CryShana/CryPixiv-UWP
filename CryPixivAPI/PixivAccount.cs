@@ -83,7 +83,10 @@ namespace CryPixivAPI
             else
             {
                 var error = JsonConvert.DeserializeObject<ErrorResponse>(content);
-                throw new LoginException(error.Errors.System.Message);
+                var msg = error.Errors.System.Message;
+
+                if (msg.Contains("103:")) msg = "Username/E-Mail or password are incorrect!";
+                throw new LoginException(msg);
             }
         }
         private async Task<T> GetAsync<T>(string requestUri, Dictionary<string, string> values = null, string rootPropertyName = null)

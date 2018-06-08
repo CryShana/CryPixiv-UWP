@@ -26,7 +26,7 @@
                 <TextBlock Text="Login" FontSize="20" Margin="19,16,0,0" VerticalAlignment="Top" Height="30" HorizontalAlignment="Left" Width="57"/>
                 <TextBlock Text="{Binding LoginFormErrorMessage}" Foreground="#FFFF7B7B" Margin="19,48,26,0" VerticalAlignment="Top" Height="22" HorizontalAlignment="Stretch" />
 
-                <TextBox PlaceholderText="Username" x:Name="_username" TabIndex="1" HorizontalAlignment="Stretch" Margin="19,81,25,0" VerticalAlignment="Top" PreviewKeyDown="PasswordBox_PreviewKeyDown"/>
+                <TextBox PlaceholderText="Username / E-Mail" x:Name="_username" TabIndex="1" HorizontalAlignment="Stretch" Margin="19,81,25,0" VerticalAlignment="Top" PreviewKeyDown="PasswordBox_PreviewKeyDown"/>
                 <PasswordBox PlaceholderText="Password" x:Name="_password" TabIndex="2" HorizontalAlignment="Stretch" Margin="19,118,25,0" VerticalAlignment="Top" PreviewKeyDown="PasswordBox_PreviewKeyDown"/>
 
                 <Button Content="Login" HorizontalAlignment="Right" Height="40" Margin="0,0,25,23" VerticalAlignment="Bottom" Width="138" Click="LoginClick" />
