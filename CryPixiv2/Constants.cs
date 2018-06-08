@@ -10,5 +10,8 @@ namespace CryPixiv2
     {
         public const string StorageDeviceToken = "deviceToken";
         public const string StorageRefreshToken = "refreshToken";
+
+        public const string ConnectedAnimationThumbnail = "ca1";
+        public const string ConnectedAnimationImage = "ca2";
     }
 }

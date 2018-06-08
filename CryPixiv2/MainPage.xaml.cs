@@ -40,24 +40,16 @@ namespace CryPixiv2
         public MainPage()
         {
             this.InitializeComponent();
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
 
             CurrentInstance = this;
             LocalStorage = ApplicationData.Current.LocalSettings;
             ViewModel = (MainViewModel)Application.Current.Resources["mainViewModel"];
             IllustrationGrid.IllustrationBookmarkChange += IllustrationGrid_IllustrationBookmarkChange;
+            IllustrationGrid.ItemClicked += IllustrationGrid_ItemClicked;
             
             AttemptToLogin();
         }
-
-        void IllustrationGrid_IllustrationBookmarkChange(object sender, Tuple<IllustrationWrapper, bool> e)
-        {
-            if (e.Item1.IsBookmarked)
-            {
-                if (e.Item2) ViewModel.BookmarksPublic.Insert(e.Item1);
-                else ViewModel.BookmarksPrivate.Insert(e.Item1);
-            }
-        }
-
         public async void AttemptToLogin()
         {
             var deviceToken = LocalStorage.Values[Constants.StorageDeviceToken] as string;
@@ -66,6 +58,18 @@ namespace CryPixiv2
             ViewModel.Account = new PixivAccount(deviceToken);
             await ViewModel.Login(refreshToken);
         }
+
+        #region IllustrationGrid Event Handlers
+        void IllustrationGrid_ItemClicked(object sender, IllustrationWrapper e) => NavigateTo(typeof(DetailsPage), e);
+        void IllustrationGrid_IllustrationBookmarkChange(object sender, Tuple<IllustrationWrapper, bool> e)
+        {
+            if (e.Item1.IsBookmarked)
+            {
+                if (e.Item2) ViewModel.BookmarksPublic.Insert(e.Item1);
+                else ViewModel.BookmarksPrivate.Insert(e.Item1);
+            }
+        } 
+        #endregion
 
         #region Download Switching
         private void mainPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -184,6 +188,7 @@ namespace CryPixiv2
         }
         #endregion
 
+        #region Search
         private async void _searchQuery_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key != Windows.System.VirtualKey.Enter) return;
@@ -206,12 +211,9 @@ namespace CryPixiv2
 
             // select new tab
             await Task.Delay(200);
-            searchPivot.SelectedItem = q; 
-        }
-        private void collection_IllustrationBookmarkChange(object sender, IllustrationWrapper e)
-        {
-
-        }
+            searchPivot.SelectedItem = q;
+        } 
+        #endregion
 
         #region Login Buttons
         private void PasswordBox_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
@@ -232,5 +234,7 @@ namespace CryPixiv2
             if (ViewModel.LoginFormShown) _username.Focus(FocusState.Keyboard);
         } 
         #endregion
+
+        public void NavigateTo(Type pageType, object referencedObject) => Frame.Navigate(pageType, referencedObject);        
     }
 }

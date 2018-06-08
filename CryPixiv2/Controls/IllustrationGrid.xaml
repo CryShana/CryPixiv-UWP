@@ -48,7 +48,7 @@
                             <Image x:Name="btnImage" Canvas.ZIndex="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="40" Width="40" Margin="0,0,8,8"
                                Source="ms-appx:///Assets/Images/heart-empty.png" PointerPressed="btnImage_PointerPressed" />
 
-                            <Image Source="{Binding ThumbnailImage}" Canvas.ZIndex="4"/>
+                            <Image x:Name="thumbImage" Source="{Binding ThumbnailImage}" Canvas.ZIndex="4"/>
                         </Grid>
                     </UserControl>
 

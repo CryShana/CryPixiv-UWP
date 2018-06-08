@@ -20,6 +20,7 @@ namespace CryPixiv2.Wrappers
         public string IllustrationLink => WrappedIllustration == null ? "" : 
             $"https://www.pixiv.net/member_illust.php?mode=medium&illust_id={WrappedIllustration.Id.ToString()}";
 
+        #region Thumbnail Image Fetching
         BitmapImage thumbnailImage = null;
         public bool ThumbnailImageLoading => thumbnailImage == null;
 
@@ -30,7 +31,7 @@ namespace CryPixiv2.Wrappers
             {
                 if (thumbnailImage != null) return thumbnailImage;
 
-                GetThumbnailImage();
+                GetImage(WrappedIllustration.ThumbnailImagePath, i => ThumbnailImage = i);
                 return null;
             }
             set
@@ -40,9 +41,43 @@ namespace CryPixiv2.Wrappers
                 Changed("ThumbnailImageLoading");
             }
         }
-        async Task GetThumbnailImage()
+        #endregion
+
+        #region Full Image Fetching
+        BitmapImage fullImage = null;
+        public bool FullImageLoading => fullImage == null;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public BitmapImage FullImage
         {
-            var data = await AssociatedAccount.GetData(WrappedIllustration.ThumbnailImagePath);
+            get
+            {
+                if (fullImage != null) return fullImage;
+               
+                GetImage(WrappedIllustration.FullImagePath, i => FullImage = i);
+                return thumbnailImage;
+            }
+            set
+            {
+                fullImage = value;
+                Changed();
+                Changed("FullImageLoading");
+            }
+        }
+        #endregion
+
+        public bool IsBookmarked { get => WrappedIllustration.IsBookmarked; set { WrappedIllustration.IsBookmarked = value; Changed(); } }
+
+        public IllustrationWrapper(Illustration illustration, PixivAccount account)
+        {
+            WrappedIllustration = illustration;
+            AssociatedAccount = account;
+        }
+
+        #region Private Methods
+        async Task GetImage(string path, Action<BitmapImage> callback)
+        {
+            var data = await AssociatedAccount.GetData(path);
 
             using (var stream = new InMemoryRandomAccessStream())
             {
@@ -53,16 +88,10 @@ namespace CryPixiv2.Wrappers
                 }
                 var image = new BitmapImage();
                 await image.SetSourceAsync(stream);
-                ThumbnailImage = image;
+
+                callback(image);
             }
-        }
-
-        public bool IsBookmarked { get => WrappedIllustration.IsBookmarked; set { WrappedIllustration.IsBookmarked = value; Changed(); } }
-
-        public IllustrationWrapper(Illustration illustration, PixivAccount account)
-        {
-            WrappedIllustration = illustration;
-            AssociatedAccount = account;
-        }
+        } 
+        #endregion
     }
 }

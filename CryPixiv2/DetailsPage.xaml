@@ -1,0 +1,17 @@
+﻿<Page
+    x:Class="CryPixiv2.DetailsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CryPixiv2"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" DataContext="{x:Bind Illustration}"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Button x:Name="BackButton" Style="{StaticResource NavigationBackButtonNormalStyle}" HorizontalAlignment="Left" VerticalAlignment="Top" Height="49" Width="53" Click="BackButton_Click"/>
+        <Image x:Name="fullImage" Margin="28,98,782,30" HorizontalAlignment="Stretch" Source="{Binding FullImage}"/>
+
+
+    </Grid>
+</Page>

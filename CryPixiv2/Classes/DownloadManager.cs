@@ -84,7 +84,7 @@ namespace CryPixiv2.Classes
                     // user is not logged in
                     Debug.WriteLine("User not logged in!");
 
-                    // retry login then show login form
+                    // retry login
                     var vm = MainPage.CurrentInstance.ViewModel;
                     vm.Login(vm.Account.AuthInfo.RefreshToken);
                 }

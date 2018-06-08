@@ -32,7 +32,7 @@ namespace CryPixiv2.Controls
     {
         #region Private Fields and PropertyChanged methods
         public static readonly DependencyProperty ItemSourceProperty =
-            DependencyProperty.Register("ItemSource", typeof(PixivObservableCollection), 
+            DependencyProperty.Register("ItemSource", typeof(PixivObservableCollection),
                 typeof(IllustrationGrid), new PropertyMetadata(null, new PropertyChangedCallback(ItemSourceChanged)));
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -49,6 +49,7 @@ namespace CryPixiv2.Controls
         public int ToLoadCount => ItemSource?.EnqueuedItems?.Count ?? 0;
         public bool? SortByScore { get => sortbkm; set { sortbkm = value ?? false; Changed(); SortByBookmarkCount(value == true); } }
         public static event EventHandler<Tuple<IllustrationWrapper, bool>> IllustrationBookmarkChange;
+        public static event EventHandler<IllustrationWrapper> ItemClicked;
 
         public IllustrationGrid()
         {
@@ -60,7 +61,7 @@ namespace CryPixiv2.Controls
         {
             var o = (IllustrationGrid)obj;
             var src = o.ItemSource;
-           
+
             src.ItemAdded += (a, b) =>
             {
                 o.Changed("ToLoadCount");
@@ -75,18 +76,46 @@ namespace CryPixiv2.Controls
             if (sort) viewSource.SortDescriptions.Add(new SortDescription(SortDirection.Descending, new BookmarkComparer()));
             viewSource.Refresh();
         }
-        private void GridView_Loaded(object sender, RoutedEventArgs e)
-        {
-            
-            mylist.ItemClick += (a, b) =>
-            {               
-                var item = b.ClickedItem as IllustrationWrapper; 
 
+        IllustrationWrapper _storedItem = null;
+        const string thumbImageName = "thumbImage";
+        private async void GridView_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (_storedItem != null)
+            {
+                mylist.ScrollIntoView(_storedItem, ScrollIntoViewAlignment.Default);
+                mylist.UpdateLayout();
+
+                var animation = ConnectedAnimationService.GetForCurrentView().GetAnimation(Constants.ConnectedAnimationImage);
+                if (animation != null) await mylist.TryStartConnectedAnimationAsync(animation, _storedItem, thumbImageName);               
+            }
+
+            mylist.ItemClick += (a, b) =>
+            {
+                var container = mylist.ContainerFromItem(b.ClickedItem) as GridViewItem;
+                if (container != null)
+                {
+                    // stash item
+                    _storedItem = container.Content as IllustrationWrapper;
+
+                    // prepare connected animation (name, stashed item, name of element that will be connected)
+                    var animation = mylist.PrepareConnectedAnimation(Constants.ConnectedAnimationThumbnail, _storedItem, thumbImageName);
+                   
+                    ItemClicked?.Invoke(this, _storedItem);
+                }
+                else
+                {
+                    // handle this
+                }
+
+                /*
+                var item = b.ClickedItem as IllustrationWrapper;          
                 var package = new DataPackage();
                 package.SetText(item.IllustrationLink);
                 package.RequestedOperation = DataPackageOperation.Copy;
                 Clipboard.SetContent(package);
                 Clipboard.Flush();
+                */
             };
         }
 
@@ -147,7 +176,7 @@ namespace CryPixiv2.Controls
 
             // start all the animations
             storyboard.Begin();
-            visual.StartAnimationGroup(group);                               
+            visual.StartAnimationGroup(group);
         }
         private void ItemsWrapGrid_Loaded(object sender, RoutedEventArgs e) => InitializeAnimations((Panel)sender);
         private static CompositionAnimationGroup CreateOffsetAnimation(Compositor compositor)
@@ -156,7 +185,7 @@ namespace CryPixiv2.Controls
             var offsetAnimation = compositor.CreateVector3KeyFrameAnimation();
             offsetAnimation.InsertExpressionKeyFrame(1, "this.FinalValue");
             offsetAnimation.Duration = TimeSpan.FromSeconds(.8);
-            
+
             // Define Animation Target for this animation to animate using definition. 
             offsetAnimation.Target = "Offset";
 

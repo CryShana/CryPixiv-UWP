@@ -74,6 +74,7 @@ namespace CryPixivAPI.Classes
 
         public string ThumbnailImagePath => ImageUrls["square_medium"];
         public string BigThumbnailImagePath => ImageUrls["medium"];
+        public string FullImagePath => ImageUrls["large"];
     }
     public class Tag
     {
