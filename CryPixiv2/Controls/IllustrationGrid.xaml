@@ -19,7 +19,8 @@
     </UserControl.Resources>
     <Grid>
         <GridView x:Name="mylist" Loaded="GridView_Loaded" animations:ReorderGridAnimation.Duration="600" IsItemClickEnabled="True"
-                  ItemsSource="{Binding Source={StaticResource viewSource}}" Margin="0,0,0,20">
+                  ItemsSource="{Binding Source={StaticResource viewSource}}" Margin="0,0,0,20"
+                  ItemClick="mylist_ItemClick">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsWrapGrid x:Name="stack" Orientation="Horizontal" HorizontalAlignment="Center" Loaded="ItemsWrapGrid_Loaded"/>

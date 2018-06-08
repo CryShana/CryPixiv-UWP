@@ -89,34 +89,6 @@ namespace CryPixiv2.Controls
                 var animation = ConnectedAnimationService.GetForCurrentView().GetAnimation(Constants.ConnectedAnimationImage);
                 if (animation != null) await mylist.TryStartConnectedAnimationAsync(animation, _storedItem, thumbImageName);               
             }
-
-            mylist.ItemClick += (a, b) =>
-            {
-                var container = mylist.ContainerFromItem(b.ClickedItem) as GridViewItem;
-                if (container != null)
-                {
-                    // stash item
-                    _storedItem = container.Content as IllustrationWrapper;
-
-                    // prepare connected animation (name, stashed item, name of element that will be connected)
-                    var animation = mylist.PrepareConnectedAnimation(Constants.ConnectedAnimationThumbnail, _storedItem, thumbImageName);
-                   
-                    ItemClicked?.Invoke(this, _storedItem);
-                }
-                else
-                {
-                    // handle this
-                }
-
-                /*
-                var item = b.ClickedItem as IllustrationWrapper;          
-                var package = new DataPackage();
-                package.SetText(item.IllustrationLink);
-                package.RequestedOperation = DataPackageOperation.Copy;
-                Clipboard.SetContent(package);
-                Clipboard.Flush();
-                */
-            };
         }
 
         #region Animations
@@ -236,6 +208,34 @@ namespace CryPixiv2.Controls
                     work.IsBookmarked = false;
                 }
             }
+        }
+
+        private void mylist_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var container = mylist.ContainerFromItem(e.ClickedItem) as GridViewItem;
+            if (container != null)
+            {
+                // stash item
+                _storedItem = container.Content as IllustrationWrapper;
+
+                // prepare connected animation (name, stashed item, name of element that will be connected)
+                var animation = mylist.PrepareConnectedAnimation(Constants.ConnectedAnimationThumbnail, _storedItem, thumbImageName);
+
+                ItemClicked?.Invoke(this, _storedItem);
+            }
+            else
+            {
+                // handle this
+            }
+
+            /*
+            var item = b.ClickedItem as IllustrationWrapper;          
+            var package = new DataPackage();
+            package.SetText(item.IllustrationLink);
+            package.RequestedOperation = DataPackageOperation.Copy;
+            Clipboard.SetContent(package);
+            Clipboard.Flush();
+            */
         }
     }
 
