@@ -42,22 +42,13 @@ namespace CryPixiv2
             Illustration = item;
 
             var imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation(Constants.ConnectedAnimationThumbnail);
-            if (imageAnimation != null)
-            {
-                imageAnimation.TryStart(fullImage);
-            }
+            if (imageAnimation != null) imageAnimation.TryStart(fullImage);          
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             base.OnNavigatingFrom(e);
-
-            try
-            {
-                // FIX THIS
-                ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(Constants.ConnectedAnimationImage, fullImage);
-            }
-            catch { }
+            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(Constants.ConnectedAnimationImage, fullImage);
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

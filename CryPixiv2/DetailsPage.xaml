@@ -10,8 +10,6 @@
 
     <Grid>
         <Button x:Name="BackButton" Style="{StaticResource NavigationBackButtonNormalStyle}" HorizontalAlignment="Left" VerticalAlignment="Top" Height="49" Width="53" Click="BackButton_Click"/>
-        <Image x:Name="fullImage" Margin="28,98,782,30" HorizontalAlignment="Stretch" Source="{Binding FullImage}"/>
-
-
+        <Image x:Name="fullImage" Margin="1,50,399,1" Source="{Binding FullImage}" HorizontalAlignment="Stretch" Stretch="Uniform"/>
     </Grid>
 </Page>

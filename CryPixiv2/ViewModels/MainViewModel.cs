@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -66,7 +67,7 @@ namespace CryPixiv2.ViewModels
 
         public MainViewModel()
         {
-            
+
         }
 
         private void SaveAuthInfo()
@@ -77,36 +78,24 @@ namespace CryPixiv2.ViewModels
             ls.Values[Constants.StorageRefreshToken] = Account.AuthInfo.RefreshToken;
         }
 
-        public async Task Login(string username, string password)
+        public async Task Login(string username, string password) => await Login(username, password, null);
+        public async Task Login(string refreshToken) => await Login(null, null, refreshToken);
+        private async Task Login(string username, string password, string refreshToken)
         {
             try
             {
-                IsLoggingIn = true;
-                LoginFormShown = false;
-                LoginFormErrorMessage = "";
-                await Account.Login(username, password);
-
-                SaveAuthInfo();
-            }
-            catch (LoginException lex)
-            {
-                LoginFormShown = true;
-                LoginFormErrorMessage = lex.Message;
-            }
-            finally
-            {
-                IsLoggingIn = false;
-            }
-        }
-
-        public async Task Login(string refreshToken)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(refreshToken)) throw new LoginException("User not logged in!");
+                if (string.IsNullOrEmpty(refreshToken) &&
+                    (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password)))
+                    throw new LoginException("User not logged in!");
 
                 IsLoggingIn = true;
-                await Account.Login(refreshToken);
+                if (!string.IsNullOrEmpty(refreshToken)) await Account.Login(refreshToken);
+                else
+                {
+                    LoginFormShown = false;
+                    LoginFormErrorMessage = "";
+                    await Account.Login(username, password);
+                }
 
                 SaveAuthInfo();
             }
@@ -115,6 +104,14 @@ namespace CryPixiv2.ViewModels
                 // failed to login (either 'invalid refresh token' or 'user not logged in')
                 LoginFormShown = true;
                 LoginFormErrorMessage = lex.Message;
+            }
+            catch (HttpRequestException httpex)
+            {
+                // internet error - set timeout and try again later
+            }
+            catch (Exception ex)
+            {
+                // unkown error
             }
             finally
             {

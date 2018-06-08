@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -60,7 +61,7 @@ namespace CryPixivAPI.Classes
         [JsonProperty("meta_single_page")]
         public Dictionary<string, string> MetaSinglePage { get; set; }
         [JsonProperty("meta_pages")]
-        public List<object> MetaPages { get; set; }
+        public List<ImageUrlCollection> MetaPages { get; set; }
         [JsonProperty("total_view")]
         public int TotalViews { get; set; }
         [JsonProperty("total_bookmarks")]
@@ -72,10 +73,31 @@ namespace CryPixivAPI.Classes
         [JsonProperty("is_muted")]
         public bool Muted { get; set; }
 
+        public int Pages => MetaPages.Count == 0 ? 1 : MetaPages.Count;
         public string ThumbnailImagePath => ImageUrls["square_medium"];
         public string BigThumbnailImagePath => ImageUrls["medium"];
-        public string FullImagePath => ImageUrls["large"];
+        public string FullImagePath
+        {
+            get
+            {
+                // this part of code is highly dependent on the key values (should improve it in the future)
+                if (MetaPages.Count == 0 && MetaSinglePage.Count != 0)
+                    return MetaSinglePage.ContainsKey("original_image_url") ?
+                        MetaSinglePage["original_image_url"] : MetaSinglePage.First().Value;
+                else if (MetaPages.Count == 0 && MetaSinglePage.Count == 0) return ImageUrls["large"];
+                else return GetOriginalImagePath(0);              
+            }
+        }
+
+        public string GetOriginalImagePath(int index) => MetaPages[index].ImageUrls["original"];
     }
+
+    public class ImageUrlCollection
+    {
+        [JsonProperty("image_urls")]
+        public Dictionary<string, string> ImageUrls { get; set; }
+    }
+
     public class Tag
     {
         [JsonProperty("name")]
