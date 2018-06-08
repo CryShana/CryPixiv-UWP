@@ -10,6 +10,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace CryPixiv2.ViewModels
 {
@@ -35,7 +36,8 @@ namespace CryPixiv2.ViewModels
             rankingDailyFemale18 = new PixivObservableCollection(a => a.GetRankedIllustrations(PixivParameters.RankingMode.Daily_Female_R18));
 
         private ObservableCollection<SearchSession> searches = new ObservableCollection<SearchSession>();
-        private bool isloggingin = false;
+        private bool isloggingin = false, loginform = false;
+        private string loginerror = "";
         #endregion
 
         #region Public Properties
@@ -56,11 +58,37 @@ namespace CryPixiv2.ViewModels
         public ObservableCollection<SearchSession> Searches { get => searches; set { searches = value; Changed(); } }
 
         public bool IsLoggingIn { get => isloggingin; set { isloggingin = value; Changed(); } }
+        public bool LoginFormShown { get => loginform; set { loginform = value; Changed(); } }
+        public string LoginFormErrorMessage { get => loginerror; set { loginerror = value; Changed(); } }
         #endregion
 
         public MainViewModel()
         {
 
+        }
+
+        public async Task Login(string username, string password)
+        {
+            try
+            {
+                IsLoggingIn = true;
+                LoginFormShown = false;
+                LoginFormErrorMessage = "";
+                await Account.Login(username, password);
+
+                var localStorage = ApplicationData.Current.LocalSettings;
+                localStorage.Values[Constants.StorageDeviceToken] = Account.AuthInfo.DeviceToken;
+                localStorage.Values[Constants.StorageRefreshToken] = Account.AuthInfo.RefreshToken;
+            }
+            catch (LoginException lex)
+            {
+                LoginFormShown = true;
+                LoginFormErrorMessage = lex.Message;
+            }
+            finally
+            {
+                IsLoggingIn = false;
+            }
         }
 
         public async Task Login(string refreshToken)
@@ -74,10 +102,9 @@ namespace CryPixiv2.ViewModels
             }
             catch (LoginException lex)
             {
-                var msg = lex.Message; // will either get INVALID REFRESH TOKEN error or USER NOT LOGGED IN (TODO: Do the actual username/password login somewhere else and pass refresh token here MAYBE)
-
-                // failed to login
-                // TODO: maybe set some property to TRUE if login is required - which shows new loading screen with LOGIN FORM
+                // failed to login (either 'invalid refresh token' or 'user not logged in')
+                LoginFormShown = true;
+                LoginFormErrorMessage = lex.Message;
             }
             finally
             {

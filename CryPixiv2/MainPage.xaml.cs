@@ -57,11 +57,13 @@ namespace CryPixiv2
 
         public async void AttemptToLogin()
         {
-            // TODO: Load device token
-            // TODO: Load refresh token
-            // TODO: If both present - attempt login directly - if one of them is missing - REQUIRE LOGIN WITH USERNAME and PASSWORD
-            ViewModel.Account = new PixivAccount("fa2226814b46768e9f0ea3aafac61eb6");
-            await ViewModel.Login("IuEsI8_15UjDFtSfaOcqJkPCK3oe12IzQDMwP4mz_qA");
+            var localStorage = ApplicationData.Current.LocalSettings;
+
+            var deviceToken = localStorage.Values[Constants.StorageDeviceToken] as string;
+            var refreshToken = localStorage.Values[Constants.StorageRefreshToken] as string;
+            
+            ViewModel.Account = new PixivAccount(deviceToken);
+            await ViewModel.Login(refreshToken);
         }
 
         #region Download Switching
@@ -209,6 +211,23 @@ namespace CryPixiv2
         private void collection_IllustrationBookmarkChange(object sender, IllustrationWrapper e)
         {
 
+        }
+
+        private void PasswordBox_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter) LoginClick(null, null);
+        }
+        private void LoginClick(object sender, RoutedEventArgs e)
+        {
+            var username = _username.Text;
+            var password = _password.Password;
+            if (username.Length == 0 || password.Length == 0)
+            {
+                ViewModel.LoginFormErrorMessage = "Invalid username or password!";
+                return;
+            }
+
+            ViewModel.Login(username, password);
         }
     }
 }
