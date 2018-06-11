@@ -104,16 +104,16 @@ namespace CryPixiv2.Controls
             ElementCompositionPreview.GetElementVisual(panel).ImplicitAnimations = elementImplicitAnimation;
         }
 
-        public static HashSet<int> LoadedElements = new HashSet<int>();
+        public HashSet<int> LoadedElements = new HashSet<int>();
         private void DataTemplate_Loaded(object sender, RoutedEventArgs e)
         {
             var element = (Grid)sender;
 
-            // only display loaded item once
-            /*
+            // only display loaded item once          
             var item = (IllustrationWrapper)element.DataContext;
+            if (item == null) return;
             if (LoadedElements.Contains(item.WrappedIllustration.Id)) return;
-            LoadedElements.Add(item.WrappedIllustration.Id);*/
+            LoadedElements.Add(item.WrappedIllustration.Id);
 
             // prepare animation variables
             TimeSpan duration = TimeSpan.FromMilliseconds(900);
