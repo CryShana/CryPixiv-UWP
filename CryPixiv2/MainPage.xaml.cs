@@ -18,6 +18,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI.Composition;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -36,11 +37,14 @@ namespace CryPixiv2
 
         public MainViewModel ViewModel;
         public ApplicationDataContainer LocalStorage;
+        public SystemNavigationManager NavigationManager;
 
         public MainPage()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
+            this.NavigationCacheMode = NavigationCacheMode.Required;
+            this.NavigationManager = SystemNavigationManager.GetForCurrentView();
+            this.NavigationManager.BackRequested += (a, b) => GoBack();
 
             CurrentInstance = this;
             LocalStorage = ApplicationData.Current.LocalSettings;
@@ -50,6 +54,7 @@ namespace CryPixiv2
             
             AttemptToLogin();
         }
+
         public async void AttemptToLogin()
         {
             var deviceToken = LocalStorage.Values[Constants.StorageDeviceToken] as string;
@@ -235,6 +240,16 @@ namespace CryPixiv2
         } 
         #endregion
 
-        public void NavigateTo(Type pageType, object referencedObject) => Frame.Navigate(pageType, referencedObject);        
+        public void NavigateTo(Type pageType, object referencedObject) => Frame.Navigate(pageType, referencedObject);
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            NavigationManager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
+        }
+
+        public void GoBack()
+        {
+            if (Frame.CanGoBack) Frame.GoBack();
+        }
     }
 }

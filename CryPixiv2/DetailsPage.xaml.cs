@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -31,12 +32,20 @@ namespace CryPixiv2
 
         public DetailsPage()
         {
-            this.InitializeComponent();                   
+            this.InitializeComponent();
+            this.PointerPressed += DetailsPage_PointerPressed;   
+        }
+
+        private void DetailsPage_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            var isBackPressed = e.GetCurrentPoint(sender as UIElement).Properties.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.XButton1Pressed;
+            if (isBackPressed) MainPage.CurrentInstance.GoBack();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            MainPage.CurrentInstance.NavigationManager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
 
             var item = e.Parameter as IllustrationWrapper;
             Illustration = item;
@@ -49,11 +58,6 @@ namespace CryPixiv2
         {
             base.OnNavigatingFrom(e);
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(Constants.ConnectedAnimationImage, fullImage);
-        }
-
-        private void BackButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (Frame.CanGoBack) Frame.GoBack();         
         }
     }
 }

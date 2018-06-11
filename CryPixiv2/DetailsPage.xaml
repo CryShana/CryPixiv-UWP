@@ -9,7 +9,6 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Button x:Name="BackButton" Style="{StaticResource NavigationBackButtonNormalStyle}" HorizontalAlignment="Left" VerticalAlignment="Top" Height="49" Width="53" Click="BackButton_Click"/>
-        <Image x:Name="fullImage" Margin="1,50,399,1" Source="{Binding FullImage}" HorizontalAlignment="Stretch" Stretch="Uniform"/>
+        <Image x:Name="fullImage" Margin="1,4,399,1" Source="{Binding FullImage}" Stretch="Uniform" VerticalAlignment="Stretch"/>
     </Grid>
 </Page>

@@ -103,16 +103,24 @@ namespace CryPixiv2.Controls
             // panel animations
             ElementCompositionPreview.GetElementVisual(panel).ImplicitAnimations = elementImplicitAnimation;
         }
+
+        public static HashSet<int> LoadedElements = new HashSet<int>();
         private void DataTemplate_Loaded(object sender, RoutedEventArgs e)
         {
-            TimeSpan duration = TimeSpan.FromMilliseconds(900);
-
             var element = (Grid)sender;
+
+            // only display loaded item once
+            /*
+            var item = (IllustrationWrapper)element.DataContext;
+            if (LoadedElements.Contains(item.WrappedIllustration.Id)) return;
+            LoadedElements.Add(item.WrappedIllustration.Id);*/
+
+            // prepare animation variables
+            TimeSpan duration = TimeSpan.FromMilliseconds(900);
 
             var visual = ElementCompositionPreview.GetElementVisual(element);
             ElementCompositionPreview.SetIsTranslationEnabled(element, true); // if using Translation
             var compositor = visual.Compositor;
-
             var group = compositor.CreateAnimationGroup(); // if using multiple animations
 
             // prepare the opacity animation
@@ -151,6 +159,8 @@ namespace CryPixiv2.Controls
             // start all the animations
             storyboard.Begin();
             visual.StartAnimationGroup(group);
+
+            // LoadedElements.Add()
         }
         private void ItemsWrapGrid_Loaded(object sender, RoutedEventArgs e) => InitializeAnimations((Panel)sender);
         private static CompositionAnimationGroup CreateOffsetAnimation(Compositor compositor)

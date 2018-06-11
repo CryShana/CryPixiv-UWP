@@ -19,8 +19,7 @@
     </UserControl.Resources>
     <Grid>
         <GridView x:Name="mylist" Loaded="GridView_Loaded" animations:ReorderGridAnimation.Duration="600" IsItemClickEnabled="True"
-                  ItemsSource="{Binding Source={StaticResource viewSource}}" Margin="0,0,0,20"
-                  ItemClick="mylist_ItemClick">
+                  ItemsSource="{Binding Source={StaticResource viewSource}}" Margin="0,0,0,20" ItemClick="mylist_ItemClick">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsWrapGrid x:Name="stack" Orientation="Horizontal" HorizontalAlignment="Center" Loaded="ItemsWrapGrid_Loaded"/>
@@ -44,15 +43,14 @@
                             </VisualStateManager.VisualStateGroups>
 
                             <ProgressRing IsActive="{Binding ThumbnailImageLoading}" HorizontalAlignment="Center" Canvas.ZIndex="3" 
-                                      VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" />
+                                          VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" />
 
-                            <Image x:Name="btnImage" Canvas.ZIndex="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="40" Width="40" Margin="0,0,8,8"
-                               Source="ms-appx:///Assets/Images/heart-empty.png" PointerPressed="btnImage_PointerPressed" />
+                            <Image x:Name="btnImage" Canvas.ZIndex="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="40" Width="40" 
+                                   Margin="0,0,8,8" Source="ms-appx:///Assets/Images/heart-empty.png" PointerPressed="btnImage_PointerPressed" />
 
                             <Image x:Name="thumbImage" Source="{Binding ThumbnailImage}" Canvas.ZIndex="4"/>
                         </Grid>
                     </UserControl>
-
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>
@@ -64,6 +62,5 @@
             <TextBlock Text="Found:"  VerticalAlignment="Bottom" Margin="0,0,8,0" Foreground="#FF616161"/>
             <TextBlock Text="{x:Bind LoadedCount, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
         </StackPanel>
-        
     </Grid>
 </UserControl>
