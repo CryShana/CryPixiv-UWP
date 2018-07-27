@@ -9,11 +9,18 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid Background="White">
-        <FlipView x:Name="_flipview" Margin="0,0,0,100">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="887*"/>
+            <RowDefinition Height="113*"/>
+        </Grid.RowDefinitions>
+        
+        <ProgressRing x:Name="progress" HorizontalAlignment="Center" VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" Canvas.ZIndex="10"/>
+        
+        <FlipView x:Name="_flipview" HorizontalAlignment="Center" VerticalAlignment="Center" Height="887" Width="1500" Margin="0,0,0,0" SelectionChanged="_flipview_SelectionChanged">
             <Image x:Name="fullImage" Source="{Binding FullImage, Mode=OneWay}"/>
         </FlipView>
-        
-        <Grid>
+
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="0" Width="0">
             <!-- Artist info -->
             <!-- Post info -->
             <!-- Buttons -->

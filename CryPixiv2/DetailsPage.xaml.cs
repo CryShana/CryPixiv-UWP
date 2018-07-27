@@ -29,6 +29,15 @@ namespace CryPixiv2
         IllustrationWrapper illust = null;
         #endregion
         public IllustrationWrapper Illustration { get => illust; set { illust = value; Changed(); } }
+        public bool IsCurrentPageLoading
+        {
+            get
+            {
+                if (Illustration == null) return true;
+                else if (Illustration.HasMultipleImages && _flipview.SelectedIndex > 0) return Illustration.OtherImages[_flipview.SelectedIndex - 1] == null;
+                else return Illustration.FullImageLoading;
+            }
+        } 
 
         public DetailsPage()
         {
@@ -49,6 +58,7 @@ namespace CryPixiv2
 
             var item = e.Parameter as IllustrationWrapper;
             Illustration = item;
+            Illustration.ImageDownloaded += (a,b) => progress.IsActive = IsCurrentPageLoading;
 
             var imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation(Constants.ConnectedAnimationThumbnail);
             if (imageAnimation != null) imageAnimation.TryStart(fullImage);
@@ -88,5 +98,8 @@ namespace CryPixiv2
                 // might throw exception if element not in view
             }
         }
+
+        private void _flipview_SelectionChanged(object sender, SelectionChangedEventArgs e) => progress.IsActive = IsCurrentPageLoading;
+        
     }
 }

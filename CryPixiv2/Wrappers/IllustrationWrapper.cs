@@ -18,6 +18,7 @@ namespace CryPixiv2.Wrappers
         public Illustration WrappedIllustration { get; set; }
         public int ImagesCount => (WrappedIllustration.MetaSinglePage.Count == 1 && WrappedIllustration.MetaPages.Count == 0) ? 1 : WrappedIllustration.MetaPages.Count;
         public bool HasMultipleImages => ImagesCount > 1;
+        public event EventHandler<BitmapImage> ImageDownloaded;
 
         public string IllustrationLink => WrappedIllustration == null ? "" :
             $"https://www.pixiv.net/member_illust.php?mode=medium&illust_id={WrappedIllustration.Id.ToString()}";
@@ -88,13 +89,6 @@ namespace CryPixiv2.Wrappers
                 Changed();
             }
         }
-
-        // create array of bitmapimages
-        // start downloading ALL OF THEM when method is called (*when work is opened)
-        // call Changed event on every download finish
-        // bind to array property
-
-        // LATER: Download thumbnails first (these have square_medium and medium sizes too)
         #endregion
 
         public bool IsBookmarked { get => WrappedIllustration.IsBookmarked; set { WrappedIllustration.IsBookmarked = value; Changed(); } }
@@ -120,6 +114,7 @@ namespace CryPixiv2.Wrappers
                 await image.SetSourceAsync(stream);
 
                 callback(image, index);
+                ImageDownloaded?.Invoke(this, image);
             }
         }
         async Task GetOtherImages()
@@ -131,7 +126,12 @@ namespace CryPixiv2.Wrappers
                 if (img.ContainsKey(key) == false) key = img.LastOrDefault().Key;
                 var path = img[key];
 
-                GetImage(path, (bi, ind) => { OtherImages[ind - 1] = bi; Changed($"OtherImages[{ind - 1}]"); Changed("OtherImages"); }, i);
+                GetImage(path, (bi, ind) =>
+                {
+                    OtherImages[ind - 1] = bi;
+                    Changed($"OtherImages[{ind - 1}]");
+                    Changed("OtherImages");
+                }, i);
             }
         }
         #endregion
