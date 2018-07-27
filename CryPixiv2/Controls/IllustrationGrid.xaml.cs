@@ -183,11 +183,22 @@ namespace CryPixiv2.Controls
         }
         #endregion
 
-        private async void btnImage_PointerPressed(object sender, PointerRoutedEventArgs e)
+        private void btnImage_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             e.Handled = true;
 
             var work = ((Image)sender).DataContext as IllustrationWrapper;
+            BookmarkWork(work, true);
+        }
+
+        private void BookmarkPrivate_Click(object sender, RoutedEventArgs e)
+        {
+            var work = (IllustrationWrapper)((MenuFlyoutItem)sender).DataContext;
+            BookmarkWork(work, false);
+        }
+
+        private async void BookmarkWork(IllustrationWrapper work, bool isPublic)
+        {
             if (work.IsBookmarked)
             {
                 // unbookmark it
@@ -195,9 +206,9 @@ namespace CryPixiv2.Controls
 
                 try
                 {
-                    // public bookmark
+                    // remove bookmark
                     await work.AssociatedAccount.RemoveBookmark(work.WrappedIllustration.Id);
-                    IllustrationBookmarkChange?.Invoke(this, new Tuple<IllustrationWrapper, bool>(work, true));
+                    IllustrationBookmarkChange?.Invoke(this, new Tuple<IllustrationWrapper, bool>(work, isPublic));
                 }
                 catch
                 {
@@ -212,9 +223,9 @@ namespace CryPixiv2.Controls
 
                 try
                 {
-                    // public bookmark
-                    await work.AssociatedAccount.AddBookmark(work.WrappedIllustration.Id, true);
-                    IllustrationBookmarkChange?.Invoke(this, new Tuple<IllustrationWrapper, bool>(work, true));
+                    // add bookmark
+                    await work.AssociatedAccount.AddBookmark(work.WrappedIllustration.Id, isPublic);
+                    IllustrationBookmarkChange?.Invoke(this, new Tuple<IllustrationWrapper, bool>(work, isPublic));
                 }
                 catch
                 {
@@ -241,15 +252,19 @@ namespace CryPixiv2.Controls
             {
                 // handle this
             }
+        }
 
-            /*
-            var item = b.ClickedItem as IllustrationWrapper;          
-            var package = new DataPackage();
-            package.SetText(item.IllustrationLink);
-            package.RequestedOperation = DataPackageOperation.Copy;
-            Clipboard.SetContent(package);
-            Clipboard.Flush();
-            */
+        private async void OpenInBrowser_Click(object sender, RoutedEventArgs e)
+        {
+            var item = (IllustrationWrapper)((MenuFlyoutItem)sender).DataContext;
+            if (await Windows.System.Launcher.LaunchUriAsync(new Uri(item.IllustrationLink)))
+            {
+                // URI launched
+            }
+            else
+            {
+                // URI launch failed
+            }
         }
     }
 

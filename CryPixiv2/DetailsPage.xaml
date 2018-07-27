@@ -9,6 +9,20 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid Background="White">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{Binding HasMultipleImages, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="allimagesSeperator.Visibility" Value="Visible" />
+                        <Setter Target="allimagesItem.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="113"/>
@@ -17,6 +31,16 @@
         <ProgressRing x:Name="progress" HorizontalAlignment="Center" VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" Canvas.ZIndex="10"/>
 
         <FlipView x:Name="_flipview" SelectionChanged="_flipview_SelectionChanged">
+            <FlipView.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Click="CopyImage_Click">Copy image</MenuFlyoutItem>
+                    <MenuFlyoutItem Click="SaveImage_Click">Save image</MenuFlyoutItem>
+                    <MenuFlyoutSeparator x:Name="allimagesSeperator" Visibility="Collapsed"/>
+                    <MenuFlyoutItem Click="SaveAllImages_Click" x:Name="allimagesItem" Visibility="Collapsed">Save all images</MenuFlyoutItem>
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem Click="OpenInBrowser_Click">Open in browser</MenuFlyoutItem>
+                </MenuFlyout>
+            </FlipView.ContextFlyout>
             <Image x:Name="fullImage" Source="{Binding FullImage, Mode=OneWay}"/>
         </FlipView>
 

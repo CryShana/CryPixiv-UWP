@@ -118,14 +118,19 @@ namespace CryPixiv2.Wrappers
                 ImageDownloaded?.Invoke(this, image);
             }
         }
+
+        public string GetOtherImagePath(int index)
+        {
+            var img = WrappedIllustration.MetaPages[index].ImageUrls;
+            var key = "original";
+            if (img.ContainsKey(key) == false) key = img.LastOrDefault().Key;
+            return img[key];
+        }
         async Task GetOtherImages()
         {
             for (int i = 1; i < WrappedIllustration.MetaPages.Count; i++)
             {
-                var img = WrappedIllustration.MetaPages[i].ImageUrls;
-                var key = "original";
-                if (img.ContainsKey(key) == false) key = img.LastOrDefault().Key;
-                var path = img[key];
+                var path = GetOtherImagePath(i);
 
                 GetImage(path, (bi, ind) =>
                 {

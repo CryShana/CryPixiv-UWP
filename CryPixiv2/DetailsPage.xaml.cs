@@ -6,8 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Graphics.Imaging;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -16,6 +22,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 namespace CryPixiv2
@@ -113,6 +120,95 @@ namespace CryPixiv2
             progress.IsActive = IsCurrentPageLoading;
             Changed("CurrentPage");
             Changed("PageCounter");
-        }      
+        }
+
+        private async void SaveToFile(BitmapImage img)
+        {
+
+        }
+
+        private async Task<byte[]> GetImageData(int selectedIndex)
+        {
+            // get image url and download it again 
+            // (because it's too damn complicated converting existing BitmapImage to byte array while also handling situations where image isn't loaded yet)
+            var uri = (selectedIndex == 0) ? Illustration.WrappedIllustration.FullImagePath : Illustration.GetOtherImagePath(selectedIndex);
+            return await Illustration.AssociatedAccount.GetData(uri);
+        }
+        private async void CopyImage_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var data = await GetImageData(_flipview.SelectedIndex);
+
+                InMemoryRandomAccessStream rstream = new InMemoryRandomAccessStream();
+                await rstream.WriteAsync(data.AsBuffer());
+                rstream.Seek(0);
+
+                // copy to clipboard
+                var package = new DataPackage();
+                package.SetBitmap(RandomAccessStreamReference.CreateFromStream(rstream));
+                package.RequestedOperation = DataPackageOperation.Copy;
+                Clipboard.SetContent(package);
+                Clipboard.Flush();
+            }
+            catch
+            {
+                // show error
+            }
+        }
+
+        private string GetFileName(int index) => $"{Illustration.WrappedIllustration.Id}_p{index}.png";
+        private async void SaveImage_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                FileSavePicker picker = new FileSavePicker();
+                picker.SuggestedStartLocation = PickerLocationId.Downloads;
+                picker.SuggestedFileName =GetFileName(_flipview.SelectedIndex);
+                picker.FileTypeChoices.Add("PNG file", new[] { ".png" });
+                var d = await picker.PickSaveFileAsync();
+
+                var data = await GetImageData(_flipview.SelectedIndex);
+                await FileIO.WriteBytesAsync(d, data);
+            }
+            catch
+            {
+                // show error
+            }
+        }
+
+        private async void SaveAllImages_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                FolderPicker picker = new FolderPicker();
+                picker.SuggestedStartLocation = PickerLocationId.Downloads;
+                picker.FileTypeFilter.Add(".png");
+                picker.FileTypeFilter.Add(".jpg");
+                var d = await picker.PickSingleFolderAsync();
+
+                for (int i = 0; i < Illustration.ImagesCount; i++)
+                {
+                    var data = await GetImageData(i);
+                    await FileIO.WriteBytesAsync(await d.CreateFileAsync(GetFileName(i), CreationCollisionOption.GenerateUniqueName), data);
+                }                                 
+            }
+            catch
+            {
+                // show error
+            }
+        }
+
+        private async void OpenInBrowser_Click(object sender, RoutedEventArgs e)
+        {
+            if (await Windows.System.Launcher.LaunchUriAsync(new Uri(Illustration.IllustrationLink)))
+            {
+                // URI launched
+            }
+            else
+            {
+                // URI launch failed
+            }
+        }
     }
 }

@@ -38,6 +38,8 @@
                                         </VisualState.StateTriggers>
                                         <VisualState.Setters>
                                             <Setter Target="btnImage.Source" Value="ms-appx:///Assets/Images/heart-red.png" />
+                                            <Setter Target="bookmarkPrivatelyItem.Visibility" Value="Collapsed" />
+                                            <Setter Target="bookmarkPrivatelySeparator.Visibility" Value="Collapsed" />
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
@@ -52,18 +54,31 @@
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
+                            
+                            <!-- CONTEXT MENU -->
+                            <Grid.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem x:Name="bookmarkPrivatelyItem" Visibility="Visible" Click="BookmarkPrivate_Click">Bookmark privately</MenuFlyoutItem>
+                                    <MenuFlyoutSeparator x:Name="bookmarkPrivatelySeparator" Visibility="Visible" />
+                                    <MenuFlyoutItem Click="OpenInBrowser_Click">Open in browser</MenuFlyoutItem>
+                                </MenuFlyout>
+                            </Grid.ContextFlyout>
 
+                            <!-- PROGRESS RING -->
                             <ProgressRing IsActive="{Binding ThumbnailImageLoading}" HorizontalAlignment="Center" Canvas.ZIndex="3" 
                                           VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" />
 
+                            <!-- PAGE COUNTER -->
                             <Grid Name="countgrid" Canvas.ZIndex="5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" Opacity="0">
                                 <Ellipse Width="40" Height="40" Fill="Black" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5"/>
                                 <TextBlock x:Name="count" Text="{Binding ImagesCount}" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="20" />
                             </Grid>
 
+                            <!-- HEART ICON -->
                             <Image x:Name="btnImage" Canvas.ZIndex="6" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="40" Width="40" 
                                    Margin="0,0,8,8" Source="ms-appx:///Assets/Images/heart-empty.png" PointerPressed="btnImage_PointerPressed" />
 
+                            <!-- THUMBNAIL -->
                             <Image x:Name="thumbImage" Source="{Binding ThumbnailImage}" Canvas.ZIndex="4"/>
                         </Grid>
                     </UserControl>
