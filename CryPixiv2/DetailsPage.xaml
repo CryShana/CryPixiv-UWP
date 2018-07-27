@@ -20,7 +20,8 @@
             <Image x:Name="fullImage" Source="{Binding FullImage, Mode=OneWay}"/>
         </FlipView>
 
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="0" Width="0">
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="0" Width="0" Grid.Row="1">
+            <TextBlock Text="{x:Bind PageCounter}" FontSize="14" Foreground="Black"></TextBlock>
             <!-- Artist info -->
             <!-- Post info -->
             <!-- Buttons -->

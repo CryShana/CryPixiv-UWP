@@ -37,7 +37,9 @@ namespace CryPixiv2
                 else if (Illustration.HasMultipleImages && _flipview.SelectedIndex > 0) return Illustration.OtherImages[_flipview.SelectedIndex - 1] == null;
                 else return Illustration.FullImageLoading;
             }
-        } 
+        }
+        public int CurrentPage => _flipview.SelectedIndex + 1;
+        public string PageCounter => $"{CurrentPage} / {Illustration.ImagesCount}";
 
         public DetailsPage()
         {
@@ -99,7 +101,12 @@ namespace CryPixiv2
             }
         }
 
-        private void _flipview_SelectionChanged(object sender, SelectionChangedEventArgs e) => progress.IsActive = IsCurrentPageLoading;
+        private void _flipview_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            progress.IsActive = IsCurrentPageLoading;
+            Changed("CurrentPage");
+            Changed("PageCounter");
+        }
         
     }
 }
