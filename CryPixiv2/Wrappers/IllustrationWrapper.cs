@@ -16,6 +16,8 @@ namespace CryPixiv2.Wrappers
     {
         public PixivAccount AssociatedAccount { get; set; }
         public Illustration WrappedIllustration { get; set; }
+        public int ImagesCount => (WrappedIllustration.MetaSinglePage.Count == 1 && WrappedIllustration.MetaPages.Count == 0) ? 1 : WrappedIllustration.MetaPages.Count;
+        public bool HasMultipleImages => ImagesCount > 1;
 
         public string IllustrationLink => WrappedIllustration == null ? "" : 
             $"https://www.pixiv.net/member_illust.php?mode=medium&illust_id={WrappedIllustration.Id.ToString()}";

@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:controls2="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:converters="using:CryPixiv2.Converters"
     mc:Ignorable="d"
@@ -39,13 +40,26 @@
                                             <Setter Target="btnImage.Source" Value="ms-appx:///Assets/Images/heart-red.png" />
                                         </VisualState.Setters>
                                     </VisualState>
+                                    <VisualState>
+                                        <VisualState.StateTriggers>
+                                            <StateTrigger IsActive="{Binding HasMultipleImages}" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Target="countgrid.Opacity" Value="1" />
+                                        </VisualState.Setters>
+                                    </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
 
                             <ProgressRing IsActive="{Binding ThumbnailImageLoading}" HorizontalAlignment="Center" Canvas.ZIndex="3" 
                                           VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" />
 
-                            <Image x:Name="btnImage" Canvas.ZIndex="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="40" Width="40" 
+                            <Grid Name="countgrid" Canvas.ZIndex="5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" Opacity="0">
+                                <Ellipse Width="40" Height="40" Fill="Black" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5"/>
+                                <TextBlock x:Name="count" Text="{Binding ImagesCount}" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="20" />
+                            </Grid>
+
+                            <Image x:Name="btnImage" Canvas.ZIndex="6" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="40" Width="40" 
                                    Margin="0,0,8,8" Source="ms-appx:///Assets/Images/heart-empty.png" PointerPressed="btnImage_PointerPressed" />
 
                             <Image x:Name="thumbImage" Source="{Binding ThumbnailImage}" Canvas.ZIndex="4"/>
