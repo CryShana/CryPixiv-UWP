@@ -62,7 +62,7 @@ namespace CryPixiv2.Classes
                                 wr = new IllustrationWrapper(l, acc);
                                 addedIllustrations.TryAdd(l.Id, wr);
                             }
-
+                          
                             collection.Add(wr);
                         }
                     }

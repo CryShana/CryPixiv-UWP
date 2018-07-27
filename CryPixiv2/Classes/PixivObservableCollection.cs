@@ -30,6 +30,7 @@ namespace CryPixiv2.Classes
         public ObservableCollection<IllustrationWrapper> Collection { get; }
         public ConcurrentQueue<IllustrationWrapper> EnqueuedItems { get; }
         public ConcurrentQueue<IllustrationWrapper> EnqueuedItemsForDirectInsertion { get; }
+        public Dictionary<int, DateTime> LoadedElements = new Dictionary<int, DateTime>();
         public event EventHandler<IllustrationWrapper> ItemAdded; 
         #endregion
 
@@ -74,6 +75,7 @@ namespace CryPixiv2.Classes
             // add to collection and register illustration ID as added to avoid adding duplicates
             Collection.Add(item);
             addedIds.Add(item.WrappedIllustration.Id);
+            LoadedElements.Add(item.WrappedIllustration.Id, DateTime.Now);
 
             ItemAdded?.Invoke(this, item);
         }
