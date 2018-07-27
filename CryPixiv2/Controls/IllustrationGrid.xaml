@@ -40,6 +40,8 @@
                                             <Setter Target="btnImage.Source" Value="ms-appx:///Assets/Images/heart-red.png" />
                                         </VisualState.Setters>
                                     </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup>
                                     <VisualState>
                                         <VisualState.StateTriggers>
                                             <StateTrigger IsActive="{Binding HasMultipleImages}" />

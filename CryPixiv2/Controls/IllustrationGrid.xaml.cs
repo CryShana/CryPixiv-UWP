@@ -114,7 +114,7 @@ namespace CryPixiv2.Controls
             if (ItemSource.LoadedElements.ContainsKey(item.WrappedIllustration.Id))
             {
                 var val = ItemSource.LoadedElements[item.WrappedIllustration.Id];
-                if (DateTime.Now.Subtract(val).TotalSeconds > 3) return;
+                if (DateTime.Now.Subtract(val).TotalSeconds > Constants.TimeTillAnimationSkipSeconds) return;
             }
 
             // prepare animation variables

@@ -15,8 +15,6 @@ using Windows.Storage;
 
 namespace CryPixiv2.ViewModels
 {
-    // 1 - prepare animation object on the source page (to show which element will participate in the animation)
-    // 2 - start the animation on the destination page (after the navigation - passing a reference to the destination element)
     public class MainViewModel : Notifier
     {
         public PixivAccount Account { get; set; }

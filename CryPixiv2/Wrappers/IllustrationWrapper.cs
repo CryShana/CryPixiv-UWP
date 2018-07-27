@@ -19,6 +19,7 @@ namespace CryPixiv2.Wrappers
         public int ImagesCount => (WrappedIllustration.MetaSinglePage.Count == 1 && WrappedIllustration.MetaPages.Count == 0) ? 1 : WrappedIllustration.MetaPages.Count;
         public bool HasMultipleImages => ImagesCount > 1;
         public event EventHandler<BitmapImage> ImageDownloaded;
+        public bool ImageDownloadedSubscribed => ImageDownloaded != null;
 
         public string IllustrationLink => WrappedIllustration == null ? "" :
             $"https://www.pixiv.net/member_illust.php?mode=medium&illust_id={WrappedIllustration.Id.ToString()}";

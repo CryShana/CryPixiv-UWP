@@ -60,7 +60,11 @@ namespace CryPixiv2
 
             var item = e.Parameter as IllustrationWrapper;
             Illustration = item;
-            Illustration.ImageDownloaded += (a,b) => progress.IsActive = IsCurrentPageLoading;
+
+            // only subscribe if not subscribed yet
+            if (Illustration.ImageDownloadedSubscribed == false) Illustration.ImageDownloaded += (a,b) => progress.IsActive = IsCurrentPageLoading;
+            // check progress and hide it if already loaded
+            progress.IsActive = IsCurrentPageLoading;
 
             var imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation(Constants.ConnectedAnimationThumbnail);
             if (imageAnimation != null) imageAnimation.TryStart(fullImage);
