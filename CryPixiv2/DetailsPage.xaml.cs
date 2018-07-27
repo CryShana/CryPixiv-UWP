@@ -28,6 +28,8 @@ namespace CryPixiv2
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         IllustrationWrapper illust = null;
         #endregion
+
+        #region Public Properties
         public IllustrationWrapper Illustration { get => illust; set { illust = value; Changed(); } }
         public bool IsCurrentPageLoading
         {
@@ -39,7 +41,8 @@ namespace CryPixiv2
             }
         }
         public int CurrentPage => _flipview.SelectedIndex + 1;
-        public string PageCounter => $"{CurrentPage} / {Illustration.ImagesCount}";
+        public string PageCounter => $"{CurrentPage} / {Illustration.ImagesCount}"; 
+        #endregion
 
         public DetailsPage()
         {
@@ -110,7 +113,6 @@ namespace CryPixiv2
             progress.IsActive = IsCurrentPageLoading;
             Changed("CurrentPage");
             Changed("PageCounter");
-        }
-        
+        }      
     }
 }

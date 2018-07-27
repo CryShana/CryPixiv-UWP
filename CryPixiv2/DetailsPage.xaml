@@ -10,18 +10,22 @@
 
     <Grid Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="887*"/>
-            <RowDefinition Height="113*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="113"/>
         </Grid.RowDefinitions>
-        
+
         <ProgressRing x:Name="progress" HorizontalAlignment="Center" VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" Canvas.ZIndex="10"/>
-        
-        <FlipView x:Name="_flipview" HorizontalAlignment="Center" VerticalAlignment="Center" Height="887" Width="1500" Margin="0,0,0,0" SelectionChanged="_flipview_SelectionChanged">
+
+        <FlipView x:Name="_flipview" SelectionChanged="_flipview_SelectionChanged">
             <Image x:Name="fullImage" Source="{Binding FullImage, Mode=OneWay}"/>
         </FlipView>
 
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="0" Width="0" Grid.Row="1">
-            <TextBlock Text="{x:Bind PageCounter}" FontSize="14" Foreground="Black"></TextBlock>
+        <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="auto" Width="auto" Background="#7F000000">
+            <TextBlock Text="{x:Bind PageCounter, Mode=OneWay}" FontSize="16" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,10,15,10" />
+        </Grid>
+
+        <Grid Grid.Row="1">
+
             <!-- Artist info -->
             <!-- Post info -->
             <!-- Buttons -->
