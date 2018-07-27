@@ -9,6 +9,14 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid Background="White">
-        <Image x:Name="fullImage" Margin="1,4,399,1" Source="{Binding FullImage}" Stretch="Uniform" VerticalAlignment="Stretch"/>
+        <FlipView x:Name="_flipview" Margin="0,0,0,100">
+            <Image x:Name="fullImage" Source="{Binding FullImage, Mode=OneWay}"/>
+        </FlipView>
+        
+        <Grid>
+            <!-- Artist info -->
+            <!-- Post info -->
+            <!-- Buttons -->
+        </Grid>
     </Grid>
 </Page>

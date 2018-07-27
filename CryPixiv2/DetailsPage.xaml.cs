@@ -26,14 +26,14 @@ namespace CryPixiv2
         public event PropertyChangedEventHandler PropertyChanged;
         public void Changed([CallerMemberName]string name = "")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        IllustrationWrapper illust = null; 
+        IllustrationWrapper illust = null;
         #endregion
         public IllustrationWrapper Illustration { get => illust; set { illust = value; Changed(); } }
 
         public DetailsPage()
         {
             this.InitializeComponent();
-            this.PointerPressed += DetailsPage_PointerPressed;   
+            this.PointerPressed += DetailsPage_PointerPressed;
         }
 
         private void DetailsPage_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -51,13 +51,42 @@ namespace CryPixiv2
             Illustration = item;
 
             var imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation(Constants.ConnectedAnimationThumbnail);
-            if (imageAnimation != null) imageAnimation.TryStart(fullImage);          
+            if (imageAnimation != null) imageAnimation.TryStart(fullImage);
+
+            // remove other images from flipview
+            if (_flipview.Items.Count > 1)
+                for (int i = _flipview.Items.Count - 1; i >= 1; i--) _flipview.Items.RemoveAt(i);
+
+            // add other images
+            if (item.HasMultipleImages)
+            {
+                int i = 0;
+                foreach (var img in item.WrappedIllustration.MetaPages.Skip(1))
+                {
+                    Image imgElement = new Image();
+                    Binding b = new Binding();
+                    b.Source = item;
+                    b.Path = new PropertyPath($"OtherImages[{i}]");
+                    b.Mode = BindingMode.OneWay;
+                    BindingOperations.SetBinding(imgElement, Image.SourceProperty, b);
+                    _flipview.Items.Add(imgElement);
+                    i++;
+                }
+            }
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             base.OnNavigatingFrom(e);
-            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(Constants.ConnectedAnimationImage, fullImage);
+
+            try
+            {
+                ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(Constants.ConnectedAnimationImage, (Image)_flipview.Items[_flipview.SelectedIndex]);
+            }
+            catch
+            {
+                // might throw exception if element not in view
+            }
         }
     }
 }
