@@ -199,6 +199,9 @@ namespace CryPixiv2.Controls
 
         public static async void BookmarkWork(IllustrationWrapper work, bool isPublic)
         {
+            MainPage.Logger.Info($"{(work.IsBookmarked ? "Unbookmarking" : "Bookmarking")} work. " +
+                $"(Id: {work.WrappedIllustration.Id}, IsPublic: {isPublic.ToString()})");
+
             if (work.IsBookmarked)
             {
                 // unbookmark it
@@ -210,10 +213,11 @@ namespace CryPixiv2.Controls
                     await work.AssociatedAccount.RemoveBookmark(work.WrappedIllustration.Id);
                     IllustrationBookmarkChange?.Invoke(null, new Tuple<IllustrationWrapper, bool>(work, isPublic));
                 }
-                catch
+                catch (Exception ex)
                 {
                     // fail - restore previous value
                     work.IsBookmarked = true;
+                    MainPage.Logger.Error(ex, "Failed to remove bookmark!");
                 }
             }
             else
@@ -227,10 +231,11 @@ namespace CryPixiv2.Controls
                     await work.AssociatedAccount.AddBookmark(work.WrappedIllustration.Id, isPublic);
                     IllustrationBookmarkChange?.Invoke(null, new Tuple<IllustrationWrapper, bool>(work, isPublic));
                 }
-                catch
+                catch (Exception ex)
                 {
                     // fail - restore previous value
                     work.IsBookmarked = false;
+                    MainPage.Logger.Error(ex, "Failed to add bookmark!");
                 }
             }
         }

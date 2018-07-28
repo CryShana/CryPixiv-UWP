@@ -82,7 +82,7 @@ namespace CryPixiv2.ViewModels
         {
             try
             {
-                MainPage.Logger.Info($"Attempting to login... (Parameters: {username ?? "null"}, {password ?? "null"}, {refreshToken ?? "null"}");
+                MainPage.Logger.Info($"Attempting to login... (Parameters: {username ?? "null"}, {password ?? "null"}, {refreshToken ?? "null"})");
 
                 if (string.IsNullOrEmpty(refreshToken) &&
                     (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password)))
