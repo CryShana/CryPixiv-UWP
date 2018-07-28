@@ -348,11 +348,10 @@ namespace CryPixiv2
         }
         #endregion
 
-        private void Tag_Click(object sender, PointerRoutedEventArgs e)
+        private void tagsCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var panel = (dynamic)sender;
-            var tag = panel.DataContext.Name as string;
-
+            if (tagsCombobox.SelectedItem == null) return;
+            var tag = ((dynamic)tagsCombobox.SelectedItem).Name as string;
             var p = new DataPackage();
             p.SetText(tag);
             p.RequestedOperation = DataPackageOperation.Copy;
@@ -360,6 +359,8 @@ namespace CryPixiv2
             Clipboard.Flush();
 
             ShowNotification("Tag copied to clipboard.");
+
+            tagsCombobox.SelectedItem = null;
         }
     }
 }

@@ -129,8 +129,8 @@
         </VisualStateManager.VisualStateGroups>
 
         <!-- PROGRESS RING -->
-        <ProgressRing x:Name="progress" HorizontalAlignment="Left" VerticalAlignment="Center" Height="70" Width="70" 
-                      Foreground="Black" Canvas.ZIndex="10" Margin="715,0,0,0"/>
+        <ProgressRing x:Name="progress" HorizontalAlignment="Center" VerticalAlignment="Center" Height="70" Width="70" 
+                      Foreground="Black" Canvas.ZIndex="10"/>
 
         <!-- IMAGE VIEWER -->
         <FlipView x:Name="_flipview" SelectionChanged="_flipview_SelectionChanged"
@@ -244,10 +244,10 @@
         <Grid Grid.Row="1" x:Name="tagsGrid" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="300" Canvas.ZIndex="10">
             <TextBlock x:Name="lel" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <ComboBox PlaceholderText="Click to copy tag" ItemsSource="{Binding WrappedIllustration.Tags,Mode=OneWay}" HorizontalAlignment="Stretch" 
-                      Margin="10,10,10,0" VerticalAlignment="Top" x:Name="tagsCombobox">
+                      Margin="10,10,10,0" VerticalAlignment="Top" x:Name="tagsCombobox" SelectionChanged="tagsCombobox_SelectionChanged">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel PointerPressed="Tag_Click">
+                        <StackPanel>
                             <TextBlock Text="{Binding}" />
                         </StackPanel>
                     </DataTemplate>
