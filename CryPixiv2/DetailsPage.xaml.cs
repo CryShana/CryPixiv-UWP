@@ -36,6 +36,10 @@ namespace CryPixiv2
         IllustrationWrapper illust = null;
         #endregion
 
+        #region Private Fields
+        bool pageslidervis = false;
+        #endregion
+
         #region Public Properties
         public IllustrationWrapper Illustration { get => illust; set { illust = value; Changed(); } }
         public bool IsCurrentPageLoading
@@ -48,13 +52,28 @@ namespace CryPixiv2
             }
         }
         public int CurrentPage => _flipview.SelectedIndex + 1;
-        public string PageCounter => $"{CurrentPage} / {Illustration.ImagesCount}"; 
+        public string PageCounter => $"{CurrentPage} / {Illustration.ImagesCount}";
+        #endregion
+
+        #region Private Properties
+        private int MaxSelectedIndex => Illustration.ImagesCount - 1;
+        private bool PageSliderVisible { get => pageslidervis; set { pageslidervis = value; Changed(); } }
         #endregion
 
         public DetailsPage()
         {
             this.InitializeComponent();
             this.PointerPressed += DetailsPage_PointerPressed;
+            this.PreviewKeyDown += DetailsPage_PreviewKeyDown;
+        }
+
+        private void DetailsPage_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            var isBackPressed = 
+                e.Key == Windows.System.VirtualKey.Escape || 
+                e.Key == Windows.System.VirtualKey.Back || 
+                e.Key == Windows.System.VirtualKey.GoBack;
+            if (isBackPressed) MainPage.CurrentInstance.GoBack();
         }
 
         private void DetailsPage_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -72,7 +91,7 @@ namespace CryPixiv2
             Illustration = item;
 
             // only subscribe if not subscribed yet
-            if (Illustration.ImageDownloadedSubscribed == false) Illustration.ImageDownloaded += (a,b) => progress.IsActive = IsCurrentPageLoading;
+            if (Illustration.ImageDownloadedSubscribed == false) Illustration.ImageDownloaded += (a, b) => progress.IsActive = IsCurrentPageLoading;
             // check progress and hide it if already loaded
             progress.IsActive = IsCurrentPageLoading;
 
@@ -122,11 +141,6 @@ namespace CryPixiv2
             Changed("PageCounter");
         }
 
-        private async void SaveToFile(BitmapImage img)
-        {
-
-        }
-
         private async Task<byte[]> GetImageData(int selectedIndex)
         {
             // get image url and download it again 
@@ -164,7 +178,7 @@ namespace CryPixiv2
             {
                 FileSavePicker picker = new FileSavePicker();
                 picker.SuggestedStartLocation = PickerLocationId.Downloads;
-                picker.SuggestedFileName =GetFileName(_flipview.SelectedIndex);
+                picker.SuggestedFileName = GetFileName(_flipview.SelectedIndex);
                 picker.FileTypeChoices.Add("PNG file", new[] { ".png" });
                 var d = await picker.PickSaveFileAsync();
 
@@ -191,7 +205,7 @@ namespace CryPixiv2
                 {
                     var data = await GetImageData(i);
                     await FileIO.WriteBytesAsync(await d.CreateFileAsync(GetFileName(i), CreationCollisionOption.GenerateUniqueName), data);
-                }                                 
+                }
             }
             catch
             {
@@ -209,6 +223,11 @@ namespace CryPixiv2
             {
                 // URI launch failed
             }
+        }
+
+        private void PageCounter_Click(object sender, PointerRoutedEventArgs e)
+        {
+            PageSliderVisible = !PageSliderVisible;
         }
     }
 }

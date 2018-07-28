@@ -13,11 +13,22 @@
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{Binding HasMultipleImages, Mode=OneWay}" />
+                        <StateTrigger IsActive="{Binding HasMultipleImages}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="allimagesSeperator.Visibility" Value="Visible" />
                         <Setter Target="allimagesItem.Visibility" Value="Visible" />
+                        <Setter Target="pageCounter.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind PageSliderVisible, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="pageSlider.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -28,8 +39,10 @@
             <RowDefinition Height="113"/>
         </Grid.RowDefinitions>
 
+        <!-- PROGRESS RING -->
         <ProgressRing x:Name="progress" HorizontalAlignment="Center" VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" Canvas.ZIndex="10"/>
 
+        <!-- IMAGE VIEWER -->
         <FlipView x:Name="_flipview" SelectionChanged="_flipview_SelectionChanged">
             <FlipView.ContextFlyout>
                 <MenuFlyout>
@@ -44,10 +57,19 @@
             <Image x:Name="fullImage" Source="{Binding FullImage, Mode=OneWay}"/>
         </FlipView>
 
-        <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="auto" Width="auto" Background="#7F000000">
-            <TextBlock Text="{x:Bind PageCounter, Mode=OneWay}" FontSize="16" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,10,15,10" />
-        </Grid>
+        <!-- PAGE COUNTER -->
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Height="42" Width="auto" Background="#7F000000"
+              PointerPressed="PageCounter_Click" Orientation="Horizontal" x:Name="pageCounter" Visibility="Collapsed">
 
+            <TextBlock Text="{x:Bind PageCounter, Mode=OneWay}" FontSize="16" Foreground="White" 
+                       HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,10,15,10"/>
+
+            <Slider Value="{Binding ElementName=_flipview, Path=SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                    x:Name="pageSlider" Minimum="0" Maximum="{x:Bind MaxSelectedIndex, Mode=OneWay}" Width="200" Margin="15,3,15,2"
+                    Visibility="Collapsed" IsThumbToolTipEnabled="False" />
+        </StackPanel>
+
+        <!-- DETAILS -->
         <Grid Grid.Row="1">
 
             <!-- Artist info -->
