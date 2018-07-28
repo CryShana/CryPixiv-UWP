@@ -183,9 +183,9 @@ namespace CryPixiv2.Controls
         }
         #endregion
 
-        private void btnImage_PointerPressed(object sender, PointerRoutedEventArgs e)
+        private void btnBookmark_Click(object sender, PointerRoutedEventArgs e)
         {
-            e.Handled = true;
+            e.Handled = true; // so the post isn't clicked
 
             var work = ((Image)sender).DataContext as IllustrationWrapper;
             BookmarkWork(work, true);
@@ -197,7 +197,7 @@ namespace CryPixiv2.Controls
             BookmarkWork(work, false);
         }
 
-        private async void BookmarkWork(IllustrationWrapper work, bool isPublic)
+        public static async void BookmarkWork(IllustrationWrapper work, bool isPublic)
         {
             if (work.IsBookmarked)
             {
@@ -208,7 +208,7 @@ namespace CryPixiv2.Controls
                 {
                     // remove bookmark
                     await work.AssociatedAccount.RemoveBookmark(work.WrappedIllustration.Id);
-                    IllustrationBookmarkChange?.Invoke(this, new Tuple<IllustrationWrapper, bool>(work, isPublic));
+                    IllustrationBookmarkChange?.Invoke(null, new Tuple<IllustrationWrapper, bool>(work, isPublic));
                 }
                 catch
                 {
@@ -225,7 +225,7 @@ namespace CryPixiv2.Controls
                 {
                     // add bookmark
                     await work.AssociatedAccount.AddBookmark(work.WrappedIllustration.Id, isPublic);
-                    IllustrationBookmarkChange?.Invoke(this, new Tuple<IllustrationWrapper, bool>(work, isPublic));
+                    IllustrationBookmarkChange?.Invoke(null, new Tuple<IllustrationWrapper, bool>(work, isPublic));
                 }
                 catch
                 {

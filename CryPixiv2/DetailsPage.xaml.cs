@@ -1,4 +1,5 @@
-﻿using CryPixiv2.Wrappers;
+﻿using CryPixiv2.Controls;
+using CryPixiv2.Wrappers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -85,6 +86,8 @@ namespace CryPixiv2
                 else return "-";
             }
         }
+        private double DescriptionMinWidth => tagsGrid.ActualWidth + artistGrid.ActualWidth + detailGrid.ActualWidth + descriptionGrid.ActualWidth;
+        private double DetailMinWidth => tagsGrid.ActualWidth + artistGrid.ActualWidth + detailGrid.ActualWidth;
         #endregion
 
         public DetailsPage()
@@ -92,6 +95,11 @@ namespace CryPixiv2
             this.InitializeComponent();
             this.PointerPressed += DetailsPage_PointerPressed;
             this.PreviewKeyDown += DetailsPage_PreviewKeyDown;
+            this.SizeChanged += (a, b) =>
+            {
+                Changed("DescriptionMinWidth");
+                Changed("DetailMinWidth");
+            };
         }
 
         private void DetailsPage_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
@@ -237,7 +245,7 @@ namespace CryPixiv2
                 picker.SuggestedStartLocation = PickerLocationId.Downloads;
                 picker.FileTypeFilter.Add(".png");
                 picker.FileTypeFilter.Add(".jpg");
-                 
+
                 var d = await picker.PickSingleFolderAsync();
 
                 ShowNotification("Saving images...");
@@ -269,6 +277,10 @@ namespace CryPixiv2
                 ShowNotification("Failed to open in browser!");
             }
         }
+
+        private void btnBookmark_Click(object sender, PointerRoutedEventArgs e) => IllustrationGrid.BookmarkWork(Illustration, true);
+
+        private void bookmarkPrivatelyItem_Click(object sender, RoutedEventArgs e) => IllustrationGrid.BookmarkWork(Illustration, false);
         #endregion
 
         #region PageCounter Animations
@@ -294,7 +306,11 @@ namespace CryPixiv2
 
         private void ArtistGrid_Click(object sender, PointerRoutedEventArgs e)
         {
+            var rclick = e.GetCurrentPoint(sender as UIElement).Properties.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.RightButtonPressed;
+            if (rclick) return;
+
             // open artist in another page
+            var a = 5;
         }
         private async void btnFollow_Click(object sender, RoutedEventArgs e)
         {
@@ -331,5 +347,19 @@ namespace CryPixiv2
             }
         }
         #endregion
+
+        private void Tag_Click(object sender, PointerRoutedEventArgs e)
+        {
+            var panel = (dynamic)sender;
+            var tag = panel.DataContext.Name as string;
+
+            var p = new DataPackage();
+            p.SetText(tag);
+            p.RequestedOperation = DataPackageOperation.Copy;
+            Clipboard.SetContent(p);
+            Clipboard.Flush();
+
+            ShowNotification("Tag copied to clipboard.");
+        }
     }
 }

@@ -12,7 +12,13 @@
         <BitmapImage x:Key="missingImage" UriSource="Assets/Images/missingImage.jpg" />
     </Page.Resources>
     <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="113"/>
+        </Grid.RowDefinitions>
+
         <VisualStateManager.VisualStateGroups>
+            <!-- WHEN MULTIPLE IMAGES show more options in context menu and show page counter -->
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
@@ -25,6 +31,7 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
+            <!-- When Page slider should be visible -->
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
@@ -35,6 +42,7 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
+            <!-- HOVER EFFECTS -->
             <VisualStateGroup>
                 <VisualState x:Name="state_gridMouseOver">
                     <VisualState.Setters>
@@ -59,6 +67,7 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
+            <!-- ARTIST FOLLOW BUTTON -->
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
@@ -70,18 +79,62 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
+            <!-- WINDOW RESIZE -->
+            <VisualStateGroup x:Name="descriptionGroup">
+                <VisualStateGroup.Transitions>
+                    <VisualTransition GeneratedDuration="0:0:0.4" />
+                </VisualStateGroup.Transitions>
+
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{x:Bind DescriptionMinWidth,Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="descriptionGrid.Opacity" Value="1" />
+                        <Setter Target="detailGrid.Opacity" Value="1" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{x:Bind DetailMinWidth,Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="descriptionGrid.Opacity" Value="0" />
+                        <Setter Target="detailGrid.Opacity" Value="1" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="descriptionGrid.Opacity" Value="0" />
+                        <Setter Target="detailGrid.Opacity" Value="0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <!-- HEART ICON STATES -->
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{Binding IsBookmarked,Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="btnBookmark.Source" Value="ms-appx:///Assets/Images/heart-red.png" />
+                        <Setter Target="bookmarkPrivatelyItem.Visibility" Value="Collapsed" />
+                        <Setter Target="bookmarkPrivatelySeparator.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="113"/>
-        </Grid.RowDefinitions>
-
         <!-- PROGRESS RING -->
-        <ProgressRing x:Name="progress" HorizontalAlignment="Center" VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" Canvas.ZIndex="10"/>
+        <ProgressRing x:Name="progress" HorizontalAlignment="Left" VerticalAlignment="Center" Height="70" Width="70" 
+                      Foreground="Black" Canvas.ZIndex="10" Margin="715,0,0,0"/>
 
         <!-- IMAGE VIEWER -->
-        <FlipView x:Name="_flipview" SelectionChanged="_flipview_SelectionChanged">
+        <FlipView x:Name="_flipview" SelectionChanged="_flipview_SelectionChanged"
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <FlipView.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem Click="CopyImage_Click">Copy image</MenuFlyoutItem>
@@ -89,6 +142,8 @@
                     <MenuFlyoutSeparator x:Name="allimagesSeperator" Visibility="Collapsed"/>
                     <MenuFlyoutItem Click="SaveAllImages_Click" x:Name="allimagesItem" Visibility="Collapsed">Save all images</MenuFlyoutItem>
                     <MenuFlyoutSeparator />
+                    <MenuFlyoutItem x:Name="bookmarkPrivatelyItem" Click="bookmarkPrivatelyItem_Click">Bookmark privately</MenuFlyoutItem>
+                    <MenuFlyoutSeparator x:Name="bookmarkPrivatelySeparator" />
                     <MenuFlyoutItem Click="OpenInBrowser_Click">Open in browser</MenuFlyoutItem>
                 </MenuFlyout>
             </FlipView.ContextFlyout>
@@ -96,7 +151,7 @@
         </FlipView>
 
         <!-- PAGE COUNTER -->
-        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Height="42" Width="auto" Background="#7F000000"
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Height="42" Background="#7F000000"
                     Orientation="Horizontal" x:Name="pageCounter" Visibility="Collapsed">
 
             <Grid x:Name="pageCounterGrid" Background="#14000000" PointerPressed="PageCounter_Click"
@@ -112,7 +167,7 @@
 
         <!-- IMAGE INFO -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" 
-                    Background="#4C000000" Height="42" Width="auto" Padding="10">
+                    Background="#4C000000" Padding="10" Canvas.ZIndex="9">
             <TextBlock Text="{x:Bind CurrentImageResolution, Mode=OneWay}" Foreground="White" />
             <TextBlock Foreground="White">
                 <Run Text=" (" />
@@ -122,7 +177,8 @@
         </StackPanel>
 
         <!-- DETAILS -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,10,10,10">
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,0,0,0" HorizontalAlignment="Left" 
+                    VerticalAlignment="Center" Canvas.ZIndex="9">
             <Grid x:Name="artistGrid" HorizontalAlignment="Left" PointerPressed="ArtistGrid_Click"
                   PointerEntered="ArtistGrid_Entered" PointerExited="ArtistGrid_Exited" Margin="-10,-10,0,-10">
                 <Grid.ContextFlyout>
@@ -130,8 +186,10 @@
                         <MenuFlyoutItem Click="ArtistOpenBrowser_Click">Open in browser</MenuFlyoutItem>
                     </MenuFlyout>
                 </Grid.ContextFlyout>
+
                 <Image Source="{Binding ArtistImage, Mode=OneWay, FallbackValue={StaticResource missingImage}, TargetNullValue={StaticResource missingImage}}" 
                        Height="94" Width="94" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+
                 <StackPanel Margin="115,10,20,10" HorizontalAlignment="Left">
                     <TextBlock Text="{Binding WrappedIllustration.ArtistUser.Name}" IsTextSelectionEnabled="True" FontSize="18" FontWeight="Bold" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
                     <TextBlock Text="{Binding WrappedIllustration.ArtistUser.Id}" IsTextSelectionEnabled="True" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -141,7 +199,7 @@
                     </StackPanel>
                 </StackPanel>
             </Grid>
-            <Grid MaxWidth="400">
+            <Grid MaxWidth="500" x:Name="detailGrid" Opacity="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80"/>
                     <ColumnDefinition Width="*"/>
@@ -168,7 +226,7 @@
                            FontSize="16" TextAlignment="Right" Margin="0,0,10,0"/>
                 <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding CreatedText, Mode=OneWay}" FontSize="16"/>
             </Grid>
-            <Grid MaxWidth="500">
+            <Grid MaxWidth="500" x:Name="descriptionGrid" Opacity="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120"/>
                     <ColumnDefinition Width="*"/>
@@ -182,7 +240,27 @@
             </Grid>
         </StackPanel>
 
+        <!-- TAGS AND BUTTONS -->
+        <Grid Grid.Row="1" x:Name="tagsGrid" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="300" Canvas.ZIndex="10">
+            <TextBlock x:Name="lel" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <ComboBox PlaceholderText="Click to copy tag" ItemsSource="{Binding WrappedIllustration.Tags,Mode=OneWay}" HorizontalAlignment="Stretch" 
+                      Margin="10,10,10,0" VerticalAlignment="Top" x:Name="tagsCombobox">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel PointerPressed="Tag_Click">
+                            <TextBlock Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <!-- HEART ICON -->
+            <Image x:Name="btnBookmark" Canvas.ZIndex="6" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="40" Width="40" 
+                   Margin="0,0,10,16" Source="ms-appx:///Assets/Images/heart-empty.png" PointerPressed="btnBookmark_Click" />
+        </Grid>
+
         <!-- NOTIFICATION -->
-        <controls:InAppNotification x:Name="notification" Canvas.ZIndex="100" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
+        <controls:InAppNotification x:Name="notification" Canvas.ZIndex="100"
+                                    HorizontalAlignment="Center" VerticalAlignment="Bottom"  />
     </Grid>
 </Page>
