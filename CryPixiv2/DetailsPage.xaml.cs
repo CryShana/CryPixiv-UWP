@@ -190,6 +190,7 @@ namespace CryPixiv2
             try
             {
                 ShowNotification("Copying image...");
+
                 var data = await GetImageData(_flipview.SelectedIndex);
 
                 InMemoryRandomAccessStream rstream = new InMemoryRandomAccessStream();
@@ -295,7 +296,11 @@ namespace CryPixiv2
             => VisualStateManager.GoToState(this, "state_gridMouseExit", false);
         #endregion
 
-        public void ShowNotification(string text) => notification.Show(text, Constants.InAppNotificationDuration);
+        public void ShowNotification(string text)
+        {
+            MainPage.Logger.Info("Notification shown: " + text);
+            notification.Show(text, Constants.InAppNotificationDuration);
+        }
 
         #region Artist Grid
         private void ArtistGrid_Entered(object sender, PointerRoutedEventArgs e)

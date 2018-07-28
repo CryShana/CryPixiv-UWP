@@ -28,12 +28,15 @@ using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using static Microsoft.Identity.Client.Logger;
 
 namespace CryPixiv2
 {
     public sealed partial class MainPage : Page
     {
         public static MainPage CurrentInstance;
+        public static NLog.Logger Logger;
+        public static StorageFolder LocalFolder = ApplicationData.Current.LocalFolder;     
 
         public MainViewModel ViewModel;
         public ApplicationDataContainer LocalStorage;
@@ -42,16 +45,31 @@ namespace CryPixiv2
         public MainPage()
         {
             this.InitializeComponent();
+
+            // This is required for connected animations to properly work between different pages
             this.NavigationCacheMode = NavigationCacheMode.Required;
             this.NavigationManager = SystemNavigationManager.GetForCurrentView();
             this.NavigationManager.BackRequested += (a, b) => GoBack();
+            
+            // Configure logger
+            NLog.LogManager.Configuration.Variables["LogPath"] = LocalFolder.Path;
+            Logger = NLog.LogManager.GetLogger("Main");
 
+            // Upon closing app, make sure to properly flush logger
+            Application.Current.Suspending += (a, b) => NLog.LogManager.Shutdown();
+            Application.Current.UnhandledException += (a, b) => Logger.Fatal(b.Exception, b.Message);
+
+            // Set all necessary variables
             CurrentInstance = this;
             LocalStorage = ApplicationData.Current.LocalSettings;
             ViewModel = (MainViewModel)Application.Current.Resources["mainViewModel"];
+
+            // When user changes bookmarks - this will handle bookmarks being added or removed to/from the bookmark grid
             IllustrationGrid.IllustrationBookmarkChange += IllustrationGrid_IllustrationBookmarkChange;
+
+            // When user clicks on any item in any grid - it will open the DetailsPage
             IllustrationGrid.ItemClicked += IllustrationGrid_ItemClicked;
-            
+
             AttemptToLogin();
         }
 

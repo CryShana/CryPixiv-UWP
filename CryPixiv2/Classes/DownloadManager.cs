@@ -73,16 +73,16 @@ namespace CryPixiv2.Classes
                 }
                 catch (EndReachedException)
                 {
-                    Debug.WriteLine("End Reached!");
+                    MainPage.Logger.Info("End Reached!");
                 }
-                catch (COMException)
+                catch (COMException cex)
                 {
-                    Debug.WriteLine("COM Exception!");
+                    MainPage.Logger.Error(cex, "COM Exception!");
                 }
-                catch (LoginException)
+                catch (LoginException lex)
                 {
                     // user is not logged in
-                    Debug.WriteLine("User not logged in!");
+                    MainPage.Logger.Error(lex, "User not logged in!");
 
                     // retry login
                     var vm = MainPage.CurrentInstance.ViewModel;
@@ -90,7 +90,7 @@ namespace CryPixiv2.Classes
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("Unknown exception! " + ex.Message);
+                    MainPage.Logger.Error(ex, "Unknown exception!");
                 }                
             }, src.Token);
         }

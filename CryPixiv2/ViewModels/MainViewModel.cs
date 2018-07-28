@@ -82,6 +82,8 @@ namespace CryPixiv2.ViewModels
         {
             try
             {
+                MainPage.Logger.Info($"Attempting to login... (Parameters: {username ?? "null"}, {password ?? "null"}, {refreshToken ?? "null"}");
+
                 if (string.IsNullOrEmpty(refreshToken) &&
                     (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password)))
                     throw new LoginException("User not logged in!");
@@ -96,20 +98,24 @@ namespace CryPixiv2.ViewModels
                 }
 
                 SaveAuthInfo();
+                MainPage.Logger.Info($"Logged in successfully.");
             }
             catch (LoginException lex)
             {
                 // failed to login (either 'invalid refresh token' or 'user not logged in')
                 LoginFormShown = true;
                 LoginFormErrorMessage = lex.Message;
+                MainPage.Logger.Warn(lex.Message);
             }
             catch (HttpRequestException httpex)
             {
                 // internet error - set timeout and try again later
+                MainPage.Logger.Error(httpex, "HTTP error while trying to login!");
             }
             catch (Exception ex)
             {
                 // unkown error
+                MainPage.Logger.Error(ex, "Unknown error while trying to login!");
             }
             finally
             {
