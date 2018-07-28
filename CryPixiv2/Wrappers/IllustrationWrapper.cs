@@ -1,6 +1,7 @@
 ﻿using CryPixivAPI;
 using CryPixivAPI.Classes;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -26,9 +27,9 @@ namespace CryPixiv2.Wrappers
         public string IllustrationLink => WrappedIllustration == null ? "" :
             $"https://www.pixiv.net/member_illust.php?mode=medium&illust_id={WrappedIllustration.Id.ToString()}";
         public string ArtistLink => WrappedIllustration == null ? "" : $"https://www.pixiv.net/member.php?id=" + WrappedIllustration.ArtistUser.Id;
-        public string Description => WrappedIllustration.Caption.Replace("<br/>", "\n");
-        public Dictionary<int, long> FileSizes { get; set; } = new Dictionary<int, long>();
-        public Dictionary<int, string> Resolutions { get; set; } = new Dictionary<int, string>();
+        public string Description => WrappedIllustration.Caption.Replace("<br/>", "\n").Replace("<br />", "\n");
+        public ConcurrentDictionary<int, long> FileSizes { get; set; } = new ConcurrentDictionary<int, long>();
+        public ConcurrentDictionary<int, string> Resolutions { get; set; } = new ConcurrentDictionary<int, string>();
         #endregion
 
         #region Thumbnail Image Fetching

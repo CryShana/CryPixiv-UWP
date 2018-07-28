@@ -141,7 +141,7 @@
                     </StackPanel>
                 </StackPanel>
             </Grid>
-            <Grid MaxWidth="500">
+            <Grid MaxWidth="400">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80"/>
                     <ColumnDefinition Width="*"/>
@@ -168,15 +168,17 @@
                            FontSize="16" TextAlignment="Right" Margin="0,0,10,0"/>
                 <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding CreatedText, Mode=OneWay}" FontSize="16"/>
             </Grid>
-            <Grid MaxWidth="400">
+            <Grid MaxWidth="500">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Description:" FontWeight="Bold" 
                            FontSize="16" TextAlignment="Right" Margin="0,0,10,0"/>
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Description, Mode=OneWay}" FontSize="16" 
-                           IsTextSelectionEnabled="True" TextWrapping="Wrap"/>
+                <ScrollViewer Grid.Row="0" Grid.Column="1" VerticalScrollMode="Auto" HorizontalScrollMode="Disabled">
+                    <TextBlock Text="{Binding Description, Mode=OneWay}" FontSize="16" 
+                               HorizontalAlignment="Left" VerticalAlignment="Top" IsTextSelectionEnabled="True" TextWrapping="Wrap" />
+                </ScrollViewer>
             </Grid>
         </StackPanel>
 
