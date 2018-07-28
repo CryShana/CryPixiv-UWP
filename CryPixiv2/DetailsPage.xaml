@@ -32,8 +32,20 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
+            <VisualStateGroup>
+                <VisualState x:Name="state_gridMouseOver">
+                    <VisualState.Setters>
+                        <Setter Target="pageCounterGrid.Background" Value="#3F000000" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="state_gridMouseExit">
+                    <VisualState.Setters>
+                        <Setter Target="pageCounterGrid.Background" Value="#14000000" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="113"/>
@@ -59,14 +71,17 @@
 
         <!-- PAGE COUNTER -->
         <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Height="42" Width="auto" Background="#7F000000"
-              PointerPressed="PageCounter_Click" Orientation="Horizontal" x:Name="pageCounter" Visibility="Collapsed">
+                    Orientation="Horizontal" x:Name="pageCounter" Visibility="Collapsed">
 
-            <TextBlock Text="{x:Bind PageCounter, Mode=OneWay}" FontSize="16" Foreground="White" 
+            <Grid x:Name="pageCounterGrid" Background="#14000000" PointerPressed="PageCounter_Click"
+                  PointerEntered="pageCounterGrid_PointerEntered" PointerExited="pageCounterGrid_PointerExited">
+                <TextBlock Text="{x:Bind PageCounter, Mode=OneWay}" FontSize="16" Foreground="White" 
                        HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,10,15,10"/>
+            </Grid>
 
             <Slider Value="{Binding ElementName=_flipview, Path=SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                     x:Name="pageSlider" Minimum="0" Maximum="{x:Bind MaxSelectedIndex, Mode=OneWay}" Width="200" Margin="15,3,15,2"
-                    Visibility="Collapsed" IsThumbToolTipEnabled="False" />
+                    Visibility="Collapsed" IsThumbToolTipEnabled="False" Background="#66FFFFFF" />
         </StackPanel>
 
         <!-- DETAILS -->

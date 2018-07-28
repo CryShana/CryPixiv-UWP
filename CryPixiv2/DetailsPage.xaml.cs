@@ -69,9 +69,9 @@ namespace CryPixiv2
 
         private void DetailsPage_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            var isBackPressed = 
-                e.Key == Windows.System.VirtualKey.Escape || 
-                e.Key == Windows.System.VirtualKey.Back || 
+            var isBackPressed =
+                e.Key == Windows.System.VirtualKey.Escape ||
+                e.Key == Windows.System.VirtualKey.Back ||
                 e.Key == Windows.System.VirtualKey.GoBack;
             if (isBackPressed) MainPage.CurrentInstance.GoBack();
         }
@@ -141,6 +141,7 @@ namespace CryPixiv2
             Changed("PageCounter");
         }
 
+        #region ContextMenu Action
         private async Task<byte[]> GetImageData(int selectedIndex)
         {
             // get image url and download it again 
@@ -224,10 +225,18 @@ namespace CryPixiv2
                 // URI launch failed
             }
         }
+        #endregion
 
+        #region PageCounter Animations
         private void PageCounter_Click(object sender, PointerRoutedEventArgs e)
-        {
-            PageSliderVisible = !PageSliderVisible;
-        }
+            => PageSliderVisible = !PageSliderVisible;
+
+        private void pageCounterGrid_PointerEntered(object sender, PointerRoutedEventArgs e)
+            => VisualStateManager.GoToState(this, "state_gridMouseOver", false);
+
+
+        private void pageCounterGrid_PointerExited(object sender, PointerRoutedEventArgs e)
+            => VisualStateManager.GoToState(this, "state_gridMouseExit", false);
+        #endregion
     }
 }
