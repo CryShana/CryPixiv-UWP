@@ -64,6 +64,27 @@ namespace CryPixiv2
                 Changed();
             }
         }
+        private string CurrentImageResolution
+        {
+            get
+            {
+                if (Illustration.Resolutions.TryGetValue(_flipview.SelectedIndex, out string resl)) return resl;
+                else return "-";
+            }
+        }
+        private string CurrentImageSize
+        {
+            get
+            {
+                if (Illustration.FileSizes.TryGetValue(_flipview.SelectedIndex, out long size))
+                {
+                    var kbsize = size / 1024.0;
+                    if (kbsize > 1024.0) return $"{Math.Round(kbsize / 1024.0, 2)}MB";
+                    else return $"{Math.Round(kbsize, 2)}kB";
+                }
+                else return "-";
+            }
+        }
         #endregion
 
         public DetailsPage()
@@ -97,7 +118,7 @@ namespace CryPixiv2
             Illustration = item;
 
             // only subscribe if not subscribed yet
-            if (Illustration.ImageDownloadedSubscribed == false) Illustration.ImageDownloaded += (a, b) => progress.IsActive = IsCurrentPageLoading;
+            if (Illustration.ImageDownloadedSubscribed == false) Illustration.ImageDownloaded += (a, b) => _flipview_SelectionChanged(null, null);
             // check progress and hide it if already loaded
             progress.IsActive = IsCurrentPageLoading;
 
@@ -145,6 +166,8 @@ namespace CryPixiv2
             progress.IsActive = IsCurrentPageLoading;
             Changed("CurrentPage");
             Changed("PageCounter");
+            Changed("CurrentImageResolution");
+            Changed("CurrentImageSize");
         }
 
         #region ContextMenu Action
@@ -293,6 +316,18 @@ namespace CryPixiv2
             finally
             {
                 followProgress.IsActive = false;
+            }
+        }
+        private async void ArtistOpenBrowser_Click(object sender, RoutedEventArgs e)
+        {
+            if (await Windows.System.Launcher.LaunchUriAsync(new Uri(Illustration.ArtistLink)))
+            {
+                // URI launched
+            }
+            else
+            {
+                // URI launch failed
+                ShowNotification("Failed to open in browser!");
             }
         }
         #endregion

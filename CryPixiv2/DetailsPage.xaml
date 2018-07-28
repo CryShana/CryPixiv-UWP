@@ -110,13 +110,29 @@
                     Visibility="Collapsed" IsThumbToolTipEnabled="False" Background="#66FFFFFF" />
         </StackPanel>
 
+        <!-- IMAGE INFO -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" 
+                    Background="#4C000000" Height="42" Width="auto" Padding="10">
+            <TextBlock Text="{x:Bind CurrentImageResolution, Mode=OneWay}" Foreground="White" />
+            <TextBlock Foreground="White">
+                <Run Text=" (" />
+                <Run Text="{x:Bind CurrentImageSize, Mode=OneWay}" FontWeight="Bold"/>
+                <Run Text=")" />
+            </TextBlock>
+        </StackPanel>
+
         <!-- DETAILS -->
-        <Grid Grid.Row="1">
-            <Grid x:Name="artistGrid" Background="#0C000000" HorizontalAlignment="Left" PointerPressed="ArtistGrid_Click"
-                  PointerEntered="ArtistGrid_Entered" PointerExited="ArtistGrid_Exited">
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,10,10,10">
+            <Grid x:Name="artistGrid" HorizontalAlignment="Left" PointerPressed="ArtistGrid_Click"
+                  PointerEntered="ArtistGrid_Entered" PointerExited="ArtistGrid_Exited" Margin="-10,-10,0,-10">
+                <Grid.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Click="ArtistOpenBrowser_Click">Open in browser</MenuFlyoutItem>
+                    </MenuFlyout>
+                </Grid.ContextFlyout>
                 <Image Source="{Binding ArtistImage, Mode=OneWay, FallbackValue={StaticResource missingImage}, TargetNullValue={StaticResource missingImage}}" 
-                       Height="94" Width="94" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                <StackPanel Margin="115,10,10,10" Width="300" HorizontalAlignment="Left">
+                       Height="94" Width="94" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                <StackPanel Margin="115,10,20,10" HorizontalAlignment="Left">
                     <TextBlock Text="{Binding WrappedIllustration.ArtistUser.Name}" IsTextSelectionEnabled="True" FontSize="18" FontWeight="Bold" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
                     <TextBlock Text="{Binding WrappedIllustration.ArtistUser.Id}" IsTextSelectionEnabled="True" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <StackPanel Orientation="Horizontal" Margin="0, 18, 0, 0">
@@ -125,7 +141,44 @@
                     </StackPanel>
                 </StackPanel>
             </Grid>
-        </Grid>
+            <Grid MaxWidth="500">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Title:" FontWeight="Bold" 
+                           FontSize="16" TextAlignment="Right" Margin="0,0,10,0"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding WrappedIllustration.Title, Mode=OneWay}" FontSize="16" IsTextSelectionEnabled="True"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Score:" FontWeight="Bold" 
+                           FontSize="16" TextAlignment="Right" Margin="0,0,10,0"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding WrappedIllustration.TotalBookmarks, Mode=OneWay}" FontSize="16" IsTextSelectionEnabled="True"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Views:" FontWeight="Bold" 
+                           FontSize="16" TextAlignment="Right" Margin="0,0,10,0"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding WrappedIllustration.TotalViews, Mode=OneWay}" FontSize="16" IsTextSelectionEnabled="True"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Created:" FontWeight="Bold" 
+                           FontSize="16" TextAlignment="Right" Margin="0,0,10,0"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding CreatedText, Mode=OneWay}" FontSize="16"/>
+            </Grid>
+            <Grid MaxWidth="400">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Description:" FontWeight="Bold" 
+                           FontSize="16" TextAlignment="Right" Margin="0,0,10,0"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Description, Mode=OneWay}" FontSize="16" 
+                           IsTextSelectionEnabled="True" TextWrapping="Wrap"/>
+            </Grid>
+        </StackPanel>
 
         <!-- NOTIFICATION -->
         <controls:InAppNotification x:Name="notification" Canvas.ZIndex="100" HorizontalAlignment="Center" VerticalAlignment="Bottom" />

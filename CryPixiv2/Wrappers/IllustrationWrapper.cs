@@ -16,13 +16,20 @@ namespace CryPixiv2.Wrappers
     {
         public PixivAccount AssociatedAccount { get; set; }
         public Illustration WrappedIllustration { get; set; }
+
+        #region Helper Properties
         public int ImagesCount => (WrappedIllustration.MetaSinglePage.Count == 1 && WrappedIllustration.MetaPages.Count == 0) ? 1 : WrappedIllustration.MetaPages.Count;
         public bool HasMultipleImages => ImagesCount > 1;
         public event EventHandler<BitmapImage> ImageDownloaded;
         public bool ImageDownloadedSubscribed => ImageDownloaded != null;
-
+        public string CreatedText => WrappedIllustration.Created.ToString("dd.MM.yyyy HH:mm");
         public string IllustrationLink => WrappedIllustration == null ? "" :
             $"https://www.pixiv.net/member_illust.php?mode=medium&illust_id={WrappedIllustration.Id.ToString()}";
+        public string ArtistLink => WrappedIllustration == null ? "" : $"https://www.pixiv.net/member.php?id=" + WrappedIllustration.ArtistUser.Id;
+        public string Description => WrappedIllustration.Caption.Replace("<br/>", "\n");
+        public Dictionary<int, long> FileSizes { get; set; } = new Dictionary<int, long>();
+        public Dictionary<int, string> Resolutions { get; set; } = new Dictionary<int, string>();
+        #endregion
 
         #region Thumbnail Image Fetching
         BitmapImage thumbnailImage = null;
@@ -58,7 +65,7 @@ namespace CryPixiv2.Wrappers
             {
                 if (fullImage != null) return fullImage;
 
-                GetImage(WrappedIllustration.FullImagePath, (i, ind) => FullImage = i);
+                GetImage(WrappedIllustration.FullImagePath, (i, ind) => FullImage = i, 0);
                 return thumbnailImage;
             }
             set
@@ -121,7 +128,7 @@ namespace CryPixiv2.Wrappers
         }
 
         #region Private Methods
-        async Task GetImage(string path, Action<BitmapImage, int> callback, int index = 0)
+        async Task GetImage(string path, Action<BitmapImage, int> callback, int index = -1)
         {
             var data = await AssociatedAccount.GetData(path);
             using (var stream = new InMemoryRandomAccessStream())
@@ -133,6 +140,9 @@ namespace CryPixiv2.Wrappers
                 }
                 var image = new BitmapImage();
                 await image.SetSourceAsync(stream);
+
+                FileSizes.TryAdd(index, data.LongLength);
+                Resolutions.TryAdd(index, $"{image.PixelWidth}x{image.PixelHeight}");
 
                 callback(image, index);
                 ImageDownloaded?.Invoke(this, image);
