@@ -92,6 +92,26 @@ namespace CryPixiv2.Wrappers
         }
         #endregion
 
+        #region Artist Image
+        BitmapImage artistImage = null;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public BitmapImage ArtistImage
+        {
+            get
+            {
+                if (artistImage != null) return artistImage;
+
+                GetImage(WrappedIllustration.ArtistUser.ProfileImageUrls.First().Value, (i, ind) => ArtistImage = i);
+                return artistImage;
+            }
+            set
+            {
+                artistImage = value;
+                Changed();
+            }
+        }
+        #endregion
+
         public bool IsBookmarked { get => WrappedIllustration.IsBookmarked; set { WrappedIllustration.IsBookmarked = value; Changed(); } }
 
         public IllustrationWrapper(Illustration illustration, PixivAccount account)
@@ -118,7 +138,6 @@ namespace CryPixiv2.Wrappers
                 ImageDownloaded?.Invoke(this, image);
             }
         }
-
         public string GetOtherImagePath(int index)
         {
             var img = WrappedIllustration.MetaPages[index].ImageUrls;

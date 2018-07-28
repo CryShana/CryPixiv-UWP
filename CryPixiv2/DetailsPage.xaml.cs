@@ -34,9 +34,6 @@ namespace CryPixiv2
         public void Changed([CallerMemberName]string name = "")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         IllustrationWrapper illust = null;
-        #endregion
-
-        #region Private Fields
         bool pageslidervis = false;
         #endregion
 
@@ -58,6 +55,15 @@ namespace CryPixiv2
         #region Private Properties
         private int MaxSelectedIndex => Illustration.ImagesCount - 1;
         private bool PageSliderVisible { get => pageslidervis; set { pageslidervis = value; Changed(); } }
+        private bool IsArtistFollowed
+        {
+            get => Illustration.WrappedIllustration.ArtistUser.IsFollowed;
+            set
+            {
+                Illustration.WrappedIllustration.ArtistUser.IsFollowed = value;
+                Changed();
+            }
+        }
         #endregion
 
         public DetailsPage()
@@ -144,8 +150,7 @@ namespace CryPixiv2
         #region ContextMenu Action
         private async Task<byte[]> GetImageData(int selectedIndex)
         {
-            // get image url and download it again 
-            // (because it's too damn complicated converting existing BitmapImage to byte array while also handling situations where image isn't loaded yet)
+            // get image url and download it again - because stupid UWP can't convert BitmapImages to byte arrays (or to WriteableBitmaps for that matter)
             var uri = (selectedIndex == 0) ? Illustration.WrappedIllustration.FullImagePath : Illustration.GetOtherImagePath(selectedIndex);
             return await Illustration.AssociatedAccount.GetData(uri);
         }
@@ -153,6 +158,7 @@ namespace CryPixiv2
         {
             try
             {
+                ShowNotification("Copying image...");
                 var data = await GetImageData(_flipview.SelectedIndex);
 
                 InMemoryRandomAccessStream rstream = new InMemoryRandomAccessStream();
@@ -165,10 +171,13 @@ namespace CryPixiv2
                 package.RequestedOperation = DataPackageOperation.Copy;
                 Clipboard.SetContent(package);
                 Clipboard.Flush();
+
+                ShowNotification("Image copied.");
             }
             catch
             {
                 // show error
+                ShowNotification("Failed to copy image!");
             }
         }
 
@@ -183,12 +192,17 @@ namespace CryPixiv2
                 picker.FileTypeChoices.Add("PNG file", new[] { ".png" });
                 var d = await picker.PickSaveFileAsync();
 
+                ShowNotification("Saving image...");
+
                 var data = await GetImageData(_flipview.SelectedIndex);
                 await FileIO.WriteBytesAsync(d, data);
+
+                ShowNotification("Image saved.");
             }
             catch
             {
                 // show error
+                ShowNotification("Failed to save image!");
             }
         }
 
@@ -200,17 +214,23 @@ namespace CryPixiv2
                 picker.SuggestedStartLocation = PickerLocationId.Downloads;
                 picker.FileTypeFilter.Add(".png");
                 picker.FileTypeFilter.Add(".jpg");
+                 
                 var d = await picker.PickSingleFolderAsync();
+
+                ShowNotification("Saving images...");
 
                 for (int i = 0; i < Illustration.ImagesCount; i++)
                 {
                     var data = await GetImageData(i);
                     await FileIO.WriteBytesAsync(await d.CreateFileAsync(GetFileName(i), CreationCollisionOption.GenerateUniqueName), data);
                 }
+
+                ShowNotification("Images saved.");
             }
             catch
             {
                 // show error
+                ShowNotification("Failed to save all images!");
             }
         }
 
@@ -223,6 +243,7 @@ namespace CryPixiv2
             else
             {
                 // URI launch failed
+                ShowNotification("Failed to open in browser!");
             }
         }
         #endregion
@@ -237,6 +258,43 @@ namespace CryPixiv2
 
         private void pageCounterGrid_PointerExited(object sender, PointerRoutedEventArgs e)
             => VisualStateManager.GoToState(this, "state_gridMouseExit", false);
+        #endregion
+
+        public void ShowNotification(string text) => notification.Show(text, Constants.InAppNotificationDuration);
+
+        #region Artist Grid
+        private void ArtistGrid_Entered(object sender, PointerRoutedEventArgs e)
+            => VisualStateManager.GoToState(this, "state_agridMouseOver", false);
+
+        private void ArtistGrid_Exited(object sender, PointerRoutedEventArgs e)
+            => VisualStateManager.GoToState(this, "state_agridMouseExit", false);
+
+        private void ArtistGrid_Click(object sender, PointerRoutedEventArgs e)
+        {
+            // open artist in another page
+        }
+        private async void btnFollow_Click(object sender, RoutedEventArgs e)
+        {
+            bool oldval = IsArtistFollowed;
+            followProgress.IsActive = true;
+            try
+            {
+                long id = long.Parse(Illustration.WrappedIllustration.ArtistUser.Id);
+
+                if (IsArtistFollowed == false) await Illustration.AssociatedAccount.FollowUser(id);
+                else await Illustration.AssociatedAccount.UnfollowUser(id);
+
+                IsArtistFollowed = !oldval;
+            }
+            catch
+            {
+                IsArtistFollowed = oldval;
+            }
+            finally
+            {
+                followProgress.IsActive = false;
+            }
+        }
         #endregion
     }
 }

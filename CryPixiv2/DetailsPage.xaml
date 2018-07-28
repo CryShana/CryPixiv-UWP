@@ -4,10 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:CryPixiv2"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" DataContext="{x:Bind Illustration}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    <Page.Resources>
+        <BitmapImage x:Key="missingImage" UriSource="Assets/Images/missingImage.jpg" />
+    </Page.Resources>
     <Grid Background="White">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -41,6 +44,29 @@
                 <VisualState x:Name="state_gridMouseExit">
                     <VisualState.Setters>
                         <Setter Target="pageCounterGrid.Background" Value="#14000000" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup>
+                <VisualState x:Name="state_agridMouseOver">
+                    <VisualState.Setters>
+                        <Setter Target="artistGrid.Background" Value="#0C000000" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="state_agridMouseExit">
+                    <VisualState.Setters>
+                        <Setter Target="artistGrid.Background" Value="White" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind IsArtistFollowed, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="btnFollow.Background" Value="#FFFF8181" />
+                        <Setter Target="btnFollow.Content" Value="Unfollow" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -86,10 +112,22 @@
 
         <!-- DETAILS -->
         <Grid Grid.Row="1">
-
-            <!-- Artist info -->
-            <!-- Post info -->
-            <!-- Buttons -->
+            <Grid x:Name="artistGrid" Background="#0C000000" HorizontalAlignment="Left" PointerPressed="ArtistGrid_Click"
+                  PointerEntered="ArtistGrid_Entered" PointerExited="ArtistGrid_Exited">
+                <Image Source="{Binding ArtistImage, Mode=OneWay, FallbackValue={StaticResource missingImage}, TargetNullValue={StaticResource missingImage}}" 
+                       Height="94" Width="94" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <StackPanel Margin="115,10,10,10" Width="300" HorizontalAlignment="Left">
+                    <TextBlock Text="{Binding WrappedIllustration.ArtistUser.Name}" IsTextSelectionEnabled="True" FontSize="18" FontWeight="Bold" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
+                    <TextBlock Text="{Binding WrappedIllustration.ArtistUser.Id}" IsTextSelectionEnabled="True" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <StackPanel Orientation="Horizontal" Margin="0, 18, 0, 0">
+                        <Button Width="100" Content="Follow" x:Name="btnFollow" Click="btnFollow_Click" />
+                        <ProgressRing x:Name="followProgress" Width="30" Height="30" Margin="7,0,0,0" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
         </Grid>
+
+        <!-- NOTIFICATION -->
+        <controls:InAppNotification x:Name="notification" Canvas.ZIndex="100" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
     </Grid>
 </Page>

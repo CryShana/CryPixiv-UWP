@@ -15,5 +15,6 @@ namespace CryPixiv2
         public const string ConnectedAnimationImage = "ca2";
 
         public const double TimeTillAnimationSkipSeconds = 2;
+        public const int InAppNotificationDuration = 1200;
     }
 }
