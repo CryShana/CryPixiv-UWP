@@ -340,10 +340,16 @@ namespace CryPixiv2
             var dialog = new MessageDialog("Are you sure you wish to log out?", "Log out");
             dialog.Commands.Add(yesCommand);
             dialog.Commands.Add(noCommand);
+            dialog.DefaultCommandIndex = 1;
+            dialog.CancelCommandIndex = 1;
             var command = await dialog.ShowAsync();
 
             if (command == yesCommand)
             {
+                // clear login window data
+                _password.Password = "";
+                _username.Text = "";
+
                 ViewModel.ClearAuthInfo();
                 ViewModel.LoginFormShown = true;
             }
