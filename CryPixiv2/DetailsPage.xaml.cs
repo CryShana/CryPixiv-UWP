@@ -183,7 +183,7 @@ namespace CryPixiv2
         private async Task<byte[]> GetImageData(int selectedIndex)
         {
             // get image url and download it again - because stupid UWP can't convert BitmapImages to byte arrays (or to WriteableBitmaps for that matter)
-            var uri = (selectedIndex == 0) ? Illustration.WrappedIllustration.FullImagePath : Illustration.GetOtherImagePath(selectedIndex);
+            var uri = GlobalFunctions.GetImageUrl(Illustration, selectedIndex);
             return await Illustration.AssociatedAccount.GetData(uri);
         }
         private async void CopyImage_Click(object sender, RoutedEventArgs e)
@@ -194,7 +194,8 @@ namespace CryPixiv2
 
                 var data = await GetImageData(_flipview.SelectedIndex);
 
-                await GlobalFunctions.CopyToClipboardBitmap(data);
+                await GlobalFunctions.CopyToClipboardBitmap(data, 
+                    GlobalFunctions.GetIllustrationFileName(Illustration, _flipview.SelectedIndex));
 
                 ShowNotification("Image copied.");
             }
@@ -206,16 +207,16 @@ namespace CryPixiv2
             }
         }
 
-        private string GetFileName(int index) => $"{Illustration.WrappedIllustration.Id}_p{index}.png";
         private async void SaveImage_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 FileSavePicker picker = new FileSavePicker();
                 picker.SuggestedStartLocation = PickerLocationId.Downloads;
-                picker.SuggestedFileName = GetFileName(_flipview.SelectedIndex);
+                picker.SuggestedFileName = GlobalFunctions.GetIllustrationFileName(Illustration, _flipview.SelectedIndex);
                 picker.FileTypeChoices.Add("PNG file", new[] { ".png" });
                 var d = await picker.PickSaveFileAsync();
+                if (d == null) return;
 
                 ShowNotification("Saving image...", true);
 
@@ -242,13 +243,15 @@ namespace CryPixiv2
                 picker.FileTypeFilter.Add(".jpg");
 
                 var d = await picker.PickSingleFolderAsync();
+                if (d == null) return;
 
                 ShowNotification("Saving images...", true);
 
                 for (int i = 0; i < Illustration.ImagesCount; i++)
                 {
                     var data = await GetImageData(i);
-                    await FileIO.WriteBytesAsync(await d.CreateFileAsync(GetFileName(i), CreationCollisionOption.GenerateUniqueName), data);
+                    await FileIO.WriteBytesAsync(await d.CreateFileAsync(GlobalFunctions.GetIllustrationFileName(Illustration, i), 
+                        CreationCollisionOption.GenerateUniqueName), data);
                 }
 
                 ShowNotification("Images saved.");
