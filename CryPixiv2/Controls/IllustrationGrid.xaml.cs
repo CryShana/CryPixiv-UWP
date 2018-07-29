@@ -104,7 +104,117 @@ namespace CryPixiv2.Controls
             ElementCompositionPreview.GetElementVisual(panel).ImplicitAnimations = elementImplicitAnimation;
         }
 
-        private void DataTemplate_Loaded(object sender, RoutedEventArgs e)
+        private void ItemsWrapGrid_Loaded(object sender, RoutedEventArgs e) => InitializeAnimations((Panel)sender);
+        private static CompositionAnimationGroup CreateOffsetAnimation(Compositor compositor)
+        {
+            // Define Offset Animation for the Animation group
+            var offsetAnimation = compositor.CreateVector3KeyFrameAnimation();
+            offsetAnimation.InsertExpressionKeyFrame(1, "this.FinalValue");
+            offsetAnimation.Duration = TimeSpan.FromSeconds(.8);
+
+            // Define Animation Target for this animation to animate using definition. 
+            offsetAnimation.Target = "Offset";
+
+            // Add Animations to Animation group. 
+            var animationGroup = compositor.CreateAnimationGroup();
+            animationGroup.Add(offsetAnimation);
+
+            return animationGroup;
+        }
+        #endregion
+
+        #region Bookmarking
+        private void btnBookmark_Click(object sender, PointerRoutedEventArgs e)
+        {
+            e.Handled = true; // so the post isn't clicked
+
+            var work = ((Image)sender).DataContext as IllustrationWrapper;
+            BookmarkWork(work, true);
+        }
+
+        private void BookmarkPrivate_Click(object sender, RoutedEventArgs e)
+        {
+            var work = (IllustrationWrapper)((MenuFlyoutItem)sender).DataContext;
+            BookmarkWork(work, false);
+        }
+
+        public static async void BookmarkWork(IllustrationWrapper work, bool isPublic)
+        {
+            MainPage.Logger.Info($"{(work.IsBookmarked ? "Unbookmarking" : "Bookmarking")} work. " +
+                $"(Id: {work.WrappedIllustration.Id}, IsPublic: {isPublic.ToString()})");
+
+            if (work.IsBookmarked)
+            {
+                // unbookmark it
+                work.IsBookmarked = false;
+
+                try
+                {
+                    // remove bookmark
+                    await work.AssociatedAccount.RemoveBookmark(work.WrappedIllustration.Id);
+                    IllustrationBookmarkChange?.Invoke(null, new Tuple<IllustrationWrapper, bool>(work, isPublic));
+                }
+                catch (Exception ex)
+                {
+                    // fail - restore previous value
+                    work.IsBookmarked = true;
+                    MainPage.Logger.Error(ex, "Failed to remove bookmark!");
+                }
+            }
+            else
+            {
+                // bookmark it
+                work.IsBookmarked = true;
+
+                try
+                {
+                    // add bookmark
+                    await work.AssociatedAccount.AddBookmark(work.WrappedIllustration.Id, isPublic);
+                    IllustrationBookmarkChange?.Invoke(null, new Tuple<IllustrationWrapper, bool>(work, isPublic));
+                }
+                catch (Exception ex)
+                {
+                    // fail - restore previous value
+                    work.IsBookmarked = false;
+                    MainPage.Logger.Error(ex, "Failed to add bookmark!");
+                }
+            }
+        } 
+        #endregion
+
+        private void mylist_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var container = mylist.ContainerFromItem(e.ClickedItem) as GridViewItem;
+            if (container != null)
+            {
+                // stash item
+                _storedItem = container.Content as IllustrationWrapper;
+
+                // prepare connected animation (name, stashed item, name of element that will be connected)
+                var animation = mylist.PrepareConnectedAnimation(Constants.ConnectedAnimationThumbnail, _storedItem, thumbImageName);
+
+                ItemClicked?.Invoke(this, _storedItem);
+            }
+            else
+            {
+                // handle this
+            }
+        }
+
+        private async void OpenInBrowser_Click(object sender, RoutedEventArgs e)
+        {
+            var item = (IllustrationWrapper)((MenuFlyoutItem)sender).DataContext;
+            if (await Windows.System.Launcher.LaunchUriAsync(new Uri(item.IllustrationLink)))
+            {
+                // URI launched
+            }
+            else
+            {
+                // URI launch failed
+            }
+        }
+
+        private void Grid_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
             var element = (Grid)sender;
 
@@ -162,115 +272,6 @@ namespace CryPixiv2.Controls
             // start all the animations
             storyboard.Begin();
             visual.StartAnimationGroup(group);
-
-            // LoadedElements.Add()
-        }
-        private void ItemsWrapGrid_Loaded(object sender, RoutedEventArgs e) => InitializeAnimations((Panel)sender);
-        private static CompositionAnimationGroup CreateOffsetAnimation(Compositor compositor)
-        {
-            // Define Offset Animation for the Animation group
-            var offsetAnimation = compositor.CreateVector3KeyFrameAnimation();
-            offsetAnimation.InsertExpressionKeyFrame(1, "this.FinalValue");
-            offsetAnimation.Duration = TimeSpan.FromSeconds(.8);
-
-            // Define Animation Target for this animation to animate using definition. 
-            offsetAnimation.Target = "Offset";
-
-            // Add Animations to Animation group. 
-            var animationGroup = compositor.CreateAnimationGroup();
-            animationGroup.Add(offsetAnimation);
-
-            return animationGroup;
-        }
-        #endregion
-
-        private void btnBookmark_Click(object sender, PointerRoutedEventArgs e)
-        {
-            e.Handled = true; // so the post isn't clicked
-
-            var work = ((Image)sender).DataContext as IllustrationWrapper;
-            BookmarkWork(work, true);
-        }
-
-        private void BookmarkPrivate_Click(object sender, RoutedEventArgs e)
-        {
-            var work = (IllustrationWrapper)((MenuFlyoutItem)sender).DataContext;
-            BookmarkWork(work, false);
-        }
-
-        public static async void BookmarkWork(IllustrationWrapper work, bool isPublic)
-        {
-            MainPage.Logger.Info($"{(work.IsBookmarked ? "Unbookmarking" : "Bookmarking")} work. " +
-                $"(Id: {work.WrappedIllustration.Id}, IsPublic: {isPublic.ToString()})");
-
-            if (work.IsBookmarked)
-            {
-                // unbookmark it
-                work.IsBookmarked = false;
-
-                try
-                {
-                    // remove bookmark
-                    await work.AssociatedAccount.RemoveBookmark(work.WrappedIllustration.Id);
-                    IllustrationBookmarkChange?.Invoke(null, new Tuple<IllustrationWrapper, bool>(work, isPublic));
-                }
-                catch (Exception ex)
-                {
-                    // fail - restore previous value
-                    work.IsBookmarked = true;
-                    MainPage.Logger.Error(ex, "Failed to remove bookmark!");
-                }
-            }
-            else
-            {
-                // bookmark it
-                work.IsBookmarked = true;
-
-                try
-                {
-                    // add bookmark
-                    await work.AssociatedAccount.AddBookmark(work.WrappedIllustration.Id, isPublic);
-                    IllustrationBookmarkChange?.Invoke(null, new Tuple<IllustrationWrapper, bool>(work, isPublic));
-                }
-                catch (Exception ex)
-                {
-                    // fail - restore previous value
-                    work.IsBookmarked = false;
-                    MainPage.Logger.Error(ex, "Failed to add bookmark!");
-                }
-            }
-        }
-
-        private void mylist_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            var container = mylist.ContainerFromItem(e.ClickedItem) as GridViewItem;
-            if (container != null)
-            {
-                // stash item
-                _storedItem = container.Content as IllustrationWrapper;
-
-                // prepare connected animation (name, stashed item, name of element that will be connected)
-                var animation = mylist.PrepareConnectedAnimation(Constants.ConnectedAnimationThumbnail, _storedItem, thumbImageName);
-
-                ItemClicked?.Invoke(this, _storedItem);
-            }
-            else
-            {
-                // handle this
-            }
-        }
-
-        private async void OpenInBrowser_Click(object sender, RoutedEventArgs e)
-        {
-            var item = (IllustrationWrapper)((MenuFlyoutItem)sender).DataContext;
-            if (await Windows.System.Launcher.LaunchUriAsync(new Uri(item.IllustrationLink)))
-            {
-                // URI launched
-            }
-            else
-            {
-                // URI launch failed
-            }
         }
     }
 

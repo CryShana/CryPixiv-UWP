@@ -50,7 +50,8 @@ namespace CryPixiv2
             this.NavigationCacheMode = NavigationCacheMode.Required;
             this.NavigationManager = SystemNavigationManager.GetForCurrentView();
             this.NavigationManager.BackRequested += (a, b) => GoBack();
-            
+            CoreWindow.GetForCurrentThread().KeyDown += MainPage_KeyDown; ;
+
             // Configure logger
             NLog.LogManager.Configuration.Variables["LogPath"] = LocalFolder.Path;
             Logger = NLog.LogManager.GetLogger("Main");
@@ -71,6 +72,17 @@ namespace CryPixiv2
             IllustrationGrid.ItemClicked += IllustrationGrid_ItemClicked;
 
             AttemptToLogin();
+        }
+
+        private void MainPage_KeyDown(CoreWindow sender, KeyEventArgs args)
+        {
+            var key = args.VirtualKey;
+
+            var isBackPressed =
+                key == Windows.System.VirtualKey.Escape ||
+                key == Windows.System.VirtualKey.Back ||
+                key == Windows.System.VirtualKey.GoBack;
+            if (isBackPressed) CurrentInstance.GoBack();
         }
 
         public async void AttemptToLogin()
@@ -317,6 +329,7 @@ namespace CryPixiv2
             item.Collection.Reset();        
 
             searchPivot.SelectedItem = item;
+            
             ShowNotification("Collection reset.");
         } 
         #endregion
