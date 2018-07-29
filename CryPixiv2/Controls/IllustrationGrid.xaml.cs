@@ -113,6 +113,7 @@ namespace CryPixiv2.Controls
             if (item == null) return;
             if (ItemSource.LoadedElements.ContainsKey(item.WrappedIllustration.Id))
             {
+                // Skip animation if Collection.LoadedElements contains this illustration for longer than X seconds
                 var val = ItemSource.LoadedElements[item.WrappedIllustration.Id];
                 if (DateTime.Now.Subtract(val).TotalSeconds > Constants.TimeTillAnimationSkipSeconds) return;
             }

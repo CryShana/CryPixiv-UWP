@@ -1,4 +1,5 @@
-﻿using CryPixiv2.Controls;
+﻿using CryPixiv2.Classes;
+using CryPixiv2.Controls;
 using CryPixiv2.Wrappers;
 using System;
 using System.Collections.Generic;
@@ -193,16 +194,7 @@ namespace CryPixiv2
 
                 var data = await GetImageData(_flipview.SelectedIndex);
 
-                InMemoryRandomAccessStream rstream = new InMemoryRandomAccessStream();
-                await rstream.WriteAsync(data.AsBuffer());
-                rstream.Seek(0);
-
-                // copy to clipboard
-                var package = new DataPackage();
-                package.SetBitmap(RandomAccessStreamReference.CreateFromStream(rstream));
-                package.RequestedOperation = DataPackageOperation.Copy;
-                Clipboard.SetContent(package);
-                Clipboard.Flush();
+                await GlobalFunctions.CopyToClipboardBitmap(data);
 
                 ShowNotification("Image copied.");
             }
@@ -360,11 +352,8 @@ namespace CryPixiv2
         {
             if (tagsCombobox.SelectedItem == null) return;
             var tag = ((dynamic)tagsCombobox.SelectedItem).Name as string;
-            var p = new DataPackage();
-            p.SetText(tag);
-            p.RequestedOperation = DataPackageOperation.Copy;
-            Clipboard.SetContent(p);
-            Clipboard.Flush();
+
+            GlobalFunctions.CopyToClipboardText(tag);
 
             ShowNotification("Tag copied to clipboard.");
 

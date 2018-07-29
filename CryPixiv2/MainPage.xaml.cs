@@ -92,6 +92,7 @@ namespace CryPixiv2
         {
             if (e.Item1.IsBookmarked)
             {
+                // Public
                 if (e.Item2)
                 {
                     ViewModel.BookmarksPublic.Insert(e.Item1);
@@ -99,6 +100,7 @@ namespace CryPixiv2
                     if (ViewModel.BookmarksPublic.LoadedElements.ContainsKey(e.Item1.WrappedIllustration.Id) == false)
                         ViewModel.BookmarksPublic.LoadedElements.Add(e.Item1.WrappedIllustration.Id, DateTime.Now);
                 }
+                // Private
                 else
                 {
                     ViewModel.BookmarksPrivate.Insert(e.Item1);
@@ -111,6 +113,8 @@ namespace CryPixiv2
         #endregion
 
         #region Download Switching
+        // Download Manager handles which collections will be downloading at a time.
+        // Right now download manager focuses on selected pivots only. Switches to them everytime selection changes.
         private void mainPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var pivot = (Pivot)sender;
@@ -236,17 +240,21 @@ namespace CryPixiv2
             query = Regex.Replace(query, @"\s{2,}", " "); // remove unnecessary extra spaces
 
             if (query.Length == 0) return;
-            if (ViewModel.Searches.Count(x => x.Query.Query == query) > 0)
+            _searchQuery.Text = "";
+
+            var eq = ViewModel.Searches.Where(x => x.Query.Query == query).FirstOrDefault();
+            if (eq != null)
             {
-                new MessageDialog("Specified query already exists! Check existing tabs.", "Query exists").ShowAsync();
+                // go to existing tab
+                searchPivot.SelectedItem = eq;
+                ShowNotification("Query already exists.");
                 return;
             }
 
             // add new tab
             var sq = new SearchQuery() { Query = query };
             var q = new SearchSession(sq);
-            ViewModel.Searches.Add(q);
-            _searchQuery.Text = "";
+            ViewModel.Searches.Insert(0, q);
 
             // select new tab
             await Task.Delay(200);
@@ -284,6 +292,36 @@ namespace CryPixiv2
         public void GoBack()
         {
             if (Frame.CanGoBack) Frame.GoBack();
+        }
+
+        #region Search Tab Context Menu
+        private void CloseSearchTab_Click(object sender, RoutedEventArgs e)
+        {
+            var item = ((dynamic)sender).DataContext as SearchSession;
+            ViewModel.Searches.Remove(item);
+        }
+
+        private void CopyTag_Click(object sender, RoutedEventArgs e)
+        {
+            var item = ((dynamic)sender).DataContext as SearchSession;
+            GlobalFunctions.CopyToClipboardText(item.Query.Query);
+            ShowNotification("Copied tag.");
+        }
+
+        private void ResetSearchTab_Click(object sender, RoutedEventArgs e)
+        {
+            var item = ((dynamic)sender).DataContext as SearchSession;
+            item.Collection.Reset();        
+
+            searchPivot.SelectedItem = item;
+            ShowNotification("Collection reset.");
+        } 
+        #endregion
+
+        public void ShowNotification(string text, bool keepAlive = false)
+        {
+            Logger.Info("Notification shown: " + text);
+            notification.Show(text, keepAlive ? 0 : Constants.InAppNotificationDuration);
         }
     }
 }

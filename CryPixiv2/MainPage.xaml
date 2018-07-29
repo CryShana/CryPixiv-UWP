@@ -48,6 +48,14 @@
                         <Pivot.HeaderTemplate>
                             <DataTemplate>
                                 <Grid>
+                                    <Grid.ContextFlyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem Click="CloseSearchTab_Click">Close</MenuFlyoutItem>
+                                            <MenuFlyoutSeparator />
+                                            <MenuFlyoutItem Click="CopyTag_Click">Copy Tag</MenuFlyoutItem>
+                                            <MenuFlyoutItem Click="ResetSearchTab_Click">Reset</MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </Grid.ContextFlyout>
                                     <TextBlock Text="{Binding Query.Query}" />
                                 </Grid>
                             </DataTemplate>
@@ -120,5 +128,8 @@
                 </Pivot>
             </PivotItem>
         </Pivot>
+
+        <!-- NOTIFICATION -->
+        <controls:InAppNotification x:Name="notification" Canvas.ZIndex="100" HorizontalAlignment="Center" VerticalAlignment="Bottom"  />
     </Grid>
 </Page>

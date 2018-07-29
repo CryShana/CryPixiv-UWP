@@ -20,8 +20,10 @@ namespace CryPixiv2.Classes
         private TimeSpan interval = TimeSpan.FromMilliseconds(50);
         private Func<PixivAccount, Task<IllustrationResponse>> getItems;
         private IllustrationResponse lastResponse;
+        private PixivAccount account;
         private HashSet<int> addedIds = new HashSet<int>();
         private const int SpeedUpLimit = 100;
+        private bool wasReset = false;
         #endregion
 
         #region Public Properties
@@ -80,24 +82,54 @@ namespace CryPixiv2.Classes
             ItemAdded?.Invoke(this, item);
         }
 
+        public void Reset()
+        {
+            wasReset = true;
+
+            EnqueuedItemsForDirectInsertion.Clear();
+            EnqueuedItems.Clear();
+            LoadedElements.Clear();
+            Collection.Clear();
+            addedIds.Clear();
+        }
         public void Insert(params IllustrationWrapper[] items)
         {
+            // if Reset was called, ignore any further queues until initial getItems is called
+            if (wasReset) return;
+
+            // enqueue items
             foreach (var i in items) EnqueuedItemsForDirectInsertion.Enqueue(i);
         }
 
         public void Add(params IllustrationWrapper[] items)
         {
+            // if Reset was called, ignore any further queues until initial getItems is called
+            if (wasReset) return;
+
+            // enqueue items
             foreach (var i in items) EnqueuedItems.Enqueue(i);
         }
 
         public async Task<IllustrationResponse> GetItems(PixivAccount account)
         {
+            this.account = account;
+
+            // get initial items that will also provide a NextUrl for further items
             var r = await getItems?.Invoke(account);
             lastResponse = r;
             return r;
         }
         public async Task<IllustrationResponse> GetNextItems()
         {
+            // if Reset was called and account is set, call the initial getItems
+            if (wasReset && this.account != null)
+            {
+                // disable Reset mode to allow queueing items
+                wasReset = false;
+                return await GetItems(this.account);
+            }
+
+            // get items from NextUrl that was received in the last response
             var r = await lastResponse.NextPage();
             lastResponse = r;
             return r;

@@ -28,6 +28,11 @@ namespace CryPixiv2.Classes
             }
         }
 
+        /// <summary>
+        /// This controls what Collection will be getting downloaded
+        /// </summary>
+        /// <param name="collection">Collection to download</param>
+        /// <param name="acc">Associated account</param>
         public static void SwitchTo(PixivObservableCollection collection, PixivAccount acc)
         {
             Stop();
@@ -42,6 +47,7 @@ namespace CryPixiv2.Classes
                     bool started = false;
                     while (true)
                     {
+                        // Infinite loop that will initially call the "getItems" callback and later on "getNextItems" on the collection
                         IllustrationResponse r = started == false ?
                             await collection.GetItems(acc) :
                             await collection.GetNextItems();
@@ -49,6 +55,7 @@ namespace CryPixiv2.Classes
                         started = true;
                         foreach (var l in r.Illustrations)
                         {
+                            // go through all downloaded illustractions and wrap them up - if duplicates, take existing to save memory
                             src.Token.ThrowIfCancellationRequested();
 
                             IllustrationWrapper wr = null;

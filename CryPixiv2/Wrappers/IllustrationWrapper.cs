@@ -33,6 +33,7 @@ namespace CryPixiv2.Wrappers
             get
             {
                 var txt = WrappedIllustration.Caption.Replace("<br/>", "\n").Replace("<br />", "\n");
+                txt = System.Web.HttpUtility.HtmlDecode(txt);
                 if (string.IsNullOrEmpty(txt)) return "-";
 
                 var rep = Regex.Replace(txt, @"<[^>]*>", "");
