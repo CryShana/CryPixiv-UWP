@@ -75,10 +75,14 @@ namespace CryPixiv2
 
         public async void AttemptToLogin()
         {
+            // attempting to load previous data
             var deviceToken = LocalStorage.Values[Constants.StorageDeviceToken] as string;
             var refreshToken = LocalStorage.Values[Constants.StorageRefreshToken] as string;
 
+            // initialize with device token (if not null, this will make sure to login with same device token)
             ViewModel.Account = new PixivAccount(deviceToken);
+
+            // refresh authtoken using refreshtoken
             await ViewModel.Login(refreshToken);
         }
 

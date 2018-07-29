@@ -180,7 +180,7 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,0,0,0" HorizontalAlignment="Left" 
                     VerticalAlignment="Center" Canvas.ZIndex="9">
             <Grid x:Name="artistGrid" HorizontalAlignment="Left" PointerPressed="ArtistGrid_Click"
-                  PointerEntered="ArtistGrid_Entered" PointerExited="ArtistGrid_Exited" Margin="-10,-10,0,-10">
+                  PointerEntered="ArtistGrid_Entered" PointerExited="ArtistGrid_Exited" Background="White">
                 <Grid.ContextFlyout>
                     <MenuFlyout>
                         <MenuFlyoutItem Click="ArtistOpenBrowser_Click">Open in browser</MenuFlyoutItem>
@@ -199,7 +199,7 @@
                     </StackPanel>
                 </StackPanel>
             </Grid>
-            <Grid MaxWidth="500" x:Name="detailGrid" Opacity="0">
+            <Grid MaxWidth="500" x:Name="detailGrid" Opacity="0"  Margin="0,7,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80"/>
                     <ColumnDefinition Width="*"/>
@@ -226,7 +226,7 @@
                            FontSize="16" TextAlignment="Right" Margin="0,0,10,0"/>
                 <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding CreatedText, Mode=OneWay}" FontSize="16"/>
             </Grid>
-            <Grid MaxWidth="500" x:Name="descriptionGrid" Opacity="0">
+            <Grid MaxWidth="500" x:Name="descriptionGrid" Opacity="0" Margin="0,7,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120"/>
                     <ColumnDefinition Width="*"/>
