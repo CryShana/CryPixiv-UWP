@@ -158,6 +158,11 @@ namespace CryPixiv2
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             base.OnNavigatingFrom(e);
+            if (ignoreNav)
+            {
+                ignoreNav = false;
+                return;
+            }
 
             try
             {
@@ -362,27 +367,36 @@ namespace CryPixiv2
             tagsCombobox.SelectedItem = null;
         }
 
+        bool ignoreNav = false;
         public void NextIllustration()
         {
-            MainPage.CurrentInstance.GoBack();
-
             var g = MainPage.CurrentInstance.CurrentIllustrationGrid;
             var i = g.ViewSource.IndexOf(Illustration);
-            if (i + 1 >= g.ViewSource.Count) return;
+            if (i + 1 >= g.ViewSource.Count)
+            {
+                ShowNotification("No next page!");
+                return;
+            }
 
+            ignoreNav = true;
             var e = (IllustrationWrapper)g.ViewSource.ElementAt(i + 1);
+            MainPage.CurrentInstance.GoBack();
             g.ItemClick(e);
         }
 
         public void PreviousIllustration()
         {
-            MainPage.CurrentInstance.GoBack();
-
             var g = MainPage.CurrentInstance.CurrentIllustrationGrid;
             var i = g.ViewSource.IndexOf(Illustration);
-            if (i - 1 < 0) return;
+            if (i - 1 < 0)
+            {
+                ShowNotification("No previous page!");
+                return;
+            }
 
+            ignoreNav = true;
             var e = (IllustrationWrapper)g.ViewSource.ElementAt(i - 1);
+            MainPage.CurrentInstance.GoBack();
             g.ItemClick(e);
         }
     }
