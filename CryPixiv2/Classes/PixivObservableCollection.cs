@@ -21,7 +21,6 @@ namespace CryPixiv2.Classes
         private Func<PixivAccount, Task<IllustrationResponse>> getItems;
         private IllustrationResponse lastResponse;
         private PixivAccount account;
-        private HashSet<int> addedIds = new HashSet<int>();
         private const int SpeedUpLimit = 100;
         private bool wasReset = false;
         #endregion
@@ -29,10 +28,16 @@ namespace CryPixiv2.Classes
         #region Public Properties
         public TimeSpan Interval { get => interval; set { interval = value; AddTimer.Interval = value; } }
         public TimeSpan FastInterval => TimeSpan.FromMilliseconds(5);
-        public ObservableCollection<IllustrationWrapper> Collection { get; }
-        public ConcurrentQueue<IllustrationWrapper> EnqueuedItems { get; }
-        public ConcurrentQueue<IllustrationWrapper> EnqueuedItemsForDirectInsertion { get; }
-        public Dictionary<int, DateTime> LoadedElements = new Dictionary<int, DateTime>();
+
+        // This is the main collection - you should ItemSource to this
+        public ObservableCollection<IllustrationWrapper> Collection { get; } = new ObservableCollection<IllustrationWrapper>();
+        public ConcurrentQueue<IllustrationWrapper> EnqueuedItems { get; } = new ConcurrentQueue<IllustrationWrapper>();
+        public ConcurrentQueue<IllustrationWrapper> EnqueuedItemsForDirectInsertion { get; } = new ConcurrentQueue<IllustrationWrapper>();
+
+        // This dictionary keeps track of already added elements sorted in a binary tree for fast duplicate checking
+        // DateTimes are saved to keep animation from repeating after X seconds from being added to collection
+        public Dictionary<int, DateTime> LoadedElements = new Dictionary<int, DateTime>(); 
+
         public event EventHandler<IllustrationWrapper> ItemAdded;
         public bool IsPaused { get; private set; } = false;
         #endregion
@@ -41,10 +46,6 @@ namespace CryPixiv2.Classes
             Func<PixivAccount, Task<IllustrationResponse>> getItems = null)
         {
             this.getItems = getItems;
-
-            Collection = new ObservableCollection<IllustrationWrapper>();
-            EnqueuedItems = new ConcurrentQueue<IllustrationWrapper>();
-            EnqueuedItemsForDirectInsertion = new ConcurrentQueue<IllustrationWrapper>();
 
             AddTimer = new DispatcherTimer();
             AddTimer.Interval = Interval;
@@ -60,10 +61,12 @@ namespace CryPixiv2.Classes
             if (EnqueuedItemsForDirectInsertion.IsEmpty == false)
             {
                 if (EnqueuedItemsForDirectInsertion.TryDequeue(out IllustrationWrapper it) == false) return;
+                if (LoadedElements.ContainsKey(it.WrappedIllustration.Id)) return;
+
                 Collection.Add(it);
                 Collection.Move(Collection.IndexOf(it), 0);
 
-                addedIds.Add(it.WrappedIllustration.Id);
+                LoadedElements.Add(it.WrappedIllustration.Id, DateTime.Now);
                 ItemAdded?.Invoke(this, it);
                 return;
             }
@@ -76,13 +79,12 @@ namespace CryPixiv2.Classes
             else AddTimer.Interval = Interval;
             
             // check for duplicates
-            if (addedIds.Contains(item.WrappedIllustration.Id)) return;
+            if (LoadedElements.ContainsKey(item.WrappedIllustration.Id)) return;
 
             // add to collection and register illustration ID as added to avoid adding duplicates
             Collection.Add(item);
-            addedIds.Add(item.WrappedIllustration.Id);
-            LoadedElements.Add(item.WrappedIllustration.Id, DateTime.Now);
 
+            LoadedElements.Add(item.WrappedIllustration.Id, DateTime.Now);
             ItemAdded?.Invoke(this, item);
         }
 
@@ -94,7 +96,6 @@ namespace CryPixiv2.Classes
             EnqueuedItems.Clear();
             LoadedElements.Clear();
             Collection.Clear();
-            addedIds.Clear();
         }
         public void Pause() => IsPaused = true;
         public void Resume() => IsPaused = false;

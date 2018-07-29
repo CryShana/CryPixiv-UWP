@@ -219,20 +219,25 @@ namespace CryPixiv2.Controls
 
         private void Grid_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
-            var element = (Grid)sender;
+            // I am using DataContextChanged instead of Loaded event, because Loaded event doesn't get called when ItemSource is reset.
 
-            // only display loaded item once          
+            var element = (Grid)sender;
             var item = (IllustrationWrapper)element.DataContext;
             if (item == null) return;
+
+            // ensure that item gets animated ONLY ONCE - right when it gets added to Collection
             if (ItemSource.LoadedElements.ContainsKey(item.WrappedIllustration.Id))
-            {
-                // Skip animation if Collection.LoadedElements contains this illustration for longer than X seconds
+            {             
                 var val = ItemSource.LoadedElements[item.WrappedIllustration.Id];
-                if (DateTime.Now.Subtract(val).TotalSeconds > Constants.TimeTillAnimationSkipSeconds) return;
+
+                // Skip animation if Collection.LoadedElements contains this illustration for longer than X seconds
+                if (DateTime.Now.Subtract(val).TotalMilliseconds > Constants.TimeTillAnimationSkipMs) return;
+                // Once animation is done, no longer repeat it - remove X seconds to always skip it in the future.
+                else ItemSource.LoadedElements[item.WrappedIllustration.Id].Subtract(TimeSpan.FromMilliseconds(Constants.TimeTillAnimationSkipMs));
             }
 
             // prepare animation variables
-            TimeSpan duration = TimeSpan.FromMilliseconds(900);
+            TimeSpan duration = TimeSpan.FromMilliseconds(Constants.ItemGridEntryAnimationDurationMs);
 
             var visual = ElementCompositionPreview.GetElementVisual(element);
             ElementCompositionPreview.SetIsTranslationEnabled(element, true); // if using Translation

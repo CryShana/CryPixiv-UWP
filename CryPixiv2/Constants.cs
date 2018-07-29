@@ -14,7 +14,8 @@ namespace CryPixiv2
         public const string ConnectedAnimationThumbnail = "ca1";
         public const string ConnectedAnimationImage = "ca2";
 
-        public const double TimeTillAnimationSkipSeconds = 2;
+        public const double TimeTillAnimationSkipMs = 1000;
+        public const double ItemGridEntryAnimationDurationMs = 900;
         public const int InAppNotificationDuration = 1200;
     }
 }
