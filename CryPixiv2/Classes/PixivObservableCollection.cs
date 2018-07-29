@@ -33,7 +33,8 @@ namespace CryPixiv2.Classes
         public ConcurrentQueue<IllustrationWrapper> EnqueuedItems { get; }
         public ConcurrentQueue<IllustrationWrapper> EnqueuedItemsForDirectInsertion { get; }
         public Dictionary<int, DateTime> LoadedElements = new Dictionary<int, DateTime>();
-        public event EventHandler<IllustrationWrapper> ItemAdded; 
+        public event EventHandler<IllustrationWrapper> ItemAdded;
+        public bool IsPaused { get; private set; } = false;
         #endregion
 
         public PixivObservableCollection(
@@ -53,6 +54,9 @@ namespace CryPixiv2.Classes
 
         private void AddTimer_Tick(object sender, object e)
         {
+            // check if paused
+            if (IsPaused) return;
+            
             if (EnqueuedItemsForDirectInsertion.IsEmpty == false)
             {
                 if (EnqueuedItemsForDirectInsertion.TryDequeue(out IllustrationWrapper it) == false) return;
@@ -92,6 +96,9 @@ namespace CryPixiv2.Classes
             Collection.Clear();
             addedIds.Clear();
         }
+        public void Pause() => IsPaused = true;
+        public void Resume() => IsPaused = false;
+
         public void Insert(params IllustrationWrapper[] items)
         {
             // if Reset was called, ignore any further queues until initial getItems is called

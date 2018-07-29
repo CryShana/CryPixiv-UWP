@@ -7,5 +7,6 @@
     RequestedTheme="Light">
     <Application.Resources>
         <vm:MainViewModel x:Key="mainViewModel" />
+        <SolidColorBrush x:Key="color_redButton" Color="#FFFF8181" />
     </Application.Resources>
 </Application>

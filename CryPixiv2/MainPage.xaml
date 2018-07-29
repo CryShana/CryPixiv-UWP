@@ -16,6 +16,21 @@
     </Page.Resources>
     
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <!-- Pause DManager Button -->
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{Binding DownloadManagerPaused, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="btnPauseDManager.Background" Value="{StaticResource ResourceKey=color_redButton}" />
+                        <Setter Target="btnPauseDManager.Content" Value="Resume" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        
         <controls:Loading x:Name="loadingControl" IsLoading="{Binding IsLoggingIn}" Canvas.ZIndex="1000" Background="#7F000000">
             <Grid>
                 <StackPanel Orientation="Horizontal" Padding="12" Background="#FFF3F3F3" HorizontalAlignment="Left" VerticalAlignment="Center" Width="177">
@@ -131,5 +146,11 @@
 
         <!-- NOTIFICATION -->
         <controls:InAppNotification x:Name="notification" Canvas.ZIndex="100" HorizontalAlignment="Center" VerticalAlignment="Bottom"  />
+        
+        <!-- OTHER BUTTONS -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <Button x:Name="btnPauseDManager" Content="Pause" Click="PauseDownloadManagerClick" />
+            <Button x:Name="btnLogout" Content="Logout" Click="LogoutClick" />
+        </StackPanel>
     </Grid>
 </Page>

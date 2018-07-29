@@ -17,8 +17,6 @@ namespace CryPixiv2.ViewModels
 {
     public class MainViewModel : Notifier
     {
-        public PixivAccount Account { get; set; }
-
         #region Private Fields
         private PixivObservableCollection
             bookmarksPublic = new PixivObservableCollection(a => a.GetBookmarks(true)),
@@ -42,6 +40,7 @@ namespace CryPixiv2.ViewModels
         #endregion
 
         #region Public Properties
+        public PixivAccount Account { get; set; }
         public PixivObservableCollection BookmarksPublic { get => bookmarksPublic; set { bookmarksPublic = value; Changed(); } }
         public PixivObservableCollection BookmarksPrivate { get => bookmarksPrivate; set { bookmarksPrivate = value; Changed(); } }
         public PixivObservableCollection Recommended { get => recommended; set { recommended = value; Changed(); } }
@@ -61,6 +60,15 @@ namespace CryPixiv2.ViewModels
         public bool IsLoggingIn { get => isloggingin; set { isloggingin = value; Changed(); } }
         public bool LoginFormShown { get => loginform; set { loginform = value; Changed(); } }
         public string LoginFormErrorMessage { get => loginerror; set { loginerror = value; Changed(); } }
+        public bool DownloadManagerPaused
+        {
+            get => DownloadManager.IsPaused;
+            set
+            {
+                DownloadManager.IsPaused = value;
+                Changed();
+            }
+        }
         #endregion
 
         public MainViewModel()

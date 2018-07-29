@@ -40,7 +40,7 @@ namespace CryPixiv2
 
         public MainViewModel ViewModel;
         public ApplicationDataContainer LocalStorage;
-        public SystemNavigationManager NavigationManager;
+        public SystemNavigationManager NavigationManager;       
 
         public MainPage()
         {
@@ -323,5 +323,17 @@ namespace CryPixiv2
             Logger.Info("Notification shown: " + text);
             notification.Show(text, keepAlive ? 0 : Constants.InAppNotificationDuration);
         }
+
+        #region Other Buttons
+        private void PauseDownloadManagerClick(object sender, RoutedEventArgs e) 
+            => ViewModel.DownloadManagerPaused = !ViewModel.DownloadManagerPaused;
+
+        private void LogoutClick(object sender, RoutedEventArgs e)
+        {
+            // confirmation box
+
+            ViewModel.LoginFormShown = true;
+        } 
+        #endregion
     }
 }

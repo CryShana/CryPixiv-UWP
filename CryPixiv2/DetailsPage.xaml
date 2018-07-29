@@ -74,7 +74,7 @@
                         <StateTrigger IsActive="{x:Bind IsArtistFollowed, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="btnFollow.Background" Value="#FFFF8181" />
+                        <Setter Target="btnFollow.Background" Value="{StaticResource ResourceKey=color_redButton}" />
                         <Setter Target="btnFollow.Content" Value="Unfollow" />
                     </VisualState.Setters>
                 </VisualState>

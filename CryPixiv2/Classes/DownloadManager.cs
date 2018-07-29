@@ -17,6 +17,7 @@ namespace CryPixiv2.Classes
     {
         static Queue<CancellationTokenSource> tokens = new Queue<CancellationTokenSource>();
         static ConcurrentDictionary<int, IllustrationWrapper> addedIllustrations = new ConcurrentDictionary<int, IllustrationWrapper>();
+        public static bool IsPaused { get; set; } = false;
 
         public static void Stop()
         {
@@ -27,6 +28,7 @@ namespace CryPixiv2.Classes
                 t.Cancel();
             }
         }
+        
 
         /// <summary>
         /// This controls what Collection will be getting downloaded
@@ -47,6 +49,13 @@ namespace CryPixiv2.Classes
                     bool started = false;
                     while (true)
                     {
+                        // check if paused
+                        if (IsPaused)
+                        {
+                            await Task.Delay(500);
+                            continue;
+                        }
+
                         // Infinite loop that will initially call the "getItems" callback and later on "getNextItems" on the collection
                         IllustrationResponse r = started == false ?
                             await collection.GetItems(acc) :
