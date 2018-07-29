@@ -178,7 +178,7 @@ namespace CryPixiv2
             Changed("CurrentImageSize");
         }
 
-        #region ContextMenu Action
+        #region ContextMenu Action and Bookmark Button
         private async Task<byte[]> GetImageData(int selectedIndex)
         {
             // get image url and download it again - because stupid UWP can't convert BitmapImages to byte arrays (or to WriteableBitmaps for that matter)
@@ -276,7 +276,7 @@ namespace CryPixiv2
             }
         }
 
-        private void btnBookmark_Click(object sender, PointerRoutedEventArgs e) => IllustrationGrid.BookmarkWork(Illustration, true);
+        private void BookmarkButton_Clicked(object sender, IllustrationWrapper e) => IllustrationGrid.BookmarkWork(Illustration, true);
 
         private void bookmarkPrivatelyItem_Click(object sender, RoutedEventArgs e) => IllustrationGrid.BookmarkWork(Illustration, false);
         #endregion

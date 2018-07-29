@@ -107,6 +107,9 @@
     <Compile Include="Classes\PixivObservableCollection.cs" />
     <Compile Include="Classes\SearchQuery.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Controls\BookmarkButton.xaml.cs">
+      <DependentUpon>BookmarkButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\IllustrationGrid.xaml.cs">
       <DependentUpon>IllustrationGrid.xaml</DependentUpon>
     </Compile>
@@ -188,6 +191,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\BookmarkButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\IllustrationGrid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

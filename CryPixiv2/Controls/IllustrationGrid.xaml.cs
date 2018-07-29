@@ -127,13 +127,7 @@ namespace CryPixiv2.Controls
         #endregion
 
         #region Bookmarking
-        private void btnBookmark_Click(object sender, PointerRoutedEventArgs e)
-        {
-            e.Handled = true; // so the post isn't clicked
-
-            var work = ((Image)sender).DataContext as IllustrationWrapper;
-            BookmarkWork(work, true);
-        }
+        private void BookmarkButton_Clicked(object sender, IllustrationWrapper work) => BookmarkWork(work, true);     
 
         private void BookmarkPrivate_Click(object sender, RoutedEventArgs e)
         {
@@ -184,25 +178,6 @@ namespace CryPixiv2.Controls
             }
         } 
         #endregion
-
-        private void mylist_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            var container = mylist.ContainerFromItem(e.ClickedItem) as GridViewItem;
-            if (container != null)
-            {
-                // stash item
-                _storedItem = container.Content as IllustrationWrapper;
-
-                // prepare connected animation (name, stashed item, name of element that will be connected)
-                var animation = mylist.PrepareConnectedAnimation(Constants.ConnectedAnimationThumbnail, _storedItem, thumbImageName);
-
-                ItemClicked?.Invoke(this, _storedItem);
-            }
-            else
-            {
-                // handle this
-            }
-        }
 
         private async void OpenInBrowser_Click(object sender, RoutedEventArgs e)
         {
@@ -280,6 +255,25 @@ namespace CryPixiv2.Controls
             // start all the animations
             storyboard.Begin();
             visual.StartAnimationGroup(group);
+        }
+
+        private void item_click(object sender, PointerRoutedEventArgs e)
+        {
+            var container = mylist.ContainerFromItem(((Image)sender).DataContext) as GridViewItem;
+            if (container != null)
+            {
+                // stash item
+                _storedItem = container.Content as IllustrationWrapper;
+
+                // prepare connected animation (name, stashed item, name of element that will be connected)
+                var animation = mylist.PrepareConnectedAnimation(Constants.ConnectedAnimationThumbnail, _storedItem, thumbImageName);
+
+                ItemClicked?.Invoke(this, _storedItem);
+            }
+            else
+            {
+                // handle this
+            }
         }
     }
 

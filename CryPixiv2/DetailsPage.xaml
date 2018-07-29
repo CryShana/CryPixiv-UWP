@@ -2,7 +2,7 @@
     x:Class="CryPixiv2.DetailsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:CryPixiv2"
+    xmlns:local="using:CryPixiv2.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -110,19 +110,6 @@
                     <VisualState.Setters>
                         <Setter Target="descriptionGrid.Opacity" Value="0" />
                         <Setter Target="detailGrid.Opacity" Value="0" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-            <!-- HEART ICON STATES -->
-            <VisualStateGroup>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{Binding IsBookmarked,Mode=OneWay}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="btnBookmark.Source" Value="ms-appx:///Assets/Images/heart-red.png" />
-                        <Setter Target="bookmarkPrivatelyItem.Visibility" Value="Collapsed" />
-                        <Setter Target="bookmarkPrivatelySeparator.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -255,8 +242,8 @@
             </ComboBox>
 
             <!-- HEART ICON -->
-            <Image x:Name="btnBookmark" Canvas.ZIndex="6" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="40" Width="40" 
-                   Margin="0,0,10,16" Source="ms-appx:///Assets/Images/heart-empty.png" PointerPressed="btnBookmark_Click" />
+            <local:BookmarkButton Canvas.ZIndex="6" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="40" Width="40" 
+                   Margin="0,0,10,16" Clicked="BookmarkButton_Clicked" />
         </Grid>
 
         <!-- NOTIFICATION -->
