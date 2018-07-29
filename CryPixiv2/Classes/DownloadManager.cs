@@ -18,6 +18,7 @@ namespace CryPixiv2.Classes
         static Queue<CancellationTokenSource> tokens = new Queue<CancellationTokenSource>();
         static ConcurrentDictionary<int, IllustrationWrapper> addedIllustrations = new ConcurrentDictionary<int, IllustrationWrapper>();
         public static bool IsPaused { get; set; } = false;
+        public static PixivObservableCollection CurrentCollection { get; private set; }
 
         public static void Stop()
         {
@@ -41,6 +42,8 @@ namespace CryPixiv2.Classes
 
             var src = new CancellationTokenSource();
             tokens.Enqueue(src);
+
+            CurrentCollection = collection;
 
             Task.Run(async () =>
             {

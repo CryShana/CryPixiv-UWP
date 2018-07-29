@@ -133,7 +133,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Images\heart-empty.png" />
-    <Content Include="Assets\Images\heart-purple.png" />
     <Content Include="Assets\Images\heart-red.png" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />

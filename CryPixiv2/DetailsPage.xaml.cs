@@ -95,7 +95,6 @@ namespace CryPixiv2
         {
             this.InitializeComponent();
             this.PointerPressed += DetailsPage_PointerPressed;
-
             this.SizeChanged += (a, b) =>
             {
                 Changed("DescriptionMinWidth");
@@ -361,6 +360,18 @@ namespace CryPixiv2
             ShowNotification("Tag copied to clipboard.");
 
             tagsCombobox.SelectedItem = null;
+        }
+
+        public void NextIllustration()
+        {
+            MainPage.CurrentInstance.GoBack();
+            // TODO
+        }
+
+        public void PreviousIllustration()
+        {
+            MainPage.CurrentInstance.GoBack();
+            // TODO
         }
     }
 }

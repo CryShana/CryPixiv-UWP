@@ -43,13 +43,16 @@ namespace CryPixiv2.Controls
         private AdvancedCollectionView viewSource = null;
         #endregion
 
+        #region Public Properties and Events
+        public AdvancedCollectionView ViewSource => viewSource;
         public PixivObservableCollection ItemSource { get => (PixivObservableCollection)GetValue(ItemSourceProperty); set => SetValue(ItemSourceProperty, value); }
         public int DisplayedCount => ItemSource?.Collection?.Count ?? 0;
         public int LoadedCount => DisplayedCount + ToLoadCount;
         public int ToLoadCount => ItemSource?.EnqueuedItems?.Count ?? 0;
         public bool? SortByScore { get => sortbkm; set { sortbkm = value ?? false; Changed(); SortByBookmarkCount(value == true); } }
         public static event EventHandler<Tuple<IllustrationWrapper, bool>> IllustrationBookmarkChange;
-        public static event EventHandler<IllustrationWrapper> ItemClicked;
+        public static event EventHandler<IllustrationWrapper> ItemClicked; 
+        #endregion
 
         public IllustrationGrid()
         {

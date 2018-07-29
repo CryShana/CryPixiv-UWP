@@ -40,7 +40,7 @@ namespace CryPixiv2
 
         public MainViewModel ViewModel;
         public ApplicationDataContainer LocalStorage;
-        public SystemNavigationManager NavigationManager;       
+        public SystemNavigationManager NavigationManager;
 
         public MainPage()
         {
@@ -82,7 +82,18 @@ namespace CryPixiv2
                 key == Windows.System.VirtualKey.Escape ||
                 key == Windows.System.VirtualKey.Back ||
                 key == Windows.System.VirtualKey.GoBack;
+
             if (isBackPressed) CurrentInstance.GoBack();
+            else 
+            {
+                var frame = Window.Current.Content as Frame;
+
+                if (frame.Content is DetailsPage d)
+                {
+                    if (key == Windows.System.VirtualKey.E) d.NextIllustration();
+                    else if (key == Windows.System.VirtualKey.Q) d.PreviousIllustration();
+                }
+            }          
         }
 
         public async void AttemptToLogin()
@@ -99,7 +110,7 @@ namespace CryPixiv2
         }
 
         #region IllustrationGrid Event Handlers
-        void IllustrationGrid_ItemClicked(object sender, IllustrationWrapper e) => NavigateTo(typeof(DetailsPage), e);
+        void IllustrationGrid_ItemClicked(object sender, IllustrationWrapper e) => NavigateTo(typeof(DetailsPage), e);      
         void IllustrationGrid_IllustrationBookmarkChange(object sender, Tuple<IllustrationWrapper, bool> e)
         {
             if (e.Item1.IsBookmarked)
