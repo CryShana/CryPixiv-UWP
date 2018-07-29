@@ -267,8 +267,11 @@ namespace CryPixiv2
         {
             if (e.Key == Windows.System.VirtualKey.Enter) LoginClick(null, null);
         }
+
+        // This gets called when user clicks Login on the Login Form
         private async void LoginClick(object sender, RoutedEventArgs e)
         {
+            
             var username = _username.Text;
             var password = _password.Password;
             if (username.Length == 0 || password.Length == 0)
@@ -328,11 +331,22 @@ namespace CryPixiv2
         private void PauseDownloadManagerClick(object sender, RoutedEventArgs e) 
             => ViewModel.DownloadManagerPaused = !ViewModel.DownloadManagerPaused;
 
-        private void LogoutClick(object sender, RoutedEventArgs e)
+        private async void LogoutClick(object sender, RoutedEventArgs e)
         {
             // confirmation box
+            var yesCommand = new UICommand("Yes", cmd => {  });
+            var noCommand = new UICommand("No", cmd => {  });
 
-            ViewModel.LoginFormShown = true;
+            var dialog = new MessageDialog("Are you sure you wish to log out?", "Log out");
+            dialog.Commands.Add(yesCommand);
+            dialog.Commands.Add(noCommand);
+            var command = await dialog.ShowAsync();
+
+            if (command == yesCommand)
+            {
+                ViewModel.ClearAuthInfo();
+                ViewModel.LoginFormShown = true;
+            }
         } 
         #endregion
     }

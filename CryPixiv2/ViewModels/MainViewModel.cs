@@ -84,6 +84,14 @@ namespace CryPixiv2.ViewModels
             ls.Values[Constants.StorageRefreshToken] = Account.AuthInfo.RefreshToken;
         }
 
+        public void ClearAuthInfo()
+        {
+            var ls = MainPage.CurrentInstance.LocalStorage;
+
+            ls.Values[Constants.StorageDeviceToken] = null;
+            ls.Values[Constants.StorageRefreshToken] = null;
+        }
+
         public async Task Login(string username, string password) => await Login(username, password, null);
         public async Task Login(string refreshToken) => await Login(null, null, refreshToken);
         private async Task Login(string username, string password, string refreshToken)
