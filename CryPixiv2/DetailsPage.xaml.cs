@@ -102,21 +102,6 @@ namespace CryPixiv2
             };
         }
 
-        private void DetailsPage_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            var isBackPressed =
-                e.Key == Windows.System.VirtualKey.Escape ||
-                e.Key == Windows.System.VirtualKey.Back ||
-                e.Key == Windows.System.VirtualKey.GoBack;
-            if (isBackPressed) MainPage.CurrentInstance.GoBack();
-        }
-
-        private void DetailsPage_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            var isBackPressed = e.GetCurrentPoint(sender as UIElement).Properties.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.XButton1Pressed;
-            if (isBackPressed) MainPage.CurrentInstance.GoBack();
-        }
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
