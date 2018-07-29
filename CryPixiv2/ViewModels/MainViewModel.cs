@@ -82,13 +82,18 @@ namespace CryPixiv2.ViewModels
         {
             try
             {
-                MainPage.Logger.Info($"Attempting to login... (Parameters: {username ?? "null"}, {password ?? "null"}, {refreshToken ?? "null"})");
+                MainPage.Logger.Info($"Attempting to login... " +
+                    $"(Parameters: {(username == null ? "null" : username)}, " +
+                    $"{(password == null ? "null" : "Password given")}, " +
+                    $"{(refreshToken == null ? "null" : "Refresh token given")})");
 
                 if (string.IsNullOrEmpty(refreshToken) &&
                     (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password)))
                     throw new LoginException("User not logged in!");
 
                 IsLoggingIn = true;
+
+                // use refresh token if present, otherwise show login form
                 if (!string.IsNullOrEmpty(refreshToken)) await Account.Login(refreshToken);
                 else
                 {

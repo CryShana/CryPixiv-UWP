@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
@@ -27,7 +28,17 @@ namespace CryPixiv2.Wrappers
         public string IllustrationLink => WrappedIllustration == null ? "" :
             $"https://www.pixiv.net/member_illust.php?mode=medium&illust_id={WrappedIllustration.Id.ToString()}";
         public string ArtistLink => WrappedIllustration == null ? "" : $"https://www.pixiv.net/member.php?id=" + WrappedIllustration.ArtistUser.Id;
-        public string Description => WrappedIllustration.Caption.Replace("<br/>", "\n").Replace("<br />", "\n");
+        public string Description
+        {
+            get
+            {
+                var txt = WrappedIllustration.Caption.Replace("<br/>", "\n").Replace("<br />", "\n");
+                if (string.IsNullOrEmpty(txt)) return "-";
+
+                var rep = Regex.Replace(txt, @"<[^>]*>", "");
+                return rep;
+            }
+        }
         public ConcurrentDictionary<int, long> FileSizes { get; set; } = new ConcurrentDictionary<int, long>();
         public ConcurrentDictionary<int, string> Resolutions { get; set; } = new ConcurrentDictionary<int, string>();
         #endregion

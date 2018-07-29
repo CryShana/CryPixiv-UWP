@@ -189,7 +189,7 @@ namespace CryPixiv2
         {
             try
             {
-                ShowNotification("Copying image...");
+                ShowNotification("Copying image...", true);
 
                 var data = await GetImageData(_flipview.SelectedIndex);
 
@@ -206,10 +206,11 @@ namespace CryPixiv2
 
                 ShowNotification("Image copied.");
             }
-            catch
+            catch (Exception ex)
             {
                 // show error
                 ShowNotification("Failed to copy image!");
+                MainPage.Logger.Error(ex, "Failed to copy image!");
             }
         }
 
@@ -224,17 +225,18 @@ namespace CryPixiv2
                 picker.FileTypeChoices.Add("PNG file", new[] { ".png" });
                 var d = await picker.PickSaveFileAsync();
 
-                ShowNotification("Saving image...");
+                ShowNotification("Saving image...", true);
 
                 var data = await GetImageData(_flipview.SelectedIndex);
                 await FileIO.WriteBytesAsync(d, data);
 
                 ShowNotification("Image saved.");
             }
-            catch
+            catch (Exception ex)
             {
                 // show error
                 ShowNotification("Failed to save image!");
+                MainPage.Logger.Error(ex, "Failed to save image!");
             }
         }
 
@@ -249,7 +251,7 @@ namespace CryPixiv2
 
                 var d = await picker.PickSingleFolderAsync();
 
-                ShowNotification("Saving images...");
+                ShowNotification("Saving images...", true);
 
                 for (int i = 0; i < Illustration.ImagesCount; i++)
                 {
@@ -259,10 +261,11 @@ namespace CryPixiv2
 
                 ShowNotification("Images saved.");
             }
-            catch
+            catch (Exception ex)
             {
                 // show error
                 ShowNotification("Failed to save all images!");
+                MainPage.Logger.Error(ex, "Failed to save all images!");
             }
         }
 
@@ -296,10 +299,10 @@ namespace CryPixiv2
             => VisualStateManager.GoToState(this, "state_gridMouseExit", false);
         #endregion
 
-        public void ShowNotification(string text)
+        public void ShowNotification(string text, bool keepAlive = false)
         {
             MainPage.Logger.Info("Notification shown: " + text);
-            notification.Show(text, Constants.InAppNotificationDuration);
+            notification.Show(text, keepAlive ? 0 : Constants.InAppNotificationDuration);
         }
 
         #region Artist Grid
