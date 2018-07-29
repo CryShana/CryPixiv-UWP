@@ -365,13 +365,25 @@ namespace CryPixiv2
         public void NextIllustration()
         {
             MainPage.CurrentInstance.GoBack();
-            // TODO
+
+            var g = MainPage.CurrentInstance.CurrentIllustrationGrid;
+            var i = g.ViewSource.IndexOf(Illustration);
+            if (i + 1 >= g.ViewSource.Count) return;
+
+            var e = (IllustrationWrapper)g.ViewSource.ElementAt(i + 1);
+            g.ItemClick(e);
         }
 
         public void PreviousIllustration()
         {
             MainPage.CurrentInstance.GoBack();
-            // TODO
+
+            var g = MainPage.CurrentInstance.CurrentIllustrationGrid;
+            var i = g.ViewSource.IndexOf(Illustration);
+            if (i - 1 < 0) return;
+
+            var e = (IllustrationWrapper)g.ViewSource.ElementAt(i - 1);
+            g.ItemClick(e);
         }
     }
 }

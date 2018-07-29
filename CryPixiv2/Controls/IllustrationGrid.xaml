@@ -79,7 +79,7 @@
                                                   HorizontalAlignment="Right" VerticalAlignment="Bottom" Canvas.ZIndex="5"/>
 
                             <!-- THUMBNAIL -->
-                            <Image x:Name="thumbImage" Source="{Binding ThumbnailImage}" Canvas.ZIndex="4" PointerPressed="item_click"/>
+                            <Image x:Name="thumbImage" Source="{Binding ThumbnailImage}" Canvas.ZIndex="4" PointerPressed="GridItem_Click"/>
                         </Grid>
                     </UserControl>
                 </DataTemplate>

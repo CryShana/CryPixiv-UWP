@@ -257,16 +257,22 @@ namespace CryPixiv2.Controls
             visual.StartAnimationGroup(group);
         }
 
-        private void item_click(object sender, PointerRoutedEventArgs e)
+        private void GridItem_Click(object sender, PointerRoutedEventArgs e) => ItemClick(((Image)sender).DataContext as IllustrationWrapper);
+        
+        public void ItemClick(IllustrationWrapper e)
         {
-            var container = mylist.ContainerFromItem(((Image)sender).DataContext) as GridViewItem;
+            var container = mylist.ContainerFromItem(e) as GridViewItem;
             if (container != null)
             {
                 // stash item
                 _storedItem = container.Content as IllustrationWrapper;
 
-                // prepare connected animation (name, stashed item, name of element that will be connected)
-                var animation = mylist.PrepareConnectedAnimation(Constants.ConnectedAnimationThumbnail, _storedItem, thumbImageName);
+                try
+                {
+                    // prepare connected animation (name, stashed item, name of element that will be connected)
+                    var animation = mylist.PrepareConnectedAnimation(Constants.ConnectedAnimationThumbnail, _storedItem, thumbImageName);
+                }
+                catch { }
 
                 ItemClicked?.Invoke(this, _storedItem);
             }

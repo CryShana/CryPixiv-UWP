@@ -50,7 +50,7 @@ namespace CryPixiv2
             this.NavigationCacheMode = NavigationCacheMode.Required;
             this.NavigationManager = SystemNavigationManager.GetForCurrentView();
             this.NavigationManager.BackRequested += (a, b) => GoBack();
-            CoreWindow.GetForCurrentThread().KeyDown += MainPage_KeyDown; ;
+            CoreWindow.GetForCurrentThread().KeyDown += MainPage_KeyDown;
 
             // Configure logger
             NLog.LogManager.Configuration.Variables["LogPath"] = LocalFolder.Path;
@@ -110,7 +110,12 @@ namespace CryPixiv2
         }
 
         #region IllustrationGrid Event Handlers
-        void IllustrationGrid_ItemClicked(object sender, IllustrationWrapper e) => NavigateTo(typeof(DetailsPage), e);      
+        public IllustrationGrid CurrentIllustrationGrid { get; private set; }
+        public void IllustrationGrid_ItemClicked(object sender, IllustrationWrapper e)
+        {
+            CurrentIllustrationGrid = (IllustrationGrid)sender;
+            NavigateTo(typeof(DetailsPage), e);
+        }
         void IllustrationGrid_IllustrationBookmarkChange(object sender, Tuple<IllustrationWrapper, bool> e)
         {
             if (e.Item1.IsBookmarked)

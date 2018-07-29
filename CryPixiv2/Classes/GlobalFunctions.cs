@@ -27,10 +27,9 @@ namespace CryPixiv2.Classes
             InMemoryRandomAccessStream rstream = new InMemoryRandomAccessStream();
             await rstream.WriteAsync(data.AsBuffer());
             rstream.Seek(0);
-
+          
             var package = new DataPackage();
             package.SetBitmap(RandomAccessStreamReference.CreateFromStream(rstream));
-            if (filename != null) package.Properties.Description = filename;
             package.RequestedOperation = DataPackageOperation.Copy;
             Clipboard.SetContent(package);
             Clipboard.Flush();
