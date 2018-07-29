@@ -94,7 +94,6 @@ namespace CryPixiv2
         public DetailsPage()
         {
             this.InitializeComponent();
-            this.PointerPressed += DetailsPage_PointerPressed;
             this.SizeChanged += (a, b) =>
             {
                 Changed("DescriptionMinWidth");
