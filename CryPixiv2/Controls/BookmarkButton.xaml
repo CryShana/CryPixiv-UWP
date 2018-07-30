@@ -11,17 +11,19 @@
     d:DesignHeight="40"
     d:DesignWidth="40">
 
-    <VisualStateManager.VisualStateGroups>
-        <VisualStateGroup>
-            <VisualState>
-                <VisualState.StateTriggers>
-                    <StateTrigger IsActive="{Binding IsBookmarked}" />
-                </VisualState.StateTriggers>
-                <VisualState.Setters>
-                    <Setter Target="btnImage.Source" Value="ms-appx:///Assets/Images/heart-red.png" />
-                </VisualState.Setters>
-            </VisualState>
-        </VisualStateGroup>
-    </VisualStateManager.VisualStateGroups>
-    <Image x:Name="btnImage" Source="ms-appx:///Assets/Images/heart-empty.png" PointerPressed="btnImage_PointerPressed" />
+    <Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{Binding IsBookmarked}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="btnImage.Source" Value="ms-appx:///Assets/Images/heart-red.png" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Image x:Name="btnImage" Source="ms-appx:///Assets/Images/heart-empty.png" PointerPressed="btnImage_PointerPressed" />
+    </Grid>
 </UserControl>
