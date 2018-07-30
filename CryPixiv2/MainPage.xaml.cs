@@ -27,6 +27,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using static Microsoft.Identity.Client.Logger;
 
@@ -301,7 +302,7 @@ namespace CryPixiv2
         } 
         #endregion
 
-        public void NavigateTo(Type pageType, object referencedObject) => Frame.Navigate(pageType, referencedObject);
+        public void NavigateTo(Type pageType, object referencedObject) => Frame.Navigate(pageType, referencedObject, new DrillInNavigationTransitionInfo());
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
