@@ -280,7 +280,8 @@ namespace CryPixiv2
             await Task.Delay(200);
             searchPivot.SelectedItem = q;
 
-            // save search to history
+            // save search to history (remove oldest item if over limit)
+            if (ViewModel.SearchHistory.Count >= Constants.MaximumSearchHistoryEntries) ViewModel.SearchHistory.RemoveAt(0);
             ViewModel.SearchHistory.Add(q.Query.Query);
         } 
         #endregion

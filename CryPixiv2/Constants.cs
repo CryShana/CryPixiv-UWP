@@ -14,5 +14,7 @@
         public const double TimeTillAnimationSkipMs = 1000;
         public const double ItemGridEntryAnimationDurationMs = 900;
         public const int InAppNotificationDuration = 1200;
+
+        public const int MaximumSearchHistoryEntries = 300;
     }
 }
