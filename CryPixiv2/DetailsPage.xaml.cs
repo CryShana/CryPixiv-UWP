@@ -94,11 +94,18 @@ namespace CryPixiv2
         public DetailsPage()
         {
             this.InitializeComponent();
+            this.PointerPressed += DetailsPage_PointerPressed;
             this.SizeChanged += (a, b) =>
             {
                 Changed("DescriptionMinWidth");
                 Changed("DetailMinWidth");
             };
+        }
+        private void DetailsPage_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            // handle Mouse back button (this can't be handled in KeyDown event handler)
+            var isBackPressed = e.GetCurrentPoint(sender as UIElement).Properties.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.XButton1Pressed;
+            if (isBackPressed) MainPage.CurrentInstance.GoBack();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

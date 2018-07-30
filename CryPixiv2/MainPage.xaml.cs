@@ -121,21 +121,9 @@ namespace CryPixiv2
             if (e.Item1.IsBookmarked)
             {
                 // Public
-                if (e.Item2)
-                {
-                    ViewModel.BookmarksPublic.Insert(e.Item1);
-
-                    if (ViewModel.BookmarksPublic.LoadedElements.ContainsKey(e.Item1.WrappedIllustration.Id) == false)
-                        ViewModel.BookmarksPublic.LoadedElements.Add(e.Item1.WrappedIllustration.Id, DateTime.Now);
-                }
+                if (e.Item2) ViewModel.BookmarksPublic.Insert(e.Item1);               
                 // Private
-                else
-                {
-                    ViewModel.BookmarksPrivate.Insert(e.Item1);
-
-                    if (ViewModel.BookmarksPrivate.LoadedElements.ContainsKey(e.Item1.WrappedIllustration.Id) == false)
-                        ViewModel.BookmarksPrivate.LoadedElements.Add(e.Item1.WrappedIllustration.Id, DateTime.Now);
-                }
+                else ViewModel.BookmarksPrivate.Insert(e.Item1);             
             }
         } 
         #endregion
