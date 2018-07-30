@@ -189,7 +189,7 @@ namespace CryPixiv2
 
                 var data = await GetImageData(_flipview.SelectedIndex);
 
-                await GlobalFunctions.CopyToClipboardBitmap(data, 
+                await GlobalFunctions.CopyToClipboardBitmap(data,
                     GlobalFunctions.GetIllustrationFileName(Illustration, _flipview.SelectedIndex));
 
                 ShowNotification("Image copied.");
@@ -245,7 +245,7 @@ namespace CryPixiv2
                 for (int i = 0; i < Illustration.ImagesCount; i++)
                 {
                     var data = await GetImageData(i);
-                    await FileIO.WriteBytesAsync(await d.CreateFileAsync(GlobalFunctions.GetIllustrationFileName(Illustration, i), 
+                    await FileIO.WriteBytesAsync(await d.CreateFileAsync(GlobalFunctions.GetIllustrationFileName(Illustration, i),
                         CreationCollisionOption.GenerateUniqueName), data);
                 }
 
@@ -363,32 +363,51 @@ namespace CryPixiv2
         {
             var g = MainPage.CurrentInstance.CurrentIllustrationGrid;
             var i = g.ViewSource.IndexOf(Illustration);
-            if (i + 1 >= g.ViewSource.Count)
-            {
-                ShowNotification("No next page!");
-                return;
-            }
 
-            ignoreNav = true;
-            var e = (IllustrationWrapper)g.ViewSource.ElementAt(i + 1);
-            MainPage.CurrentInstance.GoBack();
-            g.ItemClick(e);
+            var c = g.ViewSource.Count;
+            for (int ix = 1; ix < c; ix++)
+            {
+                // check boundaries
+                if (i + ix >= g.ViewSource.Count)
+                {
+                    ShowNotification("No next illustration!");
+                    return;
+                }
+
+                // check item
+                var e = (IllustrationWrapper)g.ViewSource.ElementAt(i + ix);
+                if (e.IsBlurred) continue;
+
+                ignoreNav = true;
+                MainPage.CurrentInstance.GoBack();
+                g.ItemClick(e);
+                break;
+            }
         }
 
         public void PreviousIllustration()
         {
             var g = MainPage.CurrentInstance.CurrentIllustrationGrid;
             var i = g.ViewSource.IndexOf(Illustration);
-            if (i - 1 < 0)
+            var c = g.ViewSource.Count;
+            for (int ix = 1; ix < c; ix++)
             {
-                ShowNotification("No previous page!");
-                return;
-            }
+                // check boundaries
+                if (i - ix < 0)
+                {
+                    ShowNotification("No previous illustration!");
+                    return;
+                }
 
-            ignoreNav = true;
-            var e = (IllustrationWrapper)g.ViewSource.ElementAt(i - 1);
-            MainPage.CurrentInstance.GoBack();
-            g.ItemClick(e);
+                // check item
+                var e = (IllustrationWrapper)g.ViewSource.ElementAt(i - ix);
+                if (e.IsBlurred) continue;
+
+                ignoreNav = true;
+                MainPage.CurrentInstance.GoBack();
+                g.ItemClick(e);
+                break;
+            }
         }
     }
 }

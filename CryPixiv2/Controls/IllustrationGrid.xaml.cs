@@ -208,7 +208,8 @@ namespace CryPixiv2.Controls
                 // Skip animation if Collection.LoadedElements contains this illustration for longer than X seconds
                 if (DateTime.Now.Subtract(val).TotalMilliseconds > Constants.TimeTillAnimationSkipMs) return;
                 // Once animation is done, no longer repeat it - remove X seconds to always skip it in the future.
-                else ItemSource.LoadedElements[item.WrappedIllustration.Id].Subtract(TimeSpan.FromMilliseconds(Constants.TimeTillAnimationSkipMs));
+                else ItemSource.LoadedElements[item.WrappedIllustration.Id] = 
+                        ItemSource.LoadedElements[item.WrappedIllustration.Id].Subtract(TimeSpan.FromMilliseconds(Constants.TimeTillAnimationSkipMs));
             }
 
             // prepare animation variables
