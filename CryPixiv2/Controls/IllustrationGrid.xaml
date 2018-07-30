@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
     xmlns:controls2="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:converters="using:CryPixiv2.Converters"
@@ -53,6 +54,17 @@
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
+                                <!--
+                                <VisualStateGroup>
+                                    <VisualState>
+                                        <VisualState.StateTriggers>
+                                            <StateTrigger IsActive="{Binding}" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Target="blurBorder.Visibility" Value="Visible" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>-->
                             </VisualStateManager.VisualStateGroups>
                             
                             <!-- CONTEXT MENU -->
@@ -65,19 +77,26 @@
                             </Grid.ContextFlyout>
 
                             <!-- PROGRESS RING -->
-                            <ProgressRing IsActive="{Binding ThumbnailImageLoading}" HorizontalAlignment="Center" Canvas.ZIndex="3" 
+                            <ProgressRing IsActive="{Binding ThumbnailImageLoading}" HorizontalAlignment="Center" Canvas.ZIndex="6" 
                                           VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" />
 
                             <!-- PAGE COUNTER -->
-                            <Grid Name="countgrid" Canvas.ZIndex="5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" Visibility="Collapsed">
+                            <Grid Name="countgrid" Canvas.ZIndex="6" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" Visibility="Collapsed">
                                 <Ellipse Width="40" Height="40" Fill="Black" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5"/>
                                 <TextBlock x:Name="count" Text="{Binding ImagesCount}" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="20" />
                             </Grid>
 
                             <!-- HEART ICON -->
                             <local:BookmarkButton Clicked="BookmarkButton_Clicked" Width="40" Height="40" Margin="0,0,8,8" 
-                                                  HorizontalAlignment="Right" VerticalAlignment="Bottom" Canvas.ZIndex="5"/>
+                                                  HorizontalAlignment="Right" VerticalAlignment="Bottom" Canvas.ZIndex="6"/>
 
+                            <!-- BLUR LAYER -->
+                            <Border x:Name="blurBorder" BorderThickness="0" Canvas.ZIndex="5" Visibility="Collapsed">
+                                <Border.Background>
+                                    <media:BackdropBlurBrush Amount="10" />
+                                </Border.Background>
+                            </Border>
+                            
                             <!-- THUMBNAIL -->
                             <Image x:Name="thumbImage" Source="{Binding ThumbnailImage}" Canvas.ZIndex="4" PointerPressed="GridItem_Click"/>
                         </Grid>

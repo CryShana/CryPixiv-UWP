@@ -20,6 +20,17 @@ namespace CryPixiv2.Wrappers
         public Illustration WrappedIllustration { get; set; }
 
         #region Helper Properties
+        #region Sanity Properties
+        // if SanityLevel <= 2 --> SAFE
+        // if SanityLevel <= 4 --> SAFE
+        // if SanityLevel <= 6 --> QUESTIONABLE
+        // if SanityLevel > 6 and R-18 tag --> NSFW
+        public bool IsNsfw => WrappedIllustration.SanityLevel >= 6 && WrappedIllustration.Tags.Count(x => x.Name.ToLower() == "r-18") > 0;
+        public bool IsQuestionable => WrappedIllustration.SanityLevel >= 5 && !IsNsfw;
+        public bool IsSafe => WrappedIllustration.SanityLevel < 5;
+        public string Rating => IsNsfw ? "NSFW" : (IsQuestionable ? "QUESTONABLE" : "SAFE");
+        #endregion
+
         public int ImagesCount => (WrappedIllustration.MetaSinglePage.Count == 1 && WrappedIllustration.MetaPages.Count == 0) ? 1 : WrappedIllustration.MetaPages.Count;
         public bool HasMultipleImages => ImagesCount > 1;
         public event EventHandler<BitmapImage> ImageDownloaded;

@@ -174,9 +174,11 @@
                     </MenuFlyout>
                 </Grid.ContextFlyout>
 
+                <!-- ARTIST IMAGE -->
                 <Image Source="{Binding ArtistImage, Mode=OneWay, FallbackValue={StaticResource missingImage}, TargetNullValue={StaticResource missingImage}}" 
                        Height="94" Width="94" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
 
+                <!-- ARTIST DETAILS -->
                 <StackPanel Margin="115,10,20,10" HorizontalAlignment="Left">
                     <TextBlock Text="{Binding WrappedIllustration.ArtistUser.Name}" IsTextSelectionEnabled="True" FontSize="18" FontWeight="Bold" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
                     <TextBlock Text="{Binding WrappedIllustration.ArtistUser.Id}" IsTextSelectionEnabled="True" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -186,6 +188,7 @@
                     </StackPanel>
                 </StackPanel>
             </Grid>
+            <!-- DETAILS -->
             <Grid MaxWidth="500" x:Name="detailGrid" Opacity="0"  Margin="0,7,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80"/>
@@ -213,6 +216,7 @@
                            FontSize="16" TextAlignment="Right" Margin="0,0,10,0"/>
                 <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding CreatedText, Mode=OneWay}" FontSize="16"/>
             </Grid>
+            <!-- DESCRIPTION -->
             <Grid MaxWidth="500" x:Name="descriptionGrid" Opacity="0" Margin="0,7,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120"/>
