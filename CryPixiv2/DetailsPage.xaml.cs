@@ -121,12 +121,12 @@ namespace CryPixiv2
             // check progress and hide it if already loaded
             progress.IsActive = IsCurrentPageLoading;
 
+            // finish connected animation
             var imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation(Constants.ConnectedAnimationThumbnail);
             if (imageAnimation != null) imageAnimation.TryStart(fullImage);
 
             // remove other images from flipview
-            if (_flipview.Items.Count > 1)
-                for (int i = _flipview.Items.Count - 1; i >= 1; i--) _flipview.Items.RemoveAt(i);
+            if (_flipview.Items.Count > 1) for (int i = _flipview.Items.Count - 1; i >= 1; i--) _flipview.Items.RemoveAt(i);
 
             // add other images
             if (item.HasMultipleImages)

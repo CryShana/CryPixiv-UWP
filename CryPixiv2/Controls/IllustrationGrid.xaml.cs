@@ -271,7 +271,7 @@ namespace CryPixiv2.Controls
                 try
                 {
                     // prepare connected animation (name, stashed item, name of element that will be connected)
-                    var animation = mylist.PrepareConnectedAnimation(Constants.ConnectedAnimationThumbnail, _storedItem, thumbImageName);
+                    mylist.PrepareConnectedAnimation(Constants.ConnectedAnimationThumbnail, _storedItem, thumbImageName); 
                 }
                 catch { }
 
