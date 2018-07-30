@@ -28,7 +28,19 @@ namespace CryPixiv2.Wrappers
         public bool IsNsfw => WrappedIllustration.SanityLevel >= 6 && WrappedIllustration.Tags.Count(x => x.Name.ToLower() == "r-18") > 0;
         public bool IsQuestionable => WrappedIllustration.SanityLevel >= 5 && !IsNsfw;
         public bool IsSafe => WrappedIllustration.SanityLevel < 5;
-        public string Rating => IsNsfw ? "NSFW" : (IsQuestionable ? "QUESTONABLE" : "SAFE");
+        public bool IsBlurred
+        {
+            get
+            {
+                switch (MainPage.CurrentInstance.ViewModel.AllowLevel)
+                {
+                    case 0: return IsNsfw || IsQuestionable;
+                    case 1: return IsNsfw;
+                    case 2: return false;
+                    default: return false;
+                }
+            }
+        }
         #endregion
 
         public int ImagesCount => (WrappedIllustration.MetaSinglePage.Count == 1 && WrappedIllustration.MetaPages.Count == 0) ? 1 : WrappedIllustration.MetaPages.Count;
@@ -149,6 +161,8 @@ namespace CryPixiv2.Wrappers
         {
             WrappedIllustration = illustration;
             AssociatedAccount = account;
+
+            MainPage.CurrentInstance.ViewModel.AllowLevelChanged += (a, b) => Changed("IsBlurred");
         }
 
         #region Private Methods

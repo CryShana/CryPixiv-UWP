@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -40,11 +41,10 @@ namespace CryPixiv2.Controls
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
         bool? sortbkm = false;
-        private AdvancedCollectionView viewSource = null;
         #endregion
 
         #region Public Properties and Events
-        public AdvancedCollectionView ViewSource => viewSource;
+        public AdvancedCollectionView ViewSource { get; }
         public PixivObservableCollection ItemSource { get => (PixivObservableCollection)GetValue(ItemSourceProperty); set => SetValue(ItemSourceProperty, value); }
         public int DisplayedCount => ItemSource?.Collection?.Count ?? 0;
         public int LoadedCount => DisplayedCount + ToLoadCount;
@@ -57,7 +57,7 @@ namespace CryPixiv2.Controls
         public IllustrationGrid()
         {
             this.InitializeComponent();
-            viewSource = Resources["viewSource"] as AdvancedCollectionView;
+            ViewSource = Resources["viewSource"] as AdvancedCollectionView;
         }
 
         public static void ItemSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
@@ -75,9 +75,9 @@ namespace CryPixiv2.Controls
 
         private void SortByBookmarkCount(bool sort = true)
         {
-            viewSource.SortDescriptions.Clear();
-            if (sort) viewSource.SortDescriptions.Add(new SortDescription(SortDirection.Descending, new BookmarkComparer()));
-            viewSource.Refresh();
+            ViewSource.SortDescriptions.Clear();
+            if (sort) ViewSource.SortDescriptions.Add(new SortDescription(SortDirection.Descending, new BookmarkComparer()));
+            ViewSource.Refresh();
         }
 
         IllustrationWrapper _storedItem = null;
@@ -279,6 +279,17 @@ namespace CryPixiv2.Controls
             else
             {
                 // handle this
+            }
+        }
+
+
+        public int AllowLevel
+        {
+            get => MainPage.CurrentInstance.ViewModel.AllowLevel;
+            set
+            {
+                MainPage.CurrentInstance.ViewModel.AllowLevel = value;
+                Changed();
             }
         }
     }

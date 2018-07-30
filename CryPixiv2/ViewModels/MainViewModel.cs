@@ -41,6 +41,25 @@ namespace CryPixiv2.ViewModels
 
         #region Public Properties
         public PixivAccount Account { get; set; }
+
+        #region Allow Levels
+        int allowlvl = 2;
+        public int AllowLevel
+        {
+            get => allowlvl;
+            set
+            {
+                allowlvl = value;
+
+                // so that IllustrationWrappers can notice it and update IsBlurred property
+                AllowLevelChanged?.Invoke(this, allowlvl);  
+
+                // update the slider values on every illustration grid
+                Changed();
+            }
+        } 
+        #endregion
+
         public PixivObservableCollection BookmarksPublic { get => bookmarksPublic; set { bookmarksPublic = value; Changed(); } }
         public PixivObservableCollection BookmarksPrivate { get => bookmarksPrivate; set { bookmarksPrivate = value; Changed(); } }
         public PixivObservableCollection Recommended { get => recommended; set { recommended = value; Changed(); } }
@@ -69,6 +88,7 @@ namespace CryPixiv2.ViewModels
                 Changed();
             }
         }
+        public event EventHandler<int> AllowLevelChanged;
         #endregion
 
         public MainViewModel()

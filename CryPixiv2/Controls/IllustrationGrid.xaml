@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
-    xmlns:controls2="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:controls2="using:AdaptiveTriggerLibrary.Triggers.LogicalTriggers"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:converters="using:CryPixiv2.Converters"
     mc:Ignorable="d"
@@ -18,10 +18,11 @@
     <UserControl.Resources>
         <controls:AdvancedCollectionView x:Key="viewSource" Source="{x:Bind ItemSource.Collection, Mode=OneWay}" />
         <converters:InvertBoolConverter  x:Key="invConverter"/>
+        <converters:AllowSliderConverter x:Key="sliderConverter" />
     </UserControl.Resources>
     <Grid>
         <GridView x:Name="mylist" Loaded="GridView_Loaded" animations:ReorderGridAnimation.Duration="600" IsItemClickEnabled="True"
-                  ItemsSource="{Binding Source={StaticResource viewSource}}" Margin="0,0,0,20">
+                  ItemsSource="{Binding Source={StaticResource viewSource}}" Margin="0,0,0,33">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsWrapGrid x:Name="stack" Orientation="Horizontal" HorizontalAlignment="Center" Loaded="ItemsWrapGrid_Loaded"/>
@@ -33,6 +34,7 @@
                         <Grid Width="300" Height="300" Background="Gainsboro" 
                               DataContextChanged="Grid_DataContextChanged" RenderTransformOrigin="0.5,0.5">
                             <VisualStateManager.VisualStateGroups>
+                                <!-- IF BOOKMARKED -->
                                 <VisualStateGroup>
                                     <VisualState>
                                         <VisualState.StateTriggers>
@@ -44,6 +46,7 @@
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
+                                <!-- IF MULTIPLE IMAGES -->
                                 <VisualStateGroup>
                                     <VisualState>
                                         <VisualState.StateTriggers>
@@ -54,19 +57,19 @@
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
-                                <!--
+                                <!-- BLUR FOR ALLOW LEVEL -->
                                 <VisualStateGroup>
                                     <VisualState>
                                         <VisualState.StateTriggers>
-                                            <StateTrigger IsActive="{Binding}" />
+                                            <StateTrigger IsActive="{Binding IsBlurred, Mode=OneWay}" />
                                         </VisualState.StateTriggers>
                                         <VisualState.Setters>
                                             <Setter Target="blurBorder.Visibility" Value="Visible" />
                                         </VisualState.Setters>
                                     </VisualState>
-                                </VisualStateGroup>-->
+                                </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            
+
                             <!-- CONTEXT MENU -->
                             <Grid.ContextFlyout>
                                 <MenuFlyout>
@@ -93,10 +96,10 @@
                             <!-- BLUR LAYER -->
                             <Border x:Name="blurBorder" BorderThickness="0" Canvas.ZIndex="5" Visibility="Collapsed">
                                 <Border.Background>
-                                    <media:BackdropBlurBrush Amount="10" />
+                                    <media:BackdropBlurBrush Amount="15" />
                                 </Border.Background>
                             </Border>
-                            
+
                             <!-- THUMBNAIL -->
                             <Image x:Name="thumbImage" Source="{Binding ThumbnailImage}" Canvas.ZIndex="4" PointerPressed="GridItem_Click"/>
                         </Grid>
@@ -104,13 +107,20 @@
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left">
-            <TextBlock Text="Displayed:" VerticalAlignment="Bottom" Margin="0,0,8,0" Foreground="#FF616161"/>
-            <TextBlock Text="{x:Bind DisplayedCount, Mode=OneWay}" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
-            <TextBlock Text="Queued:" VerticalAlignment="Bottom" Margin="0,0,8,0" Foreground="#FF616161"/>
-            <TextBlock Text="{x:Bind ToLoadCount, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
-            <TextBlock Text="Found:"  VerticalAlignment="Bottom" Margin="0,0,8,0" Foreground="#FF616161"/>
-            <TextBlock Text="{x:Bind LoadedCount, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="33">
+            <TextBlock Text="Displayed:" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="#FF616161"/>
+            <TextBlock Text="{x:Bind DisplayedCount, Mode=OneWay}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <TextBlock Text="Queued:" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="#FF616161"/>
+            <TextBlock Text="{x:Bind ToLoadCount, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <TextBlock Text="Found:"  VerticalAlignment="Center" Margin="0,0,8,0" Foreground="#FF616161"/>
+            <TextBlock Text="{x:Bind LoadedCount, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,8,0"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="33">
+            <TextBlock Text="Allow:" Foreground="#FF616161" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <Slider x:Name="allowSlider" Width="100" Minimum="0" Maximum="2" VerticalAlignment="Center"
+                    DataContext="{StaticResource mainViewModel}"
+                    Value="{Binding AllowLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"                    
+                    ThumbToolTipValueConverter="{StaticResource sliderConverter}"/>
         </StackPanel>
     </Grid>
 </UserControl>
