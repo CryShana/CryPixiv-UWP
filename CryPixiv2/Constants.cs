@@ -4,6 +4,9 @@
     {
         public const string StorageDeviceToken = "deviceToken";
         public const string StorageRefreshToken = "refreshToken";
+        public const string StorageTranslations = "translations";
+        public const string StorageHistory = "searchHistory";
+        public const string StorageBlockedIllustrations = "blockedIllustrations";
 
         public const string ConnectedAnimationThumbnail = "ca1";
         public const string ConnectedAnimationImage = "ca2";

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -40,5 +41,22 @@ namespace CryPixiv2.Classes
 
         public static string GetIllustrationFileName(IllustrationWrapper illust, int pageIndex)
             => Path.GetFileName(GetImageUrl(illust, pageIndex));
+
+        public static byte[] Serialize(object data)
+        {
+            using (var stream = new MemoryStream())
+            {
+                new BinaryFormatter().Serialize(stream, data);
+                return stream.ToArray();
+            }
+        }
+
+        public static T Deserialize<T>(byte[] data)
+        {
+            using (var stream = new MemoryStream(data))
+            {
+                return (T)new BinaryFormatter().Deserialize(stream);
+            }
+        }
     }
 }

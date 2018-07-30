@@ -361,7 +361,19 @@ namespace CryPixiv2
         private async void TagTranslationTextblock_Loaded(object sender, RoutedEventArgs e)
         {
             var textblock = (TextBlock)sender;
-            // set the translation value here because updating bindings doesn't work
+            var tag = ((dynamic)textblock.DataContext).Name as string;
+
+            var txt = "";
+            // take existing translation
+            if (MainPage.CurrentInstance.ViewModel.TranslatedWords.ContainsKey(tag)) txt = MainPage.CurrentInstance.ViewModel.TranslatedWords[tag];
+            else
+            {
+                // translate it
+                txt = await Task.Run(() => Translator.Translate(tag));
+                if (string.IsNullOrEmpty(txt) == false) MainPage.CurrentInstance.ViewModel.TranslatedWords.TryAdd(tag, txt);
+            }
+          
+            textblock.Text = txt;
         } 
         #endregion
 

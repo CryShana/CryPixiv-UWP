@@ -3,6 +3,7 @@ using CryPixiv2.Wrappers;
 using CryPixivAPI;
 using CryPixivAPI.Classes;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -76,6 +77,13 @@ namespace CryPixiv2.ViewModels
         public PixivObservableCollection RankingDailyFemale18 { get => rankingDailyFemale18; set { rankingDailyFemale18 = value; Changed(); } }
         public ObservableCollection<SearchSession> Searches { get => searches; set { searches = value; Changed(); } }
 
+        #region Data
+        // Any translated words should be cached here for later use - this will not only speed up translation loading, but also not waste network 
+        public ConcurrentDictionary<string, string> TranslatedWords { get; set; }
+        public List<string> SearchHistory { get; set; }
+        public HashSet<int> BlockedIllustrations { get; set; }
+        #endregion
+
         public bool IsLoggingIn { get => isloggingin; set { isloggingin = value; Changed(); } }
         public bool LoginFormShown { get => loginform; set { loginform = value; Changed(); } }
         public string LoginFormErrorMessage { get => loginerror; set { loginerror = value; Changed(); } }
@@ -110,6 +118,76 @@ namespace CryPixiv2.ViewModels
 
             ls.Values[Constants.StorageDeviceToken] = null;
             ls.Values[Constants.StorageRefreshToken] = null;
+        }
+
+        /// <summary>
+        /// Load Translations, Search History, Blocked Illustrations
+        /// </summary>
+        public void LoadData()
+        {
+            var ls = MainPage.CurrentInstance.LocalStorage;
+
+            var twords = ls.Values[Constants.StorageTranslations] as string;
+            var shistory = ls.Values[Constants.StorageHistory] as string;
+            var blocked = ls.Values[Constants.StorageBlockedIllustrations] as string;
+
+            TranslatedWords = new ConcurrentDictionary<string, string>();
+            if (twords != null)
+            {
+                try
+                {
+                    var tlist = GlobalFunctions.Deserialize<List<KeyValuePair<string, string>>>(Convert.FromBase64String(twords));
+                    foreach (var p in tlist) TranslatedWords.TryAdd(p.Key, p.Value);                    
+                }
+                catch(Exception ex)
+                {
+                    MainPage.Logger.Error(ex, "Failed to deserialize Translations list!");
+                }
+            }
+
+            if (shistory == null) SearchHistory = new List<string>();
+            else
+            {
+                try
+                {
+                    SearchHistory = GlobalFunctions.Deserialize<List<string>>(Convert.FromBase64String(shistory));
+                }
+                catch (Exception ex)
+                {
+                    MainPage.Logger.Error(ex, "Failed to deserialize Search history list!");
+                    SearchHistory = new List<string>();
+                }
+            }
+
+            if (blocked == null) BlockedIllustrations = new HashSet<int>();
+            else
+            {
+                try
+                {
+                    BlockedIllustrations = GlobalFunctions.Deserialize<HashSet<int>>(Convert.FromBase64String(blocked));
+                }
+                catch (Exception ex)
+                {
+                    MainPage.Logger.Error(ex, "Failed to deserialize BlockedIllustrations list!");
+                    BlockedIllustrations = new HashSet<int>();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Save Translations, Search History, Blocked Illustrations
+        /// </summary>
+        public void SaveData()
+        {
+            var ls = MainPage.CurrentInstance.LocalStorage;
+
+            var twords = GlobalFunctions.Serialize(TranslatedWords.ToList());
+            var shistory = GlobalFunctions.Serialize(SearchHistory);
+            var blocked = GlobalFunctions.Serialize(BlockedIllustrations);
+
+            ls.Values[Constants.StorageTranslations] = Convert.ToBase64String(twords);
+            ls.Values[Constants.StorageHistory] = Convert.ToBase64String(shistory);
+            ls.Values[Constants.StorageBlockedIllustrations] = Convert.ToBase64String(blocked);
         }
 
         public async Task Login(string username, string password) => await Login(username, password, null);

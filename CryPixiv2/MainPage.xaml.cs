@@ -58,13 +58,14 @@ namespace CryPixiv2
             Logger = NLog.LogManager.GetLogger("Main");
 
             // Upon closing app, make sure to properly flush logger
-            Application.Current.Suspending += (a, b) => NLog.LogManager.Shutdown();
+            Application.Current.Suspending += (a, b) => ViewModel.SaveData();
             Application.Current.UnhandledException += (a, b) => Logger.Fatal(b.Exception, b.Message);
 
             // Set all necessary variables
             CurrentInstance = this;
             LocalStorage = ApplicationData.Current.LocalSettings;
             ViewModel = (MainViewModel)Application.Current.Resources["mainViewModel"];
+            ViewModel.LoadData();
 
             // When user changes bookmarks - this will handle bookmarks being added or removed to/from the bookmark grid
             IllustrationGrid.IllustrationBookmarkChange += IllustrationGrid_IllustrationBookmarkChange;
@@ -77,6 +78,7 @@ namespace CryPixiv2
 
         private void MainPage_KeyDown(CoreWindow sender, KeyEventArgs args)
         {
+            // Handle any key here (for MOUSE presses check the DetailsPage's PointerPressed handler)
             var key = args.VirtualKey;
 
             var isBackPressed =
@@ -86,11 +88,11 @@ namespace CryPixiv2
 
             if (isBackPressed) CurrentInstance.GoBack();
             else 
-            {
+            {               
                 var frame = Window.Current.Content as Frame;
-
                 if (frame.Content is DetailsPage d)
                 {
+                    // if currently on details page
                     if (key == Windows.System.VirtualKey.E) d.NextIllustration();
                     else if (key == Windows.System.VirtualKey.Q) d.PreviousIllustration();
                 }
@@ -249,6 +251,7 @@ namespace CryPixiv2
         #endregion
 
         #region Search
+        // SEARCH CLICK
         private async void _searchQuery_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key != Windows.System.VirtualKey.Enter) return;
@@ -276,6 +279,9 @@ namespace CryPixiv2
             // select new tab
             await Task.Delay(200);
             searchPivot.SelectedItem = q;
+
+            // save search to history
+            ViewModel.SearchHistory.Add(q.Query.Query);
         } 
         #endregion
 
