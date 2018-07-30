@@ -30,10 +30,18 @@ namespace CryPixiv2.Controls
             var illust = DataContext as IllustrationWrapper;
             if (illust == null) return;
 
-            // do animation
-            firstStoryboard.Begin();
-            await Task.Delay(300);
-            secondStoryboard.Begin();
+            if (illust.IsBookmarked == false)
+            {
+                // bookmark animation
+                firstStoryboard.Begin();
+                await Task.Delay(300);
+                secondStoryboard.Begin();
+            }
+            else
+            {
+                // unbookmark animation
+                thirdStoryboard.Begin();
+            }
 
             Clicked?.Invoke(this, illust);
         }

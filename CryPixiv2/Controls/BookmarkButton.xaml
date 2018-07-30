@@ -59,6 +59,22 @@
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
             </Storyboard>
+            <Storyboard x:Name="thirdStoryboard">
+                <DoubleAnimation To="0.85" Duration="00:00:0.2" AutoReverse="True"
+                    Storyboard.TargetName="imageScaleTransform" 
+                    Storyboard.TargetProperty="ScaleY">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation To="0.85" Duration="00:00:0.2" AutoReverse="True"
+                    Storyboard.TargetName="imageScaleTransform" 
+                    Storyboard.TargetProperty="ScaleX">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
         </Grid.Resources>
         <Image x:Name="btnImage" Source="ms-appx:///Assets/Images/heart-empty.png" PointerPressed="btnImage_PointerPressed" RenderTransformOrigin=".5,.5">
             <Image.RenderTransform>

@@ -29,6 +29,18 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
+            <!-- UI Visibility -->
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{Binding UIHidden, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="btnToogleUI.Background" Value="{StaticResource ResourceKey=color_yellowButton}" />
+                        <Setter Target="btnToogleUI.Content" Value="Show UI" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         
         <controls:Loading x:Name="loadingControl" IsLoading="{Binding IsLoggingIn}" Canvas.ZIndex="1000" Background="#7F000000">
@@ -149,8 +161,9 @@
         
         <!-- OTHER BUTTONS -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-            <Button x:Name="btnPauseDManager" Content="Pause" Click="PauseDownloadManagerClick" />
-            <Button x:Name="btnLogout" Content="Logout" Click="LogoutClick" />
+            <Button x:Name="btnToogleUI" Content="Hide UI"  Click="btnToogleUI_Click"/>
+            <Button x:Name="btnPauseDManager" Content="Pause" Click="PauseDownloadManagerClick" Margin="5,0,0,0" />
+            <Button x:Name="btnLogout" Content="Logout" Click="LogoutClick" Margin="20,0,0,0" Background="{StaticResource ResourceKey=color_redButton}" />
         </StackPanel>
     </Grid>
 </Page>

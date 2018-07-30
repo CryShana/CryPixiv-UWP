@@ -8,5 +8,6 @@
     <Application.Resources>
         <vm:MainViewModel x:Key="mainViewModel" />
         <SolidColorBrush x:Key="color_redButton" Color="#FFFF8181" />
+        <SolidColorBrush x:Key="color_yellowButton" Color="#99FFCB5B" />
     </Application.Resources>
 </Application>

@@ -36,8 +36,8 @@ namespace CryPixiv2.ViewModels
             rankingDailyFemale18 = new PixivObservableCollection(a => a.GetRankedIllustrations(PixivParameters.RankingMode.Daily_Female_R18));
 
         private ObservableCollection<SearchSession> searches = new ObservableCollection<SearchSession>();
-        private bool isloggingin = false, loginform = false;
-        private string loginerror = "";
+        private bool isloggingin = false, loginform = false, uihidden = false;
+        private string loginerror = "";  
         #endregion
 
         #region Public Properties
@@ -93,6 +93,15 @@ namespace CryPixiv2.ViewModels
             set
             {
                 DownloadManager.IsPaused = value;
+                Changed();
+            }
+        }
+        public bool UIHidden
+        {
+            get => uihidden;
+            set
+            {
+                uihidden = value;
                 Changed();
             }
         }
