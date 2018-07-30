@@ -107,6 +107,7 @@
     <Compile Include="Classes\GlobalFunctions.cs" />
     <Compile Include="Classes\PixivObservableCollection.cs" />
     <Compile Include="Classes\SearchQuery.cs" />
+    <Compile Include="Classes\Translator.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Controls\BookmarkButton.xaml.cs">
       <DependentUpon>BookmarkButton.xaml</DependentUpon>

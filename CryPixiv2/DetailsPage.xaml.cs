@@ -346,6 +346,7 @@ namespace CryPixiv2
         }
         #endregion
 
+        #region Tags
         private void tagsCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (tagsCombobox.SelectedItem == null) return;
@@ -357,6 +358,12 @@ namespace CryPixiv2
 
             tagsCombobox.SelectedItem = null;
         }
+        private async void TagTranslationTextblock_Loaded(object sender, RoutedEventArgs e)
+        {
+            var textblock = (TextBlock)sender;
+            // set the translation value here because updating bindings doesn't work
+        } 
+        #endregion
 
         bool ignoreNav = false;
         public void NextIllustration()
