@@ -331,7 +331,9 @@ namespace CryPixiv2
         private void ResetSearchTab_Click(object sender, RoutedEventArgs e)
         {
             var item = ((dynamic)sender).DataContext as SearchSession;
-            item.Collection.Reset();        
+            item.Collection.Reset();
+
+            DownloadManager.SwitchTo(item.Collection, ViewModel.Account);
 
             searchPivot.SelectedItem = item;
             

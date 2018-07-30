@@ -117,6 +117,8 @@ namespace CryPixivAPI
                 var msg = err.SelectToken("message").ToString();
                 if (string.IsNullOrEmpty(msg)) msg = err.SelectToken("user_message").ToString();
 
+                if (msg.ToLower().Contains("offset must be no more than")) throw new OffsetLimitException();
+
                 throw new Exception(msg);
             }
         }

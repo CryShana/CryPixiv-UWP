@@ -107,9 +107,13 @@ namespace CryPixiv2.Classes
                     var vm = MainPage.CurrentInstance.ViewModel;
                     vm.Login(vm.Account.AuthInfo.RefreshToken);
                 }
+                catch (OffsetLimitException oex)
+                {
+                    MainPage.Logger.Error(oex, "Offset limit reached!");
+                }
                 catch (Exception ex)
                 {
-                    MainPage.Logger.Error(ex, "Unknown exception!");
+                    MainPage.Logger.Error(ex, "Unknown exception! " + ex.Message);
                 }                
             }, src.Token);
         }
