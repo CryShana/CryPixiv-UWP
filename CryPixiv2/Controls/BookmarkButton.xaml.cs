@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -17,16 +18,24 @@ using Windows.UI.Xaml.Navigation;
 namespace CryPixiv2.Controls
 {
     public sealed partial class BookmarkButton : UserControl
-    {
+    {       
         public event EventHandler<IllustrationWrapper> Clicked;
         public BookmarkButton()
         {
             this.InitializeComponent();
         }
 
-        private void btnImage_PointerPressed(object sender, PointerRoutedEventArgs e)
+        private async void btnImage_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            Clicked?.Invoke(this, DataContext as IllustrationWrapper);
+            var illust = DataContext as IllustrationWrapper;
+            if (illust == null) return;
+
+            // do animation
+            firstStoryboard.Begin();
+            await Task.Delay(300);
+            secondStoryboard.Begin();
+
+            Clicked?.Invoke(this, illust);
         }
     }
 }

@@ -12,6 +12,7 @@
     d:DesignWidth="40">
 
     <Grid>
+        <!-- IMAGE -->
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -24,6 +25,45 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <Image x:Name="btnImage" Source="ms-appx:///Assets/Images/heart-empty.png" PointerPressed="btnImage_PointerPressed" />
+        <!-- BOUNCE ANIMATION -->
+        <Grid.Resources>
+            <Storyboard x:Name="firstStoryboard">
+                <DoubleAnimation To="1.5" Duration="00:00:0.3" 
+                    Storyboard.TargetName="imageScaleTransform" 
+                    Storyboard.TargetProperty="ScaleY">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation To="1.5" Duration="00:00:0.3" 
+                    Storyboard.TargetName="imageScaleTransform" 
+                    Storyboard.TargetProperty="ScaleX">
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+            <Storyboard x:Name="secondStoryboard">
+                <DoubleAnimation To="1" Duration="00:00:0.8" 
+                    Storyboard.TargetName="imageScaleTransform" 
+                    Storyboard.TargetProperty="ScaleY">
+                    <DoubleAnimation.EasingFunction>
+                        <BounceEase Bounces="3" EasingMode="EaseOut" Bounciness="2" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation To="1" Duration="00:00:0.8" 
+                    Storyboard.TargetName="imageScaleTransform" 
+                    Storyboard.TargetProperty="ScaleX">
+                    <DoubleAnimation.EasingFunction>
+                        <BounceEase Bounces="3" EasingMode="EaseOut" Bounciness="2" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+        </Grid.Resources>
+        <Image x:Name="btnImage" Source="ms-appx:///Assets/Images/heart-empty.png" PointerPressed="btnImage_PointerPressed" RenderTransformOrigin=".5,.5">
+            <Image.RenderTransform>
+                <ScaleTransform x:Name="imageScaleTransform" />
+            </Image.RenderTransform>
+        </Image>
     </Grid>
 </UserControl>
