@@ -113,7 +113,7 @@ namespace CryPixiv2.Classes
                 }
                 catch (Exception ex)
                 {
-                    MainPage.Logger.Error(ex, "Unknown exception! " + ex.Message);
+                    MainPage.Logger.Error(ex, "Unknown exception! " + ex.Message + (ex.InnerException != null ? ex.InnerException.Message : ""));
                 }                
             }, src.Token);
         }

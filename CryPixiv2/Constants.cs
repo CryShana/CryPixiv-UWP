@@ -16,5 +16,7 @@
         public const int InAppNotificationDuration = 1200;
 
         public const int MaximumSearchHistoryEntries = 300;
+
+        public const string SaveFileName = "savedata.data";
     }
 }

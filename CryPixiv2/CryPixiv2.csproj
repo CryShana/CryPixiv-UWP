@@ -106,6 +106,7 @@
     <Compile Include="Classes\DownloadManager.cs" />
     <Compile Include="Classes\GlobalFunctions.cs" />
     <Compile Include="Classes\PixivObservableCollection.cs" />
+    <Compile Include="Classes\SaveFile.cs" />
     <Compile Include="Classes\SearchQuery.cs" />
     <Compile Include="Classes\Translator.cs" />
     <Compile Include="Constants.cs" />

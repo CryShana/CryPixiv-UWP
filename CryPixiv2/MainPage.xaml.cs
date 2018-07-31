@@ -29,7 +29,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using static Microsoft.Identity.Client.Logger;
 
 namespace CryPixiv2
 {
@@ -58,8 +57,8 @@ namespace CryPixiv2
             Logger = NLog.LogManager.GetLogger("Main");
 
             // Upon closing app, make sure to properly flush logger
-            Application.Current.Suspending += (a, b) => ViewModel.SaveData();
-            Application.Current.UnhandledException += (a, b) => Logger.Fatal(b.Exception, b.Message);
+            Application.Current.Suspending += (a, b) => ViewModel.SaveData().Wait();
+            Application.Current.UnhandledException += (a, b) => Logger.Fatal(b.Exception, b.Message + (b.Exception.InnerException != null ? b.Exception.InnerException.Message : ""));
 
             // Set all necessary variables
             CurrentInstance = this;

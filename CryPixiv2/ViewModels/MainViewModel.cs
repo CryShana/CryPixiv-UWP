@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -132,71 +133,65 @@ namespace CryPixiv2.ViewModels
         /// <summary>
         /// Load Translations, Search History, Blocked Illustrations
         /// </summary>
-        public void LoadData()
+        public async Task LoadData()
         {
-            var ls = MainPage.CurrentInstance.LocalStorage;
+            // try to get save file
+            StorageFile savefile = null;
+            try
+            {
+                savefile = await MainPage.LocalFolder.GetFileAsync(Constants.SaveFileName);
+            }
+            catch (Exception ex)
+            {
+                MainPage.Logger.Info($"Savefile not found: {ex.Message}");
+            }
 
-            var twords = ls.Values[Constants.StorageTranslations] as string;
-            var shistory = ls.Values[Constants.StorageHistory] as string;
-            var blocked = ls.Values[Constants.StorageBlockedIllustrations] as string;
+            // try to deserialize it if save file exists
+            SaveFile save = null;
+            try
+            {
+                if (savefile == null) throw new NullReferenceException();
 
+                var data = (await FileIO.ReadBufferAsync(savefile)).ToArray();
+                save = GlobalFunctions.Deserialize<SaveFile>(data);
+            }
+            catch
+            {
+                SearchHistory = new List<string>();
+                BlockedIllustrations = new HashSet<int>();
+                TranslatedWords = new ConcurrentDictionary<string, string>();
+                return;
+            }
+
+            // translated words
             TranslatedWords = new ConcurrentDictionary<string, string>();
-            if (twords != null)
-            {
-                try
-                {
-                    var tlist = GlobalFunctions.Deserialize<List<KeyValuePair<string, string>>>(Convert.FromBase64String(twords));
-                    foreach (var p in tlist) TranslatedWords.TryAdd(p.Key, p.Value);                    
-                }
-                catch(Exception ex)
-                {
-                    MainPage.Logger.Error(ex, "Failed to deserialize Translations list!");
-                }
-            }
+            var tlist = save.TranslatedWords;
+            foreach (var p in tlist) TranslatedWords.TryAdd(p.Key, p.Value);
 
-            if (shistory == null) SearchHistory = new List<string>();
-            else
-            {
-                try
-                {
-                    SearchHistory = GlobalFunctions.Deserialize<List<string>>(Convert.FromBase64String(shistory));
-                }
-                catch (Exception ex)
-                {
-                    MainPage.Logger.Error(ex, "Failed to deserialize Search history list!");
-                    SearchHistory = new List<string>();
-                }
-            }
+            // search history
+            SearchHistory = save.SearchHistory;
 
-            if (blocked == null) BlockedIllustrations = new HashSet<int>();
-            else
-            {
-                try
-                {
-                    BlockedIllustrations = GlobalFunctions.Deserialize<HashSet<int>>(Convert.FromBase64String(blocked));
-                }
-                catch (Exception ex)
-                {
-                    MainPage.Logger.Error(ex, "Failed to deserialize BlockedIllustrations list!");
-                    BlockedIllustrations = new HashSet<int>();
-                }
-            }
+            // blocked illustrations
+            BlockedIllustrations = save.BlockedIllustrations;
         }
 
         /// <summary>
         /// Save Translations, Search History, Blocked Illustrations
         /// </summary>
-        public void SaveData()
+        public async Task SaveData()
         {
-            var ls = MainPage.CurrentInstance.LocalStorage;
+            // check if data wasn't loaded - then you should not save
+            if (TranslatedWords == null || SearchHistory == null || BlockedIllustrations == null) return;
 
-            var twords = GlobalFunctions.Serialize(TranslatedWords.ToList());
-            var shistory = GlobalFunctions.Serialize(SearchHistory);
-            var blocked = GlobalFunctions.Serialize(BlockedIllustrations);
+            SaveFile save = new SaveFile()
+            {
+                TranslatedWords = TranslatedWords?.ToList(),
+                SearchHistory = SearchHistory,
+                BlockedIllustrations = BlockedIllustrations
+            };
 
-            ls.Values[Constants.StorageTranslations] = Convert.ToBase64String(twords);
-            ls.Values[Constants.StorageHistory] = Convert.ToBase64String(shistory);
-            ls.Values[Constants.StorageBlockedIllustrations] = Convert.ToBase64String(blocked);
+            var savefile = await (MainPage.LocalFolder.CreateFileAsync(Constants.SaveFileName, CreationCollisionOption.ReplaceExisting).AsTask()).ConfigureAwait(false);
+            await (FileIO.WriteBytesAsync(savefile, GlobalFunctions.Serialize(save)).AsTask()).ConfigureAwait(false);
         }
 
         public async Task Login(string username, string password) => await Login(username, password, null);

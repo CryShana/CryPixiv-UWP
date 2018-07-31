@@ -37,7 +37,8 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="btnToogleUI.Background" Value="{StaticResource ResourceKey=color_yellowButton}" />
-                        <Setter Target="btnToogleUI.Content" Value="Show UI" />
+                        <Setter Target="btnToogleUI.Content" Value="Show Top" />
+                        <Setter Target="mainPivot.Margin" Value="0,-47,0,0"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -65,7 +66,7 @@
             </Grid>
         </controls:Loading>
 
-        <Pivot x:Name="mainPivot" SelectionChanged="mainPivot_SelectionChanged" IsEnabled="{Binding LoginFormShown, Converter={StaticResource invConverter}}">
+        <Pivot x:Name="mainPivot" SelectionChanged="mainPivot_SelectionChanged" IsEnabled="{Binding LoginFormShown, Converter={StaticResource invConverter}}" Margin="0,0,0,0" >
             <PivotItem Header="Search">
                 <Grid>
                     <TextBox x:Name="_searchQuery" HorizontalAlignment="Left" VerticalAlignment="Top" PlaceholderText="Search query" 
@@ -161,7 +162,7 @@
         
         <!-- OTHER BUTTONS -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-            <Button x:Name="btnToogleUI" Content="Hide UI"  Click="btnToogleUI_Click"/>
+            <Button x:Name="btnToogleUI" Content="Hide Top"  Click="btnToogleUI_Click"/>
             <Button x:Name="btnPauseDManager" Content="Pause" Click="PauseDownloadManagerClick" Margin="5,0,0,0" />
             <Button x:Name="btnLogout" Content="Logout" Click="LogoutClick" Margin="20,0,0,0" Background="{StaticResource ResourceKey=color_redButton}" />
         </StackPanel>
