@@ -135,6 +135,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="CryPixiv2_TemporaryKey.pfx" />
+    <Content Include="Assets\Images\loading.gif" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

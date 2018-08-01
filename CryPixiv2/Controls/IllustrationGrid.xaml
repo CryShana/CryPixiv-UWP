@@ -21,7 +21,7 @@
                   ItemsSource="{Binding Source={StaticResource viewSource}}" Margin="0,0,0,33">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <ItemsWrapGrid x:Name="stack" Orientation="Horizontal" HorizontalAlignment="Center" Loaded="ItemsWrapGrid_Loaded"/>
+                    <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center" Loaded="ItemsWrapGrid_Loaded"/>
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
             <GridView.ItemTemplate>
@@ -76,8 +76,9 @@
 
 
                             <!-- PROGRESS RING -->
+                            <!--
                             <ProgressRing IsActive="{Binding ThumbnailImageLoading}" HorizontalAlignment="Center" Canvas.ZIndex="6" 
-                                          VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" />
+                                          VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" />-->
 
                             <!-- PAGE COUNTER -->
                             <Grid Name="countgrid" Canvas.ZIndex="6" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" Visibility="Collapsed">
@@ -97,7 +98,7 @@
                             </Border>
 
                             <!-- THUMBNAIL -->
-                            <Image x:Name="thumbImage" Source="{Binding ThumbnailImage}" Canvas.ZIndex="4" PointerPressed="GridItem_Click"/>
+                            <Image x:Name="thumbImage" Source="{Binding ThumbnailImage, TargetNullValue={StaticResource loadingImage}}" Canvas.ZIndex="4" PointerPressed="GridItem_Click"/>
                         </Grid>
                     </UserControl>
                 </DataTemplate>

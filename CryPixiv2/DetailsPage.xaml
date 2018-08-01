@@ -8,9 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" DataContext="{x:Bind Illustration}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <Page.Resources>
-        <BitmapImage x:Key="missingImage" UriSource="Assets/Images/missingImage.jpg" />
-    </Page.Resources>
+
     <Page.Transitions>
         <TransitionCollection>
             <NavigationThemeTransition>

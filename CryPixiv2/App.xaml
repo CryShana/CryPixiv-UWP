@@ -12,5 +12,8 @@
         <SolidColorBrush x:Key="color_yellowButton" Color="#99FFCB5B" />
         <converters:InvertBoolConverter  x:Key="invConverter"/>
         <converters:AllowSliderConverter x:Key="sliderConverter" />
+        
+        <BitmapImage x:Key="missingImage" UriSource="Assets/Images/missingImage.jpg" />
+        <BitmapImage x:Key="loadingImage" UriSource="Assets/Images/loading.gif" />
     </Application.Resources>
 </Application>
