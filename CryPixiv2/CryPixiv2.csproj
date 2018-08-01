@@ -20,11 +20,12 @@
     <PackageCertificateKeyFile>CryPixiv2_TemporaryKey.pfx</PackageCertificateKeyFile>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
-    <AppxBundle>Auto</AppxBundle>
+    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+    <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
+    <PackageCertificateThumbprint>056F2948AC51AA52ABFB819A0430CE22C75EBBF0</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -106,7 +107,7 @@
     <Compile Include="Classes\DownloadManager.cs" />
     <Compile Include="Classes\GlobalFunctions.cs" />
     <Compile Include="Classes\PixivObservableCollection.cs" />
-    <Compile Include="Classes\SaveFile.cs" />
+    <Compile Include="Wrappers\SaveFile.cs" />
     <Compile Include="Classes\SearchQuery.cs" />
     <Compile Include="Classes\Translator.cs" />
     <Compile Include="Constants.cs" />
@@ -214,7 +215,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.1.5</Version>
+      <Version>6.1.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
       <Version>3.0.0</Version>

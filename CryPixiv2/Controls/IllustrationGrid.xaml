@@ -7,7 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
-    xmlns:controls2="using:AdaptiveTriggerLibrary.Triggers.LogicalTriggers"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:converters="using:CryPixiv2.Converters"
     mc:Ignorable="d"
@@ -79,9 +78,11 @@
                                 </MenuFlyout>
                             </Grid.ContextFlyout>
 
+
                             <!-- PROGRESS RING -->
+                            <!--
                             <ProgressRing IsActive="{Binding ThumbnailImageLoading}" HorizontalAlignment="Center" Canvas.ZIndex="6" 
-                                          VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" />
+                                          VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" />-->
 
                             <!-- PAGE COUNTER -->
                             <Grid Name="countgrid" Canvas.ZIndex="6" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" Visibility="Collapsed">
