@@ -122,6 +122,18 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
+            <!-- IF BOOKMARKED -->
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{Binding IsBookmarked}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="bookmarkPrivatelyItem.Visibility" Value="Collapsed" />
+                        <Setter Target="bookmarkPrivatelySeparator.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
         <!-- PROGRESS RING -->

@@ -49,7 +49,6 @@ namespace CryPixiv2.Classes
             {
                 try
                 {
-                    bool started = false;
                     while (true)
                     {
                         // check if paused
@@ -60,11 +59,10 @@ namespace CryPixiv2.Classes
                         }
 
                         // Infinite loop that will initially call the "getItems" callback and later on "getNextItems" on the collection
-                        IllustrationResponse r = started == false ?
+                        IllustrationResponse r = collection.IsStarted == false ?
                             await collection.GetItems(acc) :
                             await collection.GetNextItems();
 
-                        started = true;
                         foreach (var l in r.Illustrations)
                         {
                             // go through all downloaded illustractions and wrap them up - if duplicates, take existing to save memory

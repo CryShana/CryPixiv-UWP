@@ -39,6 +39,7 @@ namespace CryPixiv2.Classes
         public Dictionary<int, DateTime> LoadedElements = new Dictionary<int, DateTime>(); 
 
         public event EventHandler<IllustrationWrapper> ItemAdded;
+        public bool IsStarted { get; private set; } = false;
         public bool IsPaused { get; private set; } = false;
         #endregion
 
@@ -91,6 +92,8 @@ namespace CryPixiv2.Classes
         public void Reset()
         {
             wasReset = true;
+            IsStarted = false;
+            lastResponse = null;
 
             EnqueuedItemsForDirectInsertion.Clear();
             EnqueuedItems.Clear();
@@ -125,6 +128,8 @@ namespace CryPixiv2.Classes
             // get initial items that will also provide a NextUrl for further items
             var r = await getItems?.Invoke(account);
             lastResponse = r;
+
+            if (lastResponse != null) IsStarted = true;
             return r;
         }
         public async Task<IllustrationResponse> GetNextItems()

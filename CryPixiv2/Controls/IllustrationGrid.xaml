@@ -8,7 +8,6 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
-    xmlns:converters="using:CryPixiv2.Converters"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -16,8 +15,6 @@
 
     <UserControl.Resources>
         <controls:AdvancedCollectionView x:Key="viewSource" Source="{x:Bind ItemSource.Collection, Mode=OneWay}" />
-        <converters:InvertBoolConverter  x:Key="invConverter"/>
-        <converters:AllowSliderConverter x:Key="sliderConverter" />
     </UserControl.Resources>
     <Grid>
         <GridView x:Name="mylist" Loaded="GridView_Loaded" animations:ReorderGridAnimation.Duration="600" IsItemClickEnabled="True"
@@ -51,7 +48,7 @@
                                             <StateTrigger IsActive="{Binding HasMultipleImages}" />
                                         </VisualState.StateTriggers>
                                         <VisualState.Setters>
-                                            <Setter Target="countgrid.Load" Value="True" />
+                                            <Setter Target="countgrid.Visibility" Value="Visible" />
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
@@ -82,14 +79,14 @@
                             <ProgressRing IsActive="{Binding ThumbnailImageLoading}" HorizontalAlignment="Center" Canvas.ZIndex="6" 
                                           VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" />
 
-                                <!-- PAGE COUNTER -->
-                            <Grid Name="countgrid" Canvas.ZIndex="6" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" x:Load="False">
-                                <Ellipse Width="40" Height="40" Fill="Black" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5"/>
+                            <!-- PAGE COUNTER -->
+                            <Grid Name="countgrid" Canvas.ZIndex="6" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" Visibility="Collapsed">
+                                <Ellipse Width="40" Height="40" Fill="Black" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5" CacheMode="BitmapCache"/>
                                 <TextBlock Text="{Binding ImagesCount}" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="20" />
                             </Grid>
 
                             <!-- HEART ICON -->
-                            <local:BookmarkButton Clicked="BookmarkButton_Clicked" Width="40" Height="40" Margin="0,0,8,8" 
+                            <local:BookmarkButton Clicked="BookmarkButton_Clicked" Width="40" Height="40" Margin="0,0,8,8"
                                                   HorizontalAlignment="Right" VerticalAlignment="Bottom" Canvas.ZIndex="6"/>
 
                             <!-- BLUR LAYER -->
