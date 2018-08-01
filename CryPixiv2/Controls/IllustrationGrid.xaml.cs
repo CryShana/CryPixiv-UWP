@@ -155,7 +155,8 @@ namespace CryPixiv2.Controls
                 {
                     // fail - restore previous value
                     work.IsBookmarked = true;
-                    MainPage.Logger.Error(ex, "Failed to remove bookmark!");
+                    var exvar = ex;
+                    MainPage.Logger.Error(exvar, "Failed to remove bookmark!");
                 }
             }
             else
@@ -173,7 +174,9 @@ namespace CryPixiv2.Controls
                 {
                     // fail - restore previous value
                     work.IsBookmarked = false;
-                    MainPage.Logger.Error(ex, "Failed to add bookmark!");
+
+                    var exvar = ex;
+                    MainPage.Logger.Error(exvar, "Failed to add bookmark!");
                 }
             }
         } 
@@ -258,7 +261,11 @@ namespace CryPixiv2.Controls
             visual.StartAnimationGroup(group);
         }
 
-        private void GridItem_Click(object sender, PointerRoutedEventArgs e) => ItemClick(((Image)sender).DataContext as IllustrationWrapper);
+        private void GridItem_Click(object sender, PointerRoutedEventArgs e)
+        {
+            var isLeftClick = e.GetCurrentPoint(sender as UIElement).Properties.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.LeftButtonPressed;
+            if (isLeftClick) ItemClick(((Image)sender).DataContext as IllustrationWrapper);
+        }
         
         public void ItemClick(IllustrationWrapper e)
         {

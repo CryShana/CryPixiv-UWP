@@ -3,11 +3,14 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="using:CryPixiv2.ViewModels"
+    xmlns:converters="using:CryPixiv2.Converters"
     xmlns:local="using:CryPixiv2"
     RequestedTheme="Light">
     <Application.Resources>
         <vm:MainViewModel x:Key="mainViewModel" />
         <SolidColorBrush x:Key="color_redButton" Color="#FFFF8181" />
         <SolidColorBrush x:Key="color_yellowButton" Color="#99FFCB5B" />
+        <converters:InvertBoolConverter  x:Key="invConverter"/>
+        <converters:AllowSliderConverter x:Key="sliderConverter" />
     </Application.Resources>
 </Application>

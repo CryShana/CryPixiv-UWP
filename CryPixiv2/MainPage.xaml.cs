@@ -58,7 +58,11 @@ namespace CryPixiv2
 
             // Upon closing app, make sure to properly flush logger
             Application.Current.Suspending += (a, b) => ViewModel.SaveData().Wait();
-            Application.Current.UnhandledException += (a, b) => Logger.Fatal(b.Exception, b.Message + (b.Exception.InnerException != null ? b.Exception.InnerException.Message : ""));
+            Application.Current.UnhandledException += (a, b) =>
+            {
+                var ex = b.Exception;
+                Logger.Fatal(ex, ex.Message + (ex.InnerException != null ? ex.InnerException.Message : ""));
+            };
 
             // Set all necessary variables
             CurrentInstance = this;

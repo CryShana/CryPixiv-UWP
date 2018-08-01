@@ -11,10 +11,6 @@
     mc:Ignorable="d"
     DataContext="{StaticResource mainViewModel}">
 
-    <Page.Resources>
-        <converters:InvertBoolConverter x:Key="invConverter" />
-    </Page.Resources>
-
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
             <!-- Pause DManager Button -->

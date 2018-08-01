@@ -235,14 +235,18 @@ namespace CryPixiv2.ViewModels
                 // internet error - set timeout and try again later (add this later)
                 LoginFormShown = true;
                 LoginFormErrorMessage = httpex.Message;
-                MainPage.Logger.Error(httpex, "HTTP error while trying to login!");
+
+                var exvar = httpex;
+                MainPage.Logger.Error(exvar, "HTTP error while trying to login!");
             }
             catch (Exception ex)
             {
                 // unkown error - set timeout and try again later (add this later)
                 LoginFormShown = true;
                 LoginFormErrorMessage = ex.Message;
-                MainPage.Logger.Error(ex, "Unknown error while trying to login!");
+
+                var exvar = ex;
+                MainPage.Logger.Error(exvar, "Unknown error while trying to login!");
             }
             finally
             {

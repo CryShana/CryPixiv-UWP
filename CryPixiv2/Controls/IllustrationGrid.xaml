@@ -29,9 +29,8 @@
             </GridView.ItemsPanel>
             <GridView.ItemTemplate>
                 <DataTemplate>
-                    <UserControl>
-                        <Grid Width="300" Height="300" Background="Gainsboro" 
-                              DataContextChanged="Grid_DataContextChanged" RenderTransformOrigin="0.5,0.5">
+                    <UserControl MinHeight="300" MinWidth="300" Height="300" Width="300">
+                        <Grid Background="Gainsboro" DataContextChanged="Grid_DataContextChanged" RenderTransformOrigin="0.5,0.5">
                             <VisualStateManager.VisualStateGroups>
                                 <!-- IF BOOKMARKED -->
                                 <VisualStateGroup>
@@ -52,7 +51,7 @@
                                             <StateTrigger IsActive="{Binding HasMultipleImages}" />
                                         </VisualState.StateTriggers>
                                         <VisualState.Setters>
-                                            <Setter Target="countgrid.Visibility" Value="Visible" />
+                                            <Setter Target="countgrid.Load" Value="True" />
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
@@ -80,14 +79,13 @@
 
 
                             <!-- PROGRESS RING -->
-                            <!--
                             <ProgressRing IsActive="{Binding ThumbnailImageLoading}" HorizontalAlignment="Center" Canvas.ZIndex="6" 
-                                          VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" />-->
+                                          VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" />
 
-                            <!-- PAGE COUNTER -->
-                            <Grid Name="countgrid" Canvas.ZIndex="6" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" Visibility="Collapsed">
+                                <!-- PAGE COUNTER -->
+                            <Grid Name="countgrid" Canvas.ZIndex="6" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" x:Load="False">
                                 <Ellipse Width="40" Height="40" Fill="Black" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5"/>
-                                <TextBlock x:Name="count" Text="{Binding ImagesCount}" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="20" />
+                                <TextBlock Text="{Binding ImagesCount}" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="20" />
                             </Grid>
 
                             <!-- HEART ICON -->

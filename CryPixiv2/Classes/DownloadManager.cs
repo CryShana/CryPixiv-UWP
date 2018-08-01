@@ -96,7 +96,8 @@ namespace CryPixiv2.Classes
                 }
                 catch (COMException cex)
                 {
-                    MainPage.Logger.Error(cex, "COM Exception!");
+                    var cexvar = cex;
+                    MainPage.Logger.Error(cexvar, "COM Exception!");
                 }
                 catch (LoginException lex)
                 {
@@ -109,11 +110,13 @@ namespace CryPixiv2.Classes
                 }
                 catch (OffsetLimitException oex)
                 {
-                    MainPage.Logger.Error(oex, "Offset limit reached!");
+                    var oexvar = oex;
+                    MainPage.Logger.Error(oexvar, "Offset limit reached!");
                 }
                 catch (Exception ex)
                 {
-                    MainPage.Logger.Error(ex, "Unknown exception! " + ex.Message + (ex.InnerException != null ? ex.InnerException.Message : ""));
+                    var exvar = ex;
+                    MainPage.Logger.Error(exvar, "Unknown exception! " + exvar.Message + (exvar.InnerException != null ? exvar.InnerException.Message : ""));
                 }                
             }, src.Token);
         }
