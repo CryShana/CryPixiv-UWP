@@ -87,7 +87,7 @@ namespace CryPixiv2.Controls
             if (_storedItem != null)
             {
                 mylist.ScrollIntoView(_storedItem, ScrollIntoViewAlignment.Default);
-                mylist.UpdateLayout();
+                // mylist.UpdateLayout();
 
                 var animation = ConnectedAnimationService.GetForCurrentView().GetAnimation(Constants.ConnectedAnimationImage);
                 if (animation != null) await mylist.TryStartConnectedAnimationAsync(animation, _storedItem, thumbImageName);
