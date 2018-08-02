@@ -25,9 +25,21 @@ namespace CryPixiv2
         public event PropertyChangedEventHandler PropertyChanged;
         public void Changed([CallerMemberName]string name = "")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        public long ArtistId { get; set; } = 0;
-        IllustrationWrapper illust = null;
         PixivObservableCollection artistWorks, prevCollection;
+        #endregion
+
+        #region Properties
+        public IllustrationWrapper Illustration { get; private set; }
+        public long ArtistId { get; set; } = 0;
+        private bool IsArtistFollowed
+        {
+            get => Illustration.WrappedIllustration.ArtistUser.IsFollowed;
+            set
+            {
+                Illustration.WrappedIllustration.ArtistUser.IsFollowed = value;
+                Changed();
+            }
+        } 
         #endregion
 
         public static ArtistPage CurrentInstance;
@@ -53,20 +65,43 @@ namespace CryPixiv2
         {
             base.OnNavigatedTo(e);
 
-            illust = e.Parameter as IllustrationWrapper;
-            var aid = long.Parse(illust.WrappedIllustration.ArtistUser.Id);
+            Illustration = e.Parameter as IllustrationWrapper;
+            var aid = long.Parse(Illustration.WrappedIllustration.ArtistUser.Id);
 
             if (ArtistId != aid) ArtistWorks = new PixivObservableCollection(a => a.GetUserIllustrations(ArtistId));
 
             ArtistId = aid;
             prevCollection = DownloadManager.CurrentCollection;
-            DownloadManager.SwitchTo(ArtistWorks, illust.AssociatedAccount);
+            DownloadManager.SwitchTo(ArtistWorks, Illustration.AssociatedAccount);
+        }
+
+        private async void btnFollow_Click(object sender, RoutedEventArgs e)
+        {
+            bool oldval = IsArtistFollowed;
+            followProgress.IsActive = true;
+            try
+            {
+                long id = long.Parse(Illustration.WrappedIllustration.ArtistUser.Id);
+
+                if (IsArtistFollowed == false) await Illustration.AssociatedAccount.FollowUser(id);
+                else await Illustration.AssociatedAccount.UnfollowUser(id);
+
+                IsArtistFollowed = !oldval;
+            }
+            catch
+            {
+                IsArtistFollowed = oldval;
+            }
+            finally
+            {
+                followProgress.IsActive = false;
+            }
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             base.OnNavigatingFrom(e);
-            DownloadManager.SwitchTo(prevCollection, illust.AssociatedAccount);
+            DownloadManager.SwitchTo(prevCollection, Illustration.AssociatedAccount);
         }
     }
 }

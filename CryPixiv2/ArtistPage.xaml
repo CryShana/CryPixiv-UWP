@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    
+
     <Page.Transitions>
         <TransitionCollection>
             <NavigationThemeTransition>
@@ -19,6 +19,34 @@
     </Page.Transitions>
 
     <Grid Background="White">
-        <local:IllustrationGrid x:Name="artistGrid" ItemSource="{x:Bind ArtistWorks, Mode=OneWay}" />
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind IsArtistFollowed, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="btnFollow.Background" Value="{StaticResource ResourceKey=color_redButton}" />
+                        <Setter Target="btnFollow.Content" Value="Unfollow" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        
+        <!-- ARTIST IMAGE -->
+        <Image Source="{x:Bind Illustration.ArtistImage, Mode=OneWay, FallbackValue={StaticResource missingImage}, TargetNullValue={StaticResource missingImage}}" 
+                       Height="94" Width="94" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,0" />
+
+        <!-- ARTIST DETAILS -->
+        <StackPanel Margin="115,10,20,10" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <TextBlock Text="{x:Bind Illustration.WrappedIllustration.ArtistUser.Name, Mode=OneWay}" IsTextSelectionEnabled="True" FontSize="18" FontWeight="Bold" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
+            <TextBlock Text="{x:Bind Illustration.WrappedIllustration.ArtistUser.Id, Mode=OneWay}" IsTextSelectionEnabled="True" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <StackPanel Orientation="Horizontal" Margin="0, 18, 0, 0">
+                <Button Width="100" Content="Follow" x:Name="btnFollow" Click="btnFollow_Click" />
+                <ProgressRing x:Name="followProgress" Width="30" Height="30" Margin="7,0,0,0" />
+            </StackPanel>
+        </StackPanel>
+
+        <local:IllustrationGrid x:Name="artistGrid" ItemSource="{x:Bind ArtistWorks, Mode=OneWay}" Margin="0,113,0,0" />
     </Grid>
 </Page>
