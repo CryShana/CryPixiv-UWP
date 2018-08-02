@@ -84,9 +84,6 @@ namespace CryPixiv2
         {
             base.OnNavigatingFrom(e);
 
-            // prepare animation
-            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(Constants.ConnectedAnimationArtistBack, artistImg);
-
             DownloadManager.SwitchTo(prevCollection, Illustration.AssociatedAccount);
         }
 

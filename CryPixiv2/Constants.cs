@@ -11,7 +11,6 @@
         public const string ConnectedAnimationThumbnail = "ca1";
         public const string ConnectedAnimationImage = "ca2";
         public const string ConnectedAnimationArtist = "ca3";
-        public const string ConnectedAnimationArtistBack = "ca4";
 
         public const double TimeTillAnimationSkipMs = 1000;
         public const double ItemGridEntryAnimationDurationMs = 900;

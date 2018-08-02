@@ -109,7 +109,6 @@ namespace CryPixiv2
             if (isBackPressed) MainPage.CurrentInstance.HandleKey(Windows.System.VirtualKey.Back);
         }
 
-        public static bool fromArtistPage = false;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -125,22 +124,10 @@ namespace CryPixiv2
             progress.IsActive = IsCurrentPageLoading;
 
             // finish connected animation
-            if (!fromArtistPage)
-            {
-                // from MainPage
-                ConnectedAnimationService.GetForCurrentView().DefaultDuration = TimeSpan.FromSeconds(Constants.ImageTransitionDuration);
-                var imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation(Constants.ConnectedAnimationThumbnail);
-                if (imageAnimation != null) imageAnimation.TryStart(fullImage);
-            }
-            else
-            {
-                fromArtistPage = false;
-
-                // from ArtistPage
-                ConnectedAnimationService.GetForCurrentView().DefaultDuration = TimeSpan.FromSeconds(Constants.ArtistImageTransitionDuration);
-                var imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation(Constants.ConnectedAnimationArtistBack);
-                if (imageAnimation != null) imageAnimation.TryStart(artistImg);
-            }
+            ConnectedAnimationService.GetForCurrentView().DefaultDuration = TimeSpan.FromSeconds(Constants.ImageTransitionDuration);
+            var imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation(Constants.ConnectedAnimationThumbnail);
+            if (imageAnimation != null) imageAnimation.TryStart(fullImage);
+            
 
             // remove other images from flipview
             if (_flipview.Items.Count > 1) for (int i = _flipview.Items.Count - 1; i >= 1; i--) _flipview.Items.RemoveAt(i);
