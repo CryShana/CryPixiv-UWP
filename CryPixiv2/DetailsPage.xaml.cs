@@ -138,7 +138,7 @@ namespace CryPixiv2
                 {
                     Image imgElement = new Image();
                     Binding b = new Binding();
-                    b.Source = item;
+                    b.Source = Illustration;
                     b.Path = new PropertyPath($"OtherImages[{i}]");
                     b.Mode = BindingMode.OneWay;
                     BindingOperations.SetBinding(imgElement, Image.SourceProperty, b);
@@ -307,19 +307,14 @@ namespace CryPixiv2
         private void ArtistGrid_Click(object sender, PointerRoutedEventArgs e)
         {
             var rclick = e.GetCurrentPoint(sender as UIElement).Properties.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.RightButtonPressed;
-            if (rclick) return;
+            if (rclick) return;     
 
             // open artist in another page
-
-            // navigate to new page if artist is new
-            if (ArtistPage.CurrentInstance == null || 
-                ArtistPage.CurrentInstance?.ArtistId !=
-                long.Parse(Illustration.WrappedIllustration.ArtistUser.Id))
-            {
-                NavigateTo(typeof(ArtistPage), Illustration);
-            }
-            // go back to old page
-            else MainPage.CurrentInstance.HandleKey(Windows.System.VirtualKey.Back);
+            var frame = Window.Current.Content as Frame;
+            bool wasArtistPagePrevious = frame.BackStack.Count > 1;
+            
+            if (wasArtistPagePrevious) MainPage.CurrentInstance.HandleKey(Windows.System.VirtualKey.Back);
+            else NavigateTo(typeof(ArtistPage), Illustration);           
         }
 
         public void NavigateTo(Type pageType, object referencedObject) => Frame.Navigate(pageType, referencedObject, new DrillInNavigationTransitionInfo());
