@@ -35,7 +35,7 @@
         
         <!-- ARTIST IMAGE -->
         <Image Source="{x:Bind Illustration.ArtistImage, Mode=OneWay, FallbackValue={StaticResource missingImage}, TargetNullValue={StaticResource missingImage}}" 
-                       Height="94" Width="94" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,0" />
+                       Height="94" Width="94" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,0" x:Name="artistImg"/>
 
         <!-- ARTIST DETAILS -->
         <StackPanel Margin="115,10,20,10" HorizontalAlignment="Left" VerticalAlignment="Top">

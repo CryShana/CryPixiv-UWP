@@ -109,6 +109,7 @@ namespace CryPixiv2
             if (isBackPressed) MainPage.CurrentInstance.HandleKey(Windows.System.VirtualKey.Back);
         }
 
+        public static bool fromArtistPage = false;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -124,8 +125,22 @@ namespace CryPixiv2
             progress.IsActive = IsCurrentPageLoading;
 
             // finish connected animation
-            var imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation(Constants.ConnectedAnimationThumbnail);
-            if (imageAnimation != null) imageAnimation.TryStart(fullImage);
+            if (!fromArtistPage)
+            {
+                // from MainPage
+                ConnectedAnimationService.GetForCurrentView().DefaultDuration = TimeSpan.FromSeconds(Constants.ImageTransitionDuration);
+                var imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation(Constants.ConnectedAnimationThumbnail);
+                if (imageAnimation != null) imageAnimation.TryStart(fullImage);
+            }
+            else
+            {
+                fromArtistPage = false;
+
+                // from ArtistPage
+                ConnectedAnimationService.GetForCurrentView().DefaultDuration = TimeSpan.FromSeconds(Constants.ArtistImageTransitionDuration);
+                var imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation(Constants.ConnectedAnimationArtistBack);
+                if (imageAnimation != null) imageAnimation.TryStart(artistImg);
+            }
 
             // remove other images from flipview
             if (_flipview.Items.Count > 1) for (int i = _flipview.Items.Count - 1; i >= 1; i--) _flipview.Items.RemoveAt(i);
@@ -156,10 +171,19 @@ namespace CryPixiv2
                 ignoreNav = false;
                 return;
             }
-
+           
             try
             {
-                ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(Constants.ConnectedAnimationImage, (Image)_flipview.Items[_flipview.SelectedIndex]);
+                if (!isArtist)
+                {
+                    // When going to MainPage
+                    ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(Constants.ConnectedAnimationImage, (Image)_flipview.Items[_flipview.SelectedIndex]);
+                }
+                else
+                {
+                    // When going to ArtistPage
+                    ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(Constants.ConnectedAnimationArtist, artistImg);
+                }
             }
             catch
             {
@@ -286,7 +310,6 @@ namespace CryPixiv2
         private void pageCounterGrid_PointerEntered(object sender, PointerRoutedEventArgs e)
             => VisualStateManager.GoToState(this, "state_gridMouseOver", false);
 
-
         private void pageCounterGrid_PointerExited(object sender, PointerRoutedEventArgs e)
             => VisualStateManager.GoToState(this, "state_gridMouseExit", false);
         #endregion
@@ -304,6 +327,7 @@ namespace CryPixiv2
         private void ArtistGrid_Exited(object sender, PointerRoutedEventArgs e)
             => VisualStateManager.GoToState(this, "state_agridMouseExit", false);
 
+        bool isArtist = false;
         private void ArtistGrid_Click(object sender, PointerRoutedEventArgs e)
         {
             var rclick = e.GetCurrentPoint(sender as UIElement).Properties.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.RightButtonPressed;
@@ -316,7 +340,7 @@ namespace CryPixiv2
             if (wasArtistPagePrevious) MainPage.CurrentInstance.HandleKey(Windows.System.VirtualKey.Back);
             else
             {
-                _flipview.Visibility = Visibility.Collapsed;
+                isArtist = true;
                 NavigateTo(typeof(ArtistPage), Illustration);
             }
         }

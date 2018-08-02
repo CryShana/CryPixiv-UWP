@@ -306,11 +306,17 @@ namespace CryPixiv2
                 key == VirtualKey.Escape ||
                 key == VirtualKey.Back ||
                 key == VirtualKey.GoBack;
-       
-            if (isBackPressed) CurrentInstance.GoBack();           
+
+            var frame = Window.Current.Content as Frame;
+
+            if (isBackPressed)
+            {
+                if (frame.Content is ArtistPage ap) DetailsPage.fromArtistPage = true;
+                CurrentInstance.GoBack();
+            }
             else
             {
-                var frame = Window.Current.Content as Frame;
+
                 if (frame.Content is DetailsPage d)
                 {
                     // if currently on details page

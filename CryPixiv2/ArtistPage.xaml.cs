@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 namespace CryPixiv2
@@ -73,6 +74,20 @@ namespace CryPixiv2
             ArtistId = aid;
             prevCollection = DownloadManager.CurrentCollection;
             DownloadManager.SwitchTo(ArtistWorks, Illustration.AssociatedAccount);
+
+            // finish connected animation
+            ConnectedAnimationService.GetForCurrentView().DefaultDuration = TimeSpan.FromSeconds(Constants.ArtistImageTransitionDuration);
+            var imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation(Constants.ConnectedAnimationArtist);
+            if (imageAnimation != null) imageAnimation.TryStart(artistImg);
+        }
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            base.OnNavigatingFrom(e);
+
+            // prepare animation
+            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(Constants.ConnectedAnimationArtistBack, artistImg);
+
+            DownloadManager.SwitchTo(prevCollection, Illustration.AssociatedAccount);
         }
 
         private async void btnFollow_Click(object sender, RoutedEventArgs e)
@@ -96,12 +111,6 @@ namespace CryPixiv2
             {
                 followProgress.IsActive = false;
             }
-        }
-
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            base.OnNavigatingFrom(e);
-            DownloadManager.SwitchTo(prevCollection, Illustration.AssociatedAccount);
         }
     }
 }
