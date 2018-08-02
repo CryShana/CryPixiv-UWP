@@ -40,6 +40,7 @@ namespace CryPixiv2
         #endregion
 
         #region Public Properties
+        public PixivObservableCollection AssociatedCollection { get; private set; }
         public IllustrationWrapper Illustration { get => illust; set { illust = value; Changed(); } }
         public bool IsCurrentPageLoading
         {
@@ -105,7 +106,7 @@ namespace CryPixiv2
         {
             // handle Mouse back button (this can't be handled in KeyDown event handler)
             var isBackPressed = e.GetCurrentPoint(sender as UIElement).Properties.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.XButton1Pressed;
-            if (isBackPressed) MainPage.CurrentInstance.GoBack();
+            if (isBackPressed) MainPage.CurrentInstance.HandleKey(Windows.System.VirtualKey.Back);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -113,8 +114,9 @@ namespace CryPixiv2
             base.OnNavigatedTo(e);
             MainPage.CurrentInstance.NavigationManager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
 
-            var item = e.Parameter as IllustrationWrapper;
-            Illustration = item;
+            var item = e.Parameter as Tuple<PixivObservableCollection, IllustrationWrapper>;
+            AssociatedCollection = item.Item1;
+            Illustration = item.Item2;
 
             // only subscribe if not subscribed yet
             if (Illustration.ImageDownloadedSubscribed == false) Illustration.ImageDownloaded += (a, b) => _flipview_SelectionChanged(null, null);
@@ -129,10 +131,10 @@ namespace CryPixiv2
             if (_flipview.Items.Count > 1) for (int i = _flipview.Items.Count - 1; i >= 1; i--) _flipview.Items.RemoveAt(i);
 
             // add other images
-            if (item.HasMultipleImages)
+            if (Illustration.HasMultipleImages)
             {
                 int i = 0;
-                foreach (var img in item.WrappedIllustration.MetaPages.Skip(1))
+                foreach (var img in Illustration.WrappedIllustration.MetaPages.Skip(1))
                 {
                     Image imgElement = new Image();
                     Binding b = new Binding();
@@ -308,8 +310,19 @@ namespace CryPixiv2
             if (rclick) return;
 
             // open artist in another page
-            var a = 5;
+
+            // navigate to new page if artist is new
+            if (ArtistPage.CurrentInstance == null || 
+                ArtistPage.CurrentInstance?.ArtistId !=
+                long.Parse(Illustration.WrappedIllustration.ArtistUser.Id))
+            {
+                NavigateTo(typeof(ArtistPage), Illustration);
+            }
+            // go back to old page
+            else MainPage.CurrentInstance.HandleKey(Windows.System.VirtualKey.Back);
         }
+
+        public void NavigateTo(Type pageType, object referencedObject) => Frame.Navigate(pageType, referencedObject, new DrillInNavigationTransitionInfo());
         private async void btnFollow_Click(object sender, RoutedEventArgs e)
         {
             bool oldval = IsArtistFollowed;
@@ -380,7 +393,7 @@ namespace CryPixiv2
         bool ignoreNav = false;
         public void NextIllustration()
         {
-            var g = MainPage.CurrentInstance.CurrentIllustrationGrid;
+            var g = AssociatedCollection.GridContainer;
             var i = g.ViewSource.IndexOf(Illustration);
 
             var c = g.ViewSource.Count;
@@ -398,7 +411,7 @@ namespace CryPixiv2
                 if (e.IsBlurred) continue;
 
                 ignoreNav = true;
-                MainPage.CurrentInstance.GoBack();
+                MainPage.CurrentInstance.HandleKey(Windows.System.VirtualKey.Back);
                 g.ItemClick(e);
                 break;
             }
@@ -406,7 +419,7 @@ namespace CryPixiv2
 
         public void PreviousIllustration()
         {
-            var g = MainPage.CurrentInstance.CurrentIllustrationGrid;
+            var g = AssociatedCollection.GridContainer;
             var i = g.ViewSource.IndexOf(Illustration);
             var c = g.ViewSource.Count;
             for (int ix = 1; ix < c; ix++)
@@ -423,7 +436,7 @@ namespace CryPixiv2
                 if (e.IsBlurred) continue;
 
                 ignoreNav = true;
-                MainPage.CurrentInstance.GoBack();
+                MainPage.CurrentInstance.HandleKey(Windows.System.VirtualKey.Back);
                 g.ItemClick(e);
                 break;
             }

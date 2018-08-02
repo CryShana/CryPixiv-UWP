@@ -90,7 +90,10 @@ namespace CryPixiv2.Controls
                 // mylist.UpdateLayout();
 
                 var animation = ConnectedAnimationService.GetForCurrentView().GetAnimation(Constants.ConnectedAnimationImage);
-                if (animation != null) await mylist.TryStartConnectedAnimationAsync(animation, _storedItem, thumbImageName);
+                if (animation != null)
+                {
+                    var s =await mylist.TryStartConnectedAnimationAsync(animation, _storedItem, thumbImageName);
+                }
 
                 _storedItem = null;
             }

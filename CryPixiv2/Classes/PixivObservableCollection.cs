@@ -1,4 +1,5 @@
-﻿using CryPixiv2.Wrappers;
+﻿using CryPixiv2.Controls;
+using CryPixiv2.Wrappers;
 using CryPixivAPI;
 using CryPixivAPI.Classes;
 using System;
@@ -26,6 +27,7 @@ namespace CryPixiv2.Classes
         #endregion
 
         #region Public Properties
+        public IllustrationGrid GridContainer { get; set; }
         public TimeSpan Interval { get => interval; set { interval = value; AddTimer.Interval = value; } }
         public TimeSpan FastInterval => TimeSpan.FromMilliseconds(5);
 

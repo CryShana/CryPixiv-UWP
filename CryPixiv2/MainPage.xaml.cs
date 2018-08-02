@@ -17,6 +17,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.System;
 using Windows.UI.Composition;
 using Windows.UI.Core;
 using Windows.UI.Popups;
@@ -50,7 +51,7 @@ namespace CryPixiv2
             this.NavigationCacheMode = NavigationCacheMode.Required;
             this.NavigationManager = SystemNavigationManager.GetForCurrentView();
             this.NavigationManager.BackRequested += (a, b) => GoBack();
-            CoreWindow.GetForCurrentThread().KeyDown += MainPage_KeyDown;
+            CoreWindow.GetForCurrentThread().KeyDown += KeyDownEventHandler;
 
             // Configure logger
             NLog.LogManager.Configuration.Variables["LogPath"] = LocalFolder.Path;
@@ -77,30 +78,7 @@ namespace CryPixiv2
             IllustrationGrid.ItemClicked += IllustrationGrid_ItemClicked;
 
             AttemptToLogin();
-        }
-
-        private void MainPage_KeyDown(CoreWindow sender, KeyEventArgs args)
-        {
-            // Handle any key here (for MOUSE presses check the DetailsPage's PointerPressed handler)
-            var key = args.VirtualKey;
-
-            var isBackPressed =
-                key == Windows.System.VirtualKey.Escape ||
-                key == Windows.System.VirtualKey.Back ||
-                key == Windows.System.VirtualKey.GoBack;
-
-            if (isBackPressed) CurrentInstance.GoBack();
-            else 
-            {               
-                var frame = Window.Current.Content as Frame;
-                if (frame.Content is DetailsPage d)
-                {
-                    // if currently on details page
-                    if (key == Windows.System.VirtualKey.E) d.NextIllustration();
-                    else if (key == Windows.System.VirtualKey.Q) d.PreviousIllustration();
-                }
-            }          
-        }
+        }    
 
         public async void AttemptToLogin()
         {
@@ -116,11 +94,13 @@ namespace CryPixiv2
         }
 
         #region IllustrationGrid Event Handlers
-        public IllustrationGrid CurrentIllustrationGrid { get; private set; }
         public void IllustrationGrid_ItemClicked(object sender, IllustrationWrapper e)
         {
-            CurrentIllustrationGrid = (IllustrationGrid)sender;
-            NavigateTo(typeof(DetailsPage), e);
+            var grid = (IllustrationGrid)sender;
+            grid.ItemSource.GridContainer = grid;           
+
+            NavigateTo(typeof(DetailsPage),
+                new Tuple<PixivObservableCollection, IllustrationWrapper>(grid.ItemSource, e));
         }
         void IllustrationGrid_IllustrationBookmarkChange(object sender, Tuple<IllustrationWrapper, bool> e)
         {
@@ -309,20 +289,46 @@ namespace CryPixiv2
 
             await ViewModel.Login(username, password);
             if (ViewModel.LoginFormShown) _username.Focus(FocusState.Keyboard);
-        } 
+        }
         #endregion
 
+        #region Navigation
         public void NavigateTo(Type pageType, object referencedObject) => Frame.Navigate(pageType, referencedObject, new DrillInNavigationTransitionInfo());
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             NavigationManager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
         }
+        private void KeyDownEventHandler(CoreWindow sender, KeyEventArgs args) => HandleKey(args.VirtualKey);
+        public void HandleKey(VirtualKey key)
+        {
+            var isBackPressed =
+                key == VirtualKey.Escape ||
+                key == VirtualKey.Back ||
+                key == VirtualKey.GoBack;
 
-        public void GoBack()
+            var frame = Window.Current.Content as Frame;
+
+            if (isBackPressed)
+            {
+                if (frame.Content is ArtistPage ap) ap.ArtistId = 0;
+                CurrentInstance.GoBack();
+            }
+            else
+            {
+                if (frame.Content is DetailsPage d)
+                {
+                    // if currently on details page
+                    if (key == VirtualKey.E) d.NextIllustration();
+                    else if (key == VirtualKey.Q) d.PreviousIllustration();
+                }
+            }
+        }
+        private void GoBack()
         {
             if (Frame.CanGoBack) Frame.GoBack();
-        }
+        } 
+        #endregion
 
         #region Search Tab Context Menu
         private void CloseSearchTab_Click(object sender, RoutedEventArgs e)
