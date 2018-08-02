@@ -18,7 +18,7 @@
 
         public const int MaximumSearchHistoryEntries = 300;
         public const double ImageTransitionDuration = 0.3;
-        public const double ArtistImageTransitionDuration = 0.9;
+        public const double ArtistImageTransitionDuration = 0.5;
 
         public const string SaveFileName = "savedata.data";
     }
