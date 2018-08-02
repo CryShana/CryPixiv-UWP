@@ -312,9 +312,13 @@ namespace CryPixiv2
             // open artist in another page
             var frame = Window.Current.Content as Frame;
             bool wasArtistPagePrevious = frame.BackStack.Count > 1;
-            
+
             if (wasArtistPagePrevious) MainPage.CurrentInstance.HandleKey(Windows.System.VirtualKey.Back);
-            else NavigateTo(typeof(ArtistPage), Illustration);           
+            else
+            {
+                _flipview.Visibility = Visibility.Collapsed;
+                NavigateTo(typeof(ArtistPage), Illustration);
+            }
         }
 
         public void NavigateTo(Type pageType, object referencedObject) => Frame.Navigate(pageType, referencedObject, new DrillInNavigationTransitionInfo());
