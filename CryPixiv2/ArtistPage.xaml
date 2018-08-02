@@ -21,26 +21,27 @@
     <Grid Background="White">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind IsArtistFollowed, Mode=OneWay}" />
-                    </VisualState.StateTriggers>
+                <VisualState x:Name="state_unfollow">
                     <VisualState.Setters>
                         <Setter Target="btnFollow.Background" Value="{StaticResource ResourceKey=color_redButton}" />
                         <Setter Target="btnFollow.Content" Value="Unfollow" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="state_follow">
+                    <VisualState.Setters>
+                        <Setter Target="btnFollow.Content" Value="Follow" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         
         <!-- ARTIST IMAGE -->
-        <Image Source="{x:Bind Illustration.ArtistImage, Mode=OneWay, FallbackValue={StaticResource missingImage}, TargetNullValue={StaticResource missingImage}}" 
-                       Height="94" Width="94" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,0" x:Name="artistImg"/>
+        <Image Height="94" Width="94" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,0" x:Name="artistImg"/>
 
         <!-- ARTIST DETAILS -->
         <StackPanel Margin="115,10,20,10" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <TextBlock Text="{x:Bind Illustration.WrappedIllustration.ArtistUser.Name, Mode=OneWay}" IsTextSelectionEnabled="True" FontSize="18" FontWeight="Bold" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
-            <TextBlock Text="{x:Bind Illustration.WrappedIllustration.ArtistUser.Id, Mode=OneWay}" IsTextSelectionEnabled="True" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBlock x:Name="txtName" IsTextSelectionEnabled="True" FontSize="18" FontWeight="Bold" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
+            <TextBlock x:Name="txtId" IsTextSelectionEnabled="True" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <StackPanel Orientation="Horizontal" Margin="0, 18, 0, 0">
                 <Button Width="100" Content="Follow" x:Name="btnFollow" Click="btnFollow_Click" />
                 <ProgressRing x:Name="followProgress" Width="30" Height="30" Margin="7,0,0,0" />

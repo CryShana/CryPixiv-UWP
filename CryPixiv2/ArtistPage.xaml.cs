@@ -69,11 +69,30 @@ namespace CryPixiv2
             Illustration = e.Parameter as IllustrationWrapper;
             var aid = long.Parse(Illustration.WrappedIllustration.ArtistUser.Id);
 
+            // manually set artist data (because page is cached and bindings won't update)
+            #region Set Data Manually
+            txtName.Text = Illustration.WrappedIllustration.ArtistUser.Name;
+            txtId.Text = Illustration.WrappedIllustration.ArtistUser.Id;
+            
+            Binding b = new Binding();
+            b.Source = Illustration;
+            b.Path = new PropertyPath($"ArtistImage");
+            var img = Application.Current.Resources["missingImage"];
+            b.TargetNullValue = Application.Current.Resources["missingImage"];
+            b.FallbackValue = Application.Current.Resources["missingImage"];
+            b.Mode = BindingMode.OneWay;
+            BindingOperations.SetBinding(artistImg, Image.SourceProperty, b);
+
+            UpdateFollowButton();
+            #endregion
+
             if (ArtistId != aid) ArtistWorks = new PixivObservableCollection(a => a.GetUserIllustrations(ArtistId));
 
             ArtistId = aid;
             prevCollection = DownloadManager.CurrentCollection;
             DownloadManager.SwitchTo(ArtistWorks, Illustration.AssociatedAccount);
+
+
 
             // finish connected animation
             ConnectedAnimationService.GetForCurrentView().DefaultDuration = TimeSpan.FromSeconds(Constants.ArtistImageTransitionDuration);
@@ -85,6 +104,12 @@ namespace CryPixiv2
             base.OnNavigatingFrom(e);
 
             DownloadManager.SwitchTo(prevCollection, Illustration.AssociatedAccount);
+        }
+
+        private void UpdateFollowButton()
+        {
+            if (IsArtistFollowed) VisualStateManager.GoToState(this, "state_unfollow", false);
+            else VisualStateManager.GoToState(this, "state_follow", false);
         }
 
         private async void btnFollow_Click(object sender, RoutedEventArgs e)
@@ -107,6 +132,7 @@ namespace CryPixiv2
             finally
             {
                 followProgress.IsActive = false;
+                UpdateFollowButton();
             }
         }
     }
