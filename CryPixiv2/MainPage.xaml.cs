@@ -37,7 +37,7 @@ namespace CryPixiv2
     {
         public static MainPage CurrentInstance;
         public static NLog.Logger Logger;
-        public static StorageFolder LocalFolder = ApplicationData.Current.LocalFolder;     
+        public static StorageFolder LocalFolder = ApplicationData.Current.LocalFolder;
 
         public MainViewModel ViewModel;
         public ApplicationDataContainer LocalStorage;
@@ -78,7 +78,7 @@ namespace CryPixiv2
             IllustrationGrid.ItemClicked += IllustrationGrid_ItemClicked;
 
             AttemptToLogin();
-        }    
+        }
 
         public async void AttemptToLogin()
         {
@@ -94,24 +94,20 @@ namespace CryPixiv2
         }
 
         #region IllustrationGrid Event Handlers
-        public void IllustrationGrid_ItemClicked(object sender, IllustrationWrapper e)
-        {
-            var grid = (IllustrationGrid)sender;
-            grid.ItemSource.GridContainer = grid;           
-
+        public void IllustrationGrid_ItemClicked(object sender, IllustrationWrapper e) => 
             NavigateTo(typeof(DetailsPage),
-                new Tuple<PixivObservableCollection, IllustrationWrapper>(grid.ItemSource, e));
-        }
+                new Tuple<PixivObservableCollection, IllustrationWrapper>(((IllustrationGrid)sender).ItemSource, e));
+
         void IllustrationGrid_IllustrationBookmarkChange(object sender, Tuple<IllustrationWrapper, bool> e)
         {
             if (e.Item1.IsBookmarked)
             {
                 // Public
-                if (e.Item2) ViewModel.BookmarksPublic.Insert(e.Item1);               
+                if (e.Item2) ViewModel.BookmarksPublic.Insert(e.Item1);
                 // Private
-                else ViewModel.BookmarksPrivate.Insert(e.Item1);             
+                else ViewModel.BookmarksPrivate.Insert(e.Item1);
             }
-        } 
+        }
         #endregion
 
         #region Download Switching
@@ -266,7 +262,7 @@ namespace CryPixiv2
             // save search to history (remove oldest item if over limit)
             if (ViewModel.SearchHistory.Count >= Constants.MaximumSearchHistoryEntries) ViewModel.SearchHistory.RemoveAt(0);
             ViewModel.SearchHistory.Add(q.Query.Query);
-        } 
+        }
         #endregion
 
         #region Login Buttons
@@ -278,7 +274,7 @@ namespace CryPixiv2
         // This gets called when user clicks Login on the Login Form
         private async void LoginClick(object sender, RoutedEventArgs e)
         {
-            
+
             var username = _username.Text;
             var password = _password.Password;
             if (username.Length == 0 || password.Length == 0)
@@ -306,8 +302,8 @@ namespace CryPixiv2
                 key == VirtualKey.Escape ||
                 key == VirtualKey.Back ||
                 key == VirtualKey.GoBack;
-          
-            if (isBackPressed) CurrentInstance.GoBack();          
+
+            if (isBackPressed) CurrentInstance.GoBack();
             else
             {
                 var frame = Window.Current.Content as Frame;
@@ -322,7 +318,7 @@ namespace CryPixiv2
         private void GoBack()
         {
             if (Frame.CanGoBack) Frame.GoBack();
-        } 
+        }
         #endregion
 
         #region Search Tab Context Menu
@@ -347,9 +343,9 @@ namespace CryPixiv2
             DownloadManager.SwitchTo(item.Collection, ViewModel.Account);
 
             searchPivot.SelectedItem = item;
-            
+
             ShowNotification("Collection reset.");
-        } 
+        }
         #endregion
 
         public void ShowNotification(string text, bool keepAlive = false)
@@ -359,14 +355,14 @@ namespace CryPixiv2
         }
 
         #region Other Buttons
-        private void PauseDownloadManagerClick(object sender, RoutedEventArgs e) 
+        private void PauseDownloadManagerClick(object sender, RoutedEventArgs e)
             => ViewModel.DownloadManagerPaused = !ViewModel.DownloadManagerPaused;
 
         private async void LogoutClick(object sender, RoutedEventArgs e)
         {
             // confirmation box
-            var yesCommand = new UICommand("Yes", cmd => {  });
-            var noCommand = new UICommand("No", cmd => {  });
+            var yesCommand = new UICommand("Yes", cmd => { });
+            var noCommand = new UICommand("No", cmd => { });
 
             var dialog = new MessageDialog("Are you sure you wish to log out?", "Log out");
             dialog.Commands.Add(yesCommand);
@@ -384,7 +380,7 @@ namespace CryPixiv2
                 ViewModel.ClearAuthInfo();
                 ViewModel.LoginFormShown = true;
             }
-        }     
+        }
         #endregion
     }
 }

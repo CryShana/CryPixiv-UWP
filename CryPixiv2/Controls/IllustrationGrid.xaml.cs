@@ -64,6 +64,7 @@ namespace CryPixiv2.Controls
         {
             var o = (IllustrationGrid)obj;
             var src = o.ItemSource;
+            o.ItemSource.GridContainer = o;
 
             src.ItemAdded += (a, b) =>
             {

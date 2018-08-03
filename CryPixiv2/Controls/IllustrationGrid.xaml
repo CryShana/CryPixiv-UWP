@@ -74,12 +74,6 @@
                                 </MenuFlyout>
                             </Grid.ContextFlyout>
 
-
-                            <!-- PROGRESS RING -->
-                            <!--
-                            <ProgressRing IsActive="{Binding ThumbnailImageLoading}" HorizontalAlignment="Center" Canvas.ZIndex="6" 
-                                          VerticalAlignment="Center" Height="70" Width="70" Foreground="Black" />-->
-
                             <!-- PAGE COUNTER -->
                             <Grid Name="countgrid" Canvas.ZIndex="6" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" Visibility="Collapsed">
                                 <Ellipse Width="40" Height="40" Fill="Black" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5" CacheMode="BitmapCache"/>
