@@ -37,7 +37,7 @@ namespace CryPixiv2.ViewModels
             rankingDailyFemale18 = new PixivObservableCollection(a => a.GetRankedIllustrations(PixivParameters.RankingMode.Daily_Female_R18));
 
         private ObservableCollection<SearchSession> searches = new ObservableCollection<SearchSession>();
-        private bool isloggingin = false, loginform = false, uihidden = false;
+        private bool isloggingin = false, loginform = false;
         private string loginerror = "";  
         #endregion
 
@@ -61,7 +61,6 @@ namespace CryPixiv2.ViewModels
             }
         } 
         #endregion
-
         public PixivObservableCollection BookmarksPublic { get => bookmarksPublic; set { bookmarksPublic = value; Changed(); } }
         public PixivObservableCollection BookmarksPrivate { get => bookmarksPrivate; set { bookmarksPrivate = value; Changed(); } }
         public PixivObservableCollection Recommended { get => recommended; set { recommended = value; Changed(); } }
@@ -94,15 +93,6 @@ namespace CryPixiv2.ViewModels
             set
             {
                 DownloadManager.IsPaused = value;
-                Changed();
-            }
-        }
-        public bool UIHidden
-        {
-            get => uihidden;
-            set
-            {
-                uihidden = value;
                 Changed();
             }
         }
