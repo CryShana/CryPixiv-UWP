@@ -384,9 +384,7 @@ namespace CryPixiv2
                 ViewModel.ClearAuthInfo();
                 ViewModel.LoginFormShown = true;
             }
-        }
-
-        private void btnToogleUI_Click(object sender, RoutedEventArgs e) => ViewModel.UIHidden = !ViewModel.UIHidden;       
+        }     
         #endregion
     }
 }
