@@ -30,6 +30,10 @@ After initial setup is done, you **don't need to reinstall the certificate or de
 - Increasing searching limit (right now it's 5000) using older APIs and some tricks
 - Copying images and keeping PNG transparency
 
+## Hotkeys
+- Use E/Q to navigate between illustrations
+- Use arrow keys or scroll wheel to navigate between images on illustrations with multiple images
+
 ## Screenshots
 ### Home page
 ![Home page](https://cryshana.me/viewer/ikm01tlcmqx.jpg?d=true)
