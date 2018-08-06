@@ -222,7 +222,7 @@ namespace CryPixiv2
                 FileSavePicker picker = new FileSavePicker();
                 picker.SuggestedStartLocation = PickerLocationId.Downloads;
                 picker.SuggestedFileName = GlobalFunctions.GetIllustrationFileName(Illustration, _flipview.SelectedIndex);
-                picker.FileTypeChoices.Add("PNG file", new[] { ".png" });
+                picker.FileTypeChoices.Add("Image file", new[] { ".png", ".jpg" });
                 var d = await picker.PickSaveFileAsync();
                 if (d == null) return;
 
