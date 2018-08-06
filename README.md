@@ -33,6 +33,7 @@ After initial setup is done, you **don't need to reinstall the certificate or de
 ## Hotkeys
 - Use E/Q to navigate between illustrations
 - Use arrow keys or scroll wheel to navigate between images on illustrations with multiple images
+- To go back - use ESC, Backspace or the extra Mouse button for going back
 
 ## Screenshots
 ### Home page
