@@ -30,10 +30,11 @@ After initial setup is done, you **don't need to reinstall the certificate or de
 - Increasing searching limit (right now it's 5000) using older APIs and some tricks
 - Copying images and keeping PNG transparency
 
-## Hotkeys
+## Hotkeys/Shortcuts
 - Use E/Q to navigate between illustrations
 - Use arrow keys or scroll wheel to navigate between images on illustrations with multiple images
 - To go back - use ESC, Backspace or the extra Mouse button for going back
+- Click on the page counter in the top left corner to display a page slider (for quickly navigating between pages)
 
 ## Screenshots
 ### Home page
