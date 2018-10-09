@@ -199,6 +199,7 @@ namespace CryPixivAPI
         {
             throw new NotImplementedException("Specified endpoint does not exist yet!");
 
+            /*
             var response = await GetAsync<IllustrationResponse>(overrideRequestUri ?? "/v2/illust/related ",
                overrideRequestUri != null ? null : new Dictionary<string, string>()
                {
@@ -206,6 +207,7 @@ namespace CryPixivAPI
                });
             response.GetNextPageAction = (x) => GetRelatedIllustrations(illust_id, overrideRequestUri: x);
             return response;
+            */
         }
         public async Task<IllustrationResponse> GetRankedIllustrations(string mode = PixivParameters.RankingMode.Daily, string overrideRequestUri = null)
         {
