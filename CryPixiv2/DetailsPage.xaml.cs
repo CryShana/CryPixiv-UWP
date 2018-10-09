@@ -118,7 +118,6 @@ namespace CryPixiv2
             var imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation(Constants.ConnectedAnimationThumbnail);
             if (imageAnimation != null) imageAnimation.TryStart(fullImage);
             
-
             // remove other images from flipview
             if (_flipview.Items.Count > 1) for (int i = _flipview.Items.Count - 1; i >= 1; i--) _flipview.Items.RemoveAt(i);
 
@@ -180,9 +179,10 @@ namespace CryPixiv2
         #region ContextMenu Action and Bookmark Button
         private async Task<byte[]> GetImageData(int selectedIndex)
         {
-            // get image url and download it again - because stupid UWP can't convert BitmapImages to byte arrays (or to WriteableBitmaps for that matter)
-            var uri = GlobalFunctions.GetImageUrl(Illustration, selectedIndex);
-            return await Illustration.AssociatedAccount.GetData(uri);
+            if (selectedIndex == 0 && Illustration.FullImageRawData == null) return null;
+            else if (selectedIndex > 0 && Illustration.OtherImagesRawData.Length < selectedIndex) return null;
+
+            return selectedIndex == 0 ? Illustration.FullImageRawData : Illustration.OtherImagesRawData[selectedIndex - 1];
         }
         private async void CopyImage_Click(object sender, RoutedEventArgs e)
         {

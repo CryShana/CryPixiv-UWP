@@ -78,7 +78,7 @@ namespace CryPixiv2.Wrappers
             {
                 if (thumbnailImage != null) return thumbnailImage;
 
-                GetImage(WrappedIllustration.ThumbnailImagePath, (i, ind) => ThumbnailImage = i);
+                GetImage(WrappedIllustration.ThumbnailImagePath, (i, ind, b) => ThumbnailImage = i);
                 return null;
             }
             set
@@ -101,7 +101,11 @@ namespace CryPixiv2.Wrappers
             {
                 if (fullImage != null) return fullImage;
 
-                GetImage(WrappedIllustration.FullImagePath, (i, ind) => FullImage = i, 0);
+                GetImage(WrappedIllustration.FullImagePath, (i, ind, b) =>
+                {
+                    FullImage = i;
+                    FullImageRawData = b;
+                }, 0);
                 return thumbnailImage;
             }
             set
@@ -123,6 +127,7 @@ namespace CryPixiv2.Wrappers
                 if (otherImages == null)
                 {
                     otherImages = new BitmapImage[ImagesCount - 1];
+                    OtherImagesRawData = new byte[ImagesCount - 1][];
                     GetOtherImages();
                 }
                 return otherImages;
@@ -133,6 +138,8 @@ namespace CryPixiv2.Wrappers
                 Changed();
             }
         }
+        public byte[] FullImageRawData { get; private set; }
+        public byte[][] OtherImagesRawData { get; private set; }
         #endregion
 
         #region Artist Image
@@ -144,7 +151,7 @@ namespace CryPixiv2.Wrappers
             {
                 if (artistImage != null) return artistImage;
 
-                GetImage(WrappedIllustration.ArtistUser.ProfileImageUrls.First().Value, (i, ind) => ArtistImage = i);
+                GetImage(WrappedIllustration.ArtistUser.ProfileImageUrls.First().Value, (i, ind, b) => ArtistImage = i);
                 return artistImage;
             }
             set
@@ -166,7 +173,7 @@ namespace CryPixiv2.Wrappers
         }
 
         #region Private Methods
-        async Task GetImage(string path, Action<BitmapImage, int> callback, int index = -1)
+        async Task GetImage(string path, Action<BitmapImage, int, byte[]> callback, int index = -1)
         {
             var data = await AssociatedAccount.GetData(path);
             using (var stream = new InMemoryRandomAccessStream())
@@ -182,7 +189,7 @@ namespace CryPixiv2.Wrappers
                 FileSizes.TryAdd(index, data.LongLength);
                 Resolutions.TryAdd(index, $"{image.PixelWidth}x{image.PixelHeight}");
 
-                callback(image, index);
+                callback(image, index, data);
                 ImageDownloaded?.Invoke(this, image);
             }
         }
@@ -199,9 +206,12 @@ namespace CryPixiv2.Wrappers
             {
                 var path = GetOtherImagePath(i);
 
-                GetImage(path, (bi, ind) =>
+                GetImage(path, (bi, ind, b) =>
                 {
-                    OtherImages[ind - 1] = bi;
+                    var index = ind - 1;
+                    OtherImages[index] = bi;
+                    OtherImagesRawData[index] = b;
+
                     Changed($"OtherImages[{ind - 1}]");
                     Changed("OtherImages");
                 }, i);
