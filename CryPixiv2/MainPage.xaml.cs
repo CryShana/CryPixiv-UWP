@@ -249,7 +249,7 @@ namespace CryPixiv2
         // SEARCH CLICK
         private async void _searchQuery_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key != Windows.System.VirtualKey.Enter) return;
+            if (e.Key != VirtualKey.Enter) return;
 
             var query = _searchQuery.Text;
             query = Regex.Replace(query, @"\s{2,}", " "); // remove unnecessary extra spaces
@@ -403,5 +403,40 @@ namespace CryPixiv2
 
         private void btnSettings_Click(object sender, RoutedEventArgs e)
             => NavigateTo(typeof(SettingsPage), null);
+
+        #region Search History Button
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var tag = _searchHistory.SelectedItem as string;
+            if (tag == null) return;
+
+            _searchQuery.Text = tag;
+            _searchHistory.SelectedItem = null;
+        }
+        private void _searchHistory_DropDownOpened(object sender, object e)
+        {
+            var sw = _searchHistory.ScrollViewerComponent;
+            var sh = _searchHistory.ScrollViewerComponent.ScrollableHeight;
+            sw.ChangeView(null, sh, null);
+        }
+
+        private async void TranslationTextblockLoaded(object sender, RoutedEventArgs e)
+        {
+            var textblock = (TextBlock)sender;
+            var tag = (dynamic)textblock.DataContext as string;
+
+            var txt = "";
+            // take existing translation
+            if (CurrentInstance.ViewModel.TranslatedWords.ContainsKey(tag)) txt = CurrentInstance.ViewModel.TranslatedWords[tag];
+            else
+            {
+                // translate it
+                txt = await Task.Run(() => Translator.Translate(tag));
+                if (string.IsNullOrEmpty(txt) == false) CurrentInstance.ViewModel.TranslatedWords.TryAdd(tag, txt);
+            }
+
+            textblock.Text = txt;
+        }
+        #endregion    
     }
 }

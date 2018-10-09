@@ -110,6 +110,7 @@
     <Compile Include="Classes\DownloadManager.cs" />
     <Compile Include="Classes\GlobalFunctions.cs" />
     <Compile Include="Classes\PixivObservableCollection.cs" />
+    <Compile Include="Controls\ExtendedComboBox.cs" />
     <Compile Include="Converters\BlacklistedTagsConverter.cs" />
     <Compile Include="SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>

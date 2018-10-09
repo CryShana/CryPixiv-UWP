@@ -60,8 +60,23 @@
         <Pivot x:Name="mainPivot" SelectionChanged="mainPivot_SelectionChanged" IsEnabled="{Binding LoginFormShown, Converter={StaticResource invConverter}}" Margin="0,0,0,0" >
             <PivotItem Header="Search">
                 <Grid>
-                    <TextBox x:Name="_searchQuery" HorizontalAlignment="Left" VerticalAlignment="Top" PlaceholderText="Search query" 
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox x:Name="_searchQuery" HorizontalAlignment="Left" VerticalAlignment="Top" PlaceholderText="Search query" 
                              Width="387" Height="22" Margin="10,10,0,0" KeyDown="_searchQuery_KeyDown" MaxLength="200"/>
+                       
+                        <cnt:ExtendedComboBox x:Name="_searchHistory" FontFamily="Segoe MDL2 Assets" FontSize="18" PlaceholderText="&#xE81C;" Margin="10,10,0,0" ToolTipService.ToolTip="Search history"
+                                  ItemsSource="{Binding SearchHistory, Mode=OneWay}" SelectionChanged="ComboBox_SelectionChanged" DropDownOpened="_searchHistory_DropDownOpened">
+                            <cnt:ExtendedComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding}" FontFamily="Segoe UI" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="" FontFamily="Segoe UI"  Loaded="TranslationTextblockLoaded" Foreground="#FF9C9C9C" Margin="0,0,5,0" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </cnt:ExtendedComboBox.ItemTemplate>
+                        </cnt:ExtendedComboBox>
+                    </StackPanel>
+                    
                     <Pivot x:Name="searchPivot" ItemsSource="{Binding Searches}" Margin="10,50,0,0"
                            SelectionChanged="searchPivot_SelectionChanged">
                         <Pivot.HeaderTemplate>

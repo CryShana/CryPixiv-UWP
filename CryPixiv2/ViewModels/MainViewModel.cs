@@ -37,6 +37,7 @@ namespace CryPixiv2.ViewModels
             rankingDailyFemale18 = new PixivObservableCollection(a => a.GetRankedIllustrations(PixivParameters.RankingMode.Daily_Female_R18));
 
         private ObservableCollection<SearchSession> searches = new ObservableCollection<SearchSession>();
+        private ObservableCollection<string> searchHistory = new ObservableCollection<string>();
         private bool isloggingin = false, loginform = false;
         private string loginerror = "";
         #endregion
@@ -80,7 +81,7 @@ namespace CryPixiv2.ViewModels
         #region Data
         // Any translated words should be cached here for later use - this will not only speed up translation loading, but also not waste network 
         public ConcurrentDictionary<string, string> TranslatedWords { get; set; }
-        public List<string> SearchHistory { get; set; }
+        public ObservableCollection<string> SearchHistory { get => searchHistory;  set { searchHistory = value; Changed(); } }
         public HashSet<int> BlockedIllustrations { get; set; }
         public List<string> BlacklistedTags { get; set; }
         public PageAction PageAction_DetailsImageDoubleClick { get; set; }
@@ -161,7 +162,7 @@ namespace CryPixiv2.ViewModels
             }
             catch
             {
-                SearchHistory = new List<string>();
+                SearchHistory = new ObservableCollection<string>();
                 BlacklistedTags = new List<string>();
                 BlockedIllustrations = new HashSet<int>();
                 TranslatedWords = new ConcurrentDictionary<string, string>();
@@ -175,7 +176,7 @@ namespace CryPixiv2.ViewModels
             foreach (var p in tlist) TranslatedWords.TryAdd(p.Key, p.Value);
 
             // search history
-            SearchHistory = save.SearchHistory ?? new List<string>();
+            SearchHistory = new ObservableCollection<string>(save.SearchHistory) ?? new ObservableCollection<string>();
 
             // blocked illustrations
             BlockedIllustrations = save.BlockedIllustrations ?? new HashSet<int>();
@@ -198,7 +199,7 @@ namespace CryPixiv2.ViewModels
             SaveFile save = new SaveFile()
             {
                 TranslatedWords = TranslatedWords?.ToList(),
-                SearchHistory = SearchHistory,
+                SearchHistory = SearchHistory.ToList(),
                 BlockedIllustrations = BlockedIllustrations,
                 BlacklistedTags = BlacklistedTags,
                 PageAction_DetailsImageDoubleClick = PageAction_DetailsImageDoubleClick

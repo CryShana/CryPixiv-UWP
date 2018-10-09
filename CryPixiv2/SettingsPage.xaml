@@ -40,7 +40,7 @@
             <TextBlock Visibility="Collapsed" x:Name="blockStatus" VerticalAlignment="Bottom" TextWrapping="Wrap" Foreground="#FFDC8C00" Margin="0,2,0,5">
                 <Run Text="Blocked" />
                 <Run Text="{Binding DownloadManagerBlacklistedCount, Mode=OneWay}" />
-                <Run Text="illustrations so far in this session" />
+                <Run Text="illustrations so far in this session." />
             </TextBlock>
             
             <TextBlock HorizontalAlignment="Left" Text="Action on image double-click (in details page):" Margin="0,20,0,5" />
