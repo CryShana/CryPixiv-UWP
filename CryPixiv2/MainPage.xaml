@@ -70,7 +70,8 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding}" FontFamily="Segoe UI" Margin="0,0,10,0" VerticalAlignment="Center" />
-                                        <TextBlock Text="" FontFamily="Segoe UI"  Loaded="TranslationTextblockLoaded" Foreground="#FF9C9C9C" Margin="0,0,5,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="" FontFamily="Segoe UI" DataContextChanged="TextBlock_DataContextChanged" 
+                                                   Foreground="#FF9C9C9C" Margin="0,0,5,0" VerticalAlignment="Center" />
                                     </StackPanel>
                                 </DataTemplate>
                             </cnt:ExtendedComboBox.ItemTemplate>

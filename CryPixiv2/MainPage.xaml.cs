@@ -428,7 +428,7 @@ namespace CryPixiv2
             sw.ChangeView(null, sh, null);
         }
 
-        private async void TranslationTextblockLoaded(object sender, RoutedEventArgs e)
+        private async void TextBlock_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
             var textblock = (TextBlock)sender;
             var tag = (dynamic)textblock.DataContext as string;
@@ -445,6 +445,6 @@ namespace CryPixiv2
 
             textblock.Text = txt;
         }
-        #endregion    
+        #endregion
     }
 }
