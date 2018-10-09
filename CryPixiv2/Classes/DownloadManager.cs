@@ -19,7 +19,7 @@ namespace CryPixiv2.Classes
         static ConcurrentDictionary<int, IllustrationWrapper> addedIllustrations = new ConcurrentDictionary<int, IllustrationWrapper>();
         public static bool IsPaused { get; set; } = false;
         public static PixivObservableCollection CurrentCollection { get; private set; }
-        public static event EventHandler<IllustrationWrapper> BlacklistedIllustration;
+        public static int BlacklistedCount { get; private set; }
 
         public static void Stop()
         {
@@ -100,7 +100,7 @@ namespace CryPixiv2.Classes
                             else
                             {
                                 // skip this one. It's blacklisted.
-                                BlacklistedIllustration?.Invoke(null, new IllustrationWrapper(l, acc));
+                                BlacklistedCount++;
                             }
                         }
                     }
