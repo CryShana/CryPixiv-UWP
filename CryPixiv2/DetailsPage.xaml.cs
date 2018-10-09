@@ -381,7 +381,7 @@ namespace CryPixiv2
 
             tagsCombobox.SelectedItem = null;
         }
-        private async void TagTranslationTextblock_Loaded(object sender, RoutedEventArgs e)
+        private async void TagTranslationTextblock_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)
         {
             var textblock = (TextBlock)sender;
             var tag = ((dynamic)textblock.DataContext).Name as string;
