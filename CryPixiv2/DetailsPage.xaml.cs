@@ -2,29 +2,18 @@
 using CryPixiv2.Controls;
 using CryPixiv2.Wrappers;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 namespace CryPixiv2
@@ -102,6 +91,7 @@ namespace CryPixiv2
                 Changed("DetailMinWidth");
             };
         }
+
         private void DetailsPage_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             // handle Mouse back button (this can't be handled in KeyDown event handler)
@@ -397,9 +387,10 @@ namespace CryPixiv2
             }
           
             textblock.Text = txt;
-        } 
+        }
         #endregion
 
+        #region Navigation
         bool ignoreNav = false;
         public void NextIllustration()
         {
@@ -450,6 +441,7 @@ namespace CryPixiv2
                 g.ItemClick(e);
                 break;
             }
-        }
+        } 
+        #endregion
     }
 }

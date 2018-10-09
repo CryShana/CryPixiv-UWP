@@ -27,7 +27,7 @@ namespace CryPixiv2.Classes
             {
                 var t = tokens.Dequeue();
                 t.Cancel();
-            }
+            }         
         }
         
 
