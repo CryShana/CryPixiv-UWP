@@ -38,7 +38,8 @@ namespace CryPixiv2.ViewModels
 
         private ObservableCollection<SearchSession> searches = new ObservableCollection<SearchSession>();
         private bool isloggingin = false, loginform = false;
-        private string loginerror = "";  
+        private string loginerror = "";
+        private int blacklistedCount = 0;
         #endregion
 
         #region Public Properties
@@ -108,12 +109,13 @@ namespace CryPixiv2.ViewModels
                 Changed();
             }
         }
+        public int BlacklistedCount { get => blacklistedCount; set { blacklistedCount = value; Changed(); } }
         public event EventHandler<int> AllowLevelChanged;
         #endregion
 
         public MainViewModel()
         {
-
+            DownloadManager.BlacklistedIllustration += (a, b) => BlacklistedCount++;
         }
 
         private void SaveAuthInfo()

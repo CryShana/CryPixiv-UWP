@@ -19,6 +19,7 @@ namespace CryPixiv2.Classes
         static ConcurrentDictionary<int, IllustrationWrapper> addedIllustrations = new ConcurrentDictionary<int, IllustrationWrapper>();
         public static bool IsPaused { get; set; } = false;
         public static PixivObservableCollection CurrentCollection { get; private set; }
+        public static event EventHandler<IllustrationWrapper> BlacklistedIllustration;
 
         public static void Stop()
         {
@@ -68,19 +69,39 @@ namespace CryPixiv2.Classes
                             // go through all downloaded illustractions and wrap them up - if duplicates, take existing to save memory
                             src.Token.ThrowIfCancellationRequested();
 
-                            IllustrationWrapper wr = null;
-                            if (addedIllustrations.ContainsKey(l.Id))
+                            // check blacklisted tag
+                            bool containsBl = false;
+                            foreach (var btag in MainPage.CurrentInstance.ViewModel.BlacklistedTags)
                             {
-                                // take existing Illustration
-                                wr = addedIllustrations[l.Id];
+                                if (l.Tags.Count(x => x.Name.ToLower().Trim() == btag) > 0)
+                                {
+                                    containsBl = true;
+                                    break;
+                                }
+                            }
+
+                            IllustrationWrapper wr = null;
+                            if (containsBl == false)
+                            {
+                                // continue adding it normally
+                                if (addedIllustrations.ContainsKey(l.Id))
+                                {
+                                    // take existing Illustration
+                                    wr = addedIllustrations[l.Id];
+                                }
+                                else
+                                {
+                                    wr = new IllustrationWrapper(l, acc);
+                                    addedIllustrations.TryAdd(l.Id, wr);
+                                }
+
+                                collection.Add(wr);
                             }
                             else
                             {
-                                wr = new IllustrationWrapper(l, acc);
-                                addedIllustrations.TryAdd(l.Id, wr);
+                                // skip this one. It's blacklisted.
+                                BlacklistedIllustration?.Invoke(null, new IllustrationWrapper(l, acc));
                             }
-                          
-                            collection.Add(wr);
                         }
                     }
                 }
