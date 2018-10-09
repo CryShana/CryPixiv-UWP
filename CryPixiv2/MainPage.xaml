@@ -29,7 +29,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="btnPauseDManager.Background" Value="{StaticResource ResourceKey=color_redButton}" />
-                        <Setter Target="btnPauseDManager.Content" Value="Resume" />
+                        <Setter Target="btnPauseDManager.Content" Value="&#xE768;" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -149,12 +149,13 @@
         </Pivot>
 
         <!-- NOTIFICATION -->
-        <controls:InAppNotification x:Name="notification" Canvas.ZIndex="100" HorizontalAlignment="Center" VerticalAlignment="Bottom"  />
+        <controls:InAppNotification x:Name="notification" Canvas.ZIndex="100" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
         
         <!-- OTHER BUTTONS -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-            <Button x:Name="btnPauseDManager" Content="Pause" Click="PauseDownloadManagerClick" />
-            <Button x:Name="btnLogout" Content="Logout" Click="LogoutClick" Margin="10,0,0,0" Background="{StaticResource ResourceKey=color_redButton}" />
+            <Button x:Name="btnSettings" FontFamily="Segoe MDL2 Assets" Content="&#xE713;" Click="btnSettings_Click" FontSize="20" Background="Transparent" ToolTipService.ToolTip="Settings"/>
+            <Button x:Name="btnPauseDManager" FontFamily="Segoe MDL2 Assets" Content="&#xE769;" Click="PauseDownloadManagerClick" FontSize="20" Background="Transparent" ToolTipService.ToolTip="Toggle Downloading"/>
+            <Button x:Name="btnLogout" FontFamily="Segoe MDL2 Assets" Content="&#xE7E8;" Click="LogoutClick" Background="{StaticResource ResourceKey=color_redButton}" FontSize="20" ToolTipService.ToolTip="Logout"/>
         </StackPanel>
     </Grid>
 </Page>

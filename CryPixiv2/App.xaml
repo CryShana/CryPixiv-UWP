@@ -15,5 +15,9 @@
         
         <BitmapImage x:Key="missingImage" UriSource="Assets/Images/missingImage.jpg" />
         <BitmapImage x:Key="loadingImage" UriSource="Assets/Images/loading.gif" />
+
+        <Style x:Key="TransparentButtonStyle" TargetType="Button">
+            
+        </Style>
     </Application.Resources>
 </Application>

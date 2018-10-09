@@ -18,6 +18,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.System;
+using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Core;
 using Windows.UI.Popups;
@@ -382,5 +383,8 @@ namespace CryPixiv2
             }
         }
         #endregion
+
+        private void btnSettings_Click(object sender, RoutedEventArgs e)
+            => NavigateTo(typeof(SettingsPage), null);
     }
 }

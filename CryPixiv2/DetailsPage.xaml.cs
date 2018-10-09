@@ -141,30 +141,33 @@ namespace CryPixiv2
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            base.OnNavigatingFrom(e);
             if (ignoreNav)
             {
                 ignoreNav = false;
                 return;
             }
-           
-            try
+            else
             {
-                if (!isArtist)
+                try
                 {
-                    // When going to MainPage
-                    ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(Constants.ConnectedAnimationImage, (Image)_flipview.Items[_flipview.SelectedIndex]);
+                    if (!isArtist)
+                    {
+                        // When going to MainPage
+                        ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(Constants.ConnectedAnimationImage, (Image)_flipview.Items[_flipview.SelectedIndex]);
+                    }
+                    else
+                    {
+                        // When going to ArtistPage
+                        ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(Constants.ConnectedAnimationArtist, artistImg);
+                    }
                 }
-                else
+                catch
                 {
-                    // When going to ArtistPage
-                    ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(Constants.ConnectedAnimationArtist, artistImg);
+                    // might throw exception if element not in view
                 }
             }
-            catch
-            {
-                // might throw exception if element not in view
-            }
+
+            base.OnNavigatingFrom(e);
         }
 
         private void _flipview_SelectionChanged(object sender, SelectionChangedEventArgs e)
