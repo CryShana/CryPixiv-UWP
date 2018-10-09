@@ -18,7 +18,7 @@ namespace CryPixiv2
         public const double ItemGridEntryAnimationDurationMs = 900;
         public const int InAppNotificationDuration = 1200;
 
-        public const int MaximumSearchHistoryEntries = 300;
+        public const int MaximumSearchHistoryEntries = 60;
         public const double ImageTransitionDuration = 0.3;
         public const double ArtistImageTransitionDuration = 0.5;
 

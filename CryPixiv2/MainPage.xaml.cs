@@ -276,8 +276,10 @@ namespace CryPixiv2
             searchPivot.SelectedItem = q;
 
             // save search to history (remove oldest item if over limit)
-            if (ViewModel.SearchHistory.Count >= Constants.MaximumSearchHistoryEntries) ViewModel.SearchHistory.RemoveAt(0);
+            while (ViewModel.SearchHistory.Count >= Constants.MaximumSearchHistoryEntries) ViewModel.SearchHistory.RemoveAt(0);
             ViewModel.SearchHistory.Add(q.Query.Query);
+
+            shouldScrollDown = true;
         }
         #endregion
 
@@ -413,8 +415,14 @@ namespace CryPixiv2
             _searchQuery.Text = tag;
             _searchHistory.SelectedItem = null;
         }
-        private void _searchHistory_DropDownOpened(object sender, object e)
+
+        bool shouldScrollDown = false;
+        private async void _searchHistory_DropDownOpened(object sender, object e)
         {
+            if (shouldScrollDown == false) return;
+            shouldScrollDown = false;
+
+            await Task.Delay(200);
             var sw = _searchHistory.ScrollViewerComponent;
             var sh = _searchHistory.ScrollViewerComponent.ScrollableHeight;
             sw.ChangeView(null, sh, null);

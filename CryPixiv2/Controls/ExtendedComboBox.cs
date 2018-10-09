@@ -29,7 +29,7 @@ namespace CryPixiv2.Controls
 
         private void OnScrollViewerLoaded(object sender, RoutedEventArgs e)
         {
-            ScrollViewerComponent.Loaded -= OnScrollViewerLoaded;         
+            ScrollViewerComponent.Loaded -= OnScrollViewerLoaded;
             ScrollViewerComponent.ChangeView(null, ScrollViewerComponent.ScrollableHeight, null);
         }
     }
