@@ -6,9 +6,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -26,6 +28,7 @@ namespace CryPixiv2
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         IllustrationWrapper illust = null;
         bool pageslidervis = false;
+        bool pageLoading = true;
         #endregion
 
         #region Public Properties
@@ -99,8 +102,9 @@ namespace CryPixiv2
             if (isBackPressed) MainPage.CurrentInstance.HandleKey(Windows.System.VirtualKey.Back);
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            pageLoading = true;
             base.OnNavigatedTo(e);
             MainPage.CurrentInstance.NavigationManager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
 
@@ -137,6 +141,9 @@ namespace CryPixiv2
                     i++;
                 }
             }
+
+            await Task.Delay(400).ConfigureAwait(false);
+            pageLoading = false;
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -444,7 +451,32 @@ namespace CryPixiv2
                 g.ItemClick(e);
                 break;
             }
-        } 
+        }
         #endregion
+
+        private void Page_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            switch (MainPage.CurrentInstance.ViewModel.PageAction_DetailsImageDoubleClick)
+            {
+                case ViewModels.MainViewModel.PageAction.ToggleFullscreen:
+                    var view = ApplicationView.GetForCurrentView();
+                    if (view.IsFullScreenMode) view.ExitFullScreenMode();
+                    else view.TryEnterFullScreenMode(); 
+                    break;
+                case ViewModels.MainViewModel.PageAction.NavigateBack:
+                    if (pageLoading) return;
+
+                    MainPage.CurrentInstance.HandleKey(Windows.System.VirtualKey.Back);
+                    break;
+                case ViewModels.MainViewModel.PageAction.CopyImage:
+                    CopyImage_Click(this, null);
+                    break;
+                case ViewModels.MainViewModel.PageAction.GoToNextIllustration:
+                    if (pageLoading) return;
+
+                    NextIllustration();
+                    break;
+            }
+        }
     }
 }

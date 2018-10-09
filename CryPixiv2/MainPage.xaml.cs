@@ -95,9 +95,24 @@ namespace CryPixiv2
         }
 
         #region IllustrationGrid Event Handlers
-        public void IllustrationGrid_ItemClicked(object sender, IllustrationWrapper e) => 
-            NavigateTo(typeof(DetailsPage),
-                new Tuple<PixivObservableCollection, IllustrationWrapper>(((IllustrationGrid)sender).ItemSource, e));
+        public bool NavigatingToPage = false;
+        public async void IllustrationGrid_ItemClicked(object sender, IllustrationWrapper e)
+        {
+            if (NavigatingToPage) return;
+            NavigatingToPage = true;
+
+            try
+            {
+                NavigateTo(typeof(DetailsPage),
+                    new Tuple<PixivObservableCollection, IllustrationWrapper>(((IllustrationGrid)sender).ItemSource, e));
+            }
+            finally
+            {
+                // this is a quick solution to prevent double-clicking on item and navigating to same page twice
+                await Task.Delay(500).ConfigureAwait(false);
+                NavigatingToPage = false;
+            }
+        }
 
         void IllustrationGrid_IllustrationBookmarkChange(object sender, Tuple<IllustrationWrapper, bool> e)
         {

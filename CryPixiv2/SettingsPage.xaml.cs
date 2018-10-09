@@ -28,11 +28,13 @@ namespace CryPixiv2
             this.InitializeComponent();
             this.PointerPressed += SettingsPage_PointerPressed;
 
+            // add all enum value descriptions here in the SAME ORDER as defined in the enum definition (indexes should reflect enum values!)
             doubleClickActions = new List<string>()
             {
                 "Toggle fullscreen",
                 "Navigate back",
-                "Copy image"
+                "Copy image",
+                "Go to next illustration"
             };
         }
 

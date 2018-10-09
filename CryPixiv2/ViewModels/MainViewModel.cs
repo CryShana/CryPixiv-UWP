@@ -85,12 +85,14 @@ namespace CryPixiv2.ViewModels
         public List<string> BlacklistedTags { get; set; }
         public PageAction PageAction_DetailsImageDoubleClick { get; set; }
 
+        // values of enum values must reflect indexes in Settings page combobox
         [Serializable]
         public enum PageAction
         {
             ToggleFullscreen = 0,
             NavigateBack = 1,
-            CopyImage = 2
+            CopyImage = 2,
+            GoToNextIllustration = 3
         }
         #endregion
 
