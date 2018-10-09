@@ -82,6 +82,16 @@ namespace CryPixiv2.ViewModels
         public ConcurrentDictionary<string, string> TranslatedWords { get; set; }
         public List<string> SearchHistory { get; set; }
         public HashSet<int> BlockedIllustrations { get; set; }
+        public List<string> BlacklistedTags { get; set; }
+        public PageAction PageAction_DetailsImageDoubleClick { get; set; }
+
+        [Serializable]
+        public enum PageAction
+        {
+            ToggleFullscreen = 0,
+            NavigateBack = 1,
+            CopyImage = 2
+        }
         #endregion
 
         public bool IsLoggingIn { get => isloggingin; set { isloggingin = value; Changed(); } }
@@ -148,8 +158,10 @@ namespace CryPixiv2.ViewModels
             catch
             {
                 SearchHistory = new List<string>();
+                BlacklistedTags = new List<string>();
                 BlockedIllustrations = new HashSet<int>();
                 TranslatedWords = new ConcurrentDictionary<string, string>();
+                PageAction_DetailsImageDoubleClick = Constants.DefaultPageAction_DetailsImageDoubleClick;
                 return;
             }
 
@@ -159,10 +171,16 @@ namespace CryPixiv2.ViewModels
             foreach (var p in tlist) TranslatedWords.TryAdd(p.Key, p.Value);
 
             // search history
-            SearchHistory = save.SearchHistory;
+            SearchHistory = save.SearchHistory ?? new List<string>();
 
             // blocked illustrations
-            BlockedIllustrations = save.BlockedIllustrations;
+            BlockedIllustrations = save.BlockedIllustrations ?? new HashSet<int>();
+
+            // blacklisted tags
+            BlacklistedTags = save.BlacklistedTags ?? new List<string>();
+
+            // actions
+            PageAction_DetailsImageDoubleClick = save.PageAction_DetailsImageDoubleClick;
         }
 
         /// <summary>
@@ -177,7 +195,9 @@ namespace CryPixiv2.ViewModels
             {
                 TranslatedWords = TranslatedWords?.ToList(),
                 SearchHistory = SearchHistory,
-                BlockedIllustrations = BlockedIllustrations
+                BlockedIllustrations = BlockedIllustrations,
+                BlacklistedTags = BlacklistedTags,
+                PageAction_DetailsImageDoubleClick = PageAction_DetailsImageDoubleClick
             };
 
             var savefile = await (MainPage.LocalFolder.CreateFileAsync(Constants.SaveFileName, CreationCollisionOption.ReplaceExisting).AsTask()).ConfigureAwait(false);

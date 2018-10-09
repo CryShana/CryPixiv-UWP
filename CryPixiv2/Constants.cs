@@ -1,4 +1,6 @@
-﻿namespace CryPixiv2
+﻿using static CryPixiv2.ViewModels.MainViewModel;
+
+namespace CryPixiv2
 {
     public static class Constants
     {
@@ -21,5 +23,7 @@
         public const double ArtistImageTransitionDuration = 0.5;
 
         public const string SaveFileName = "savedata.data";
+
+        public const PageAction DefaultPageAction_DetailsImageDoubleClick = PageAction.ToggleFullscreen;
     }
 }

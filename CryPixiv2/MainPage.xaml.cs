@@ -304,7 +304,9 @@ namespace CryPixiv2
                 key == VirtualKey.Back ||
                 key == VirtualKey.GoBack;
 
-            if (isBackPressed) CurrentInstance.GoBack();
+            var el = FocusManager.GetFocusedElement();
+
+            if (isBackPressed && el is TextBox == false) CurrentInstance.GoBack();
             else
             {
                 var frame = Window.Current.Content as Frame;

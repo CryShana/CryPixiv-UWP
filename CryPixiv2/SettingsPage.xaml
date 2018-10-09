@@ -19,7 +19,14 @@
     </Page.Transitions>
 
     <Grid Background="White">
-        <TextBlock HorizontalAlignment="Left" Margin="107,99,0,0" Text="Settings Page" TextWrapping="Wrap" VerticalAlignment="Top"/>
-
+        <StackPanel Orientation="Vertical" Padding="50" Width="460">
+            <TextBlock HorizontalAlignment="Left" Text="Settings" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" />
+            <TextBlock HorizontalAlignment="Left" Text="Blacklisted tags:" Margin="0,30,0,0" />
+            <TextBlock VerticalAlignment="Bottom" Text="Specify 1 tag per line. Case insensitive." TextWrapping="Wrap" Foreground="Gray" Margin="0,0,0,5"/>
+            <TextBox Height="200" AcceptsReturn="True" Text="{Binding BlacklistedTags, Mode=TwoWay, Converter={StaticResource blacklistConverter}}" />
+            <TextBlock HorizontalAlignment="Left" Text="Action on image double-click (in details page):" Margin="0,20,0,5" />
+            <ComboBox Name="_doubleClickAction" HorizontalAlignment="Stretch" ItemsSource="{x:Bind doubleClickActions}"/>
+            <TextBlock VerticalAlignment="Bottom" Text="Settings will be automatically saved after leaving this menu." TextWrapping="Wrap" Foreground="Gray" Margin="0,10,0,0"/>
+        </StackPanel>
     </Grid>
 </Page>

@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using static CryPixiv2.ViewModels.MainViewModel;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -20,10 +21,19 @@ namespace CryPixiv2
 {
     public sealed partial class SettingsPage : Page
     {
+        List<string> doubleClickActions { get; }
+
         public SettingsPage()
         {
             this.InitializeComponent();
             this.PointerPressed += SettingsPage_PointerPressed;
+
+            doubleClickActions = new List<string>()
+            {
+                "Toggle fullscreen",
+                "Navigate back",
+                "Copy image"
+            };
         }
 
         private void SettingsPage_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -37,12 +47,17 @@ namespace CryPixiv2
         {
             base.OnNavigatedTo(e);
             MainPage.CurrentInstance.NavigationManager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+            _doubleClickAction.SelectedItem = doubleClickActions[(int)MainPage.CurrentInstance.ViewModel.PageAction_DetailsImageDoubleClick];
         }
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             base.OnNavigatingFrom(e);
 
+            var action = (PageAction)Enum.Parse(typeof(PageAction), _doubleClickAction.SelectedIndex.ToString());
+            MainPage.CurrentInstance.ViewModel.PageAction_DetailsImageDoubleClick = action;
+
             // save data
+            MainPage.CurrentInstance.ViewModel.SaveData();
         }
     }
 }
