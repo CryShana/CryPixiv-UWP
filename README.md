@@ -10,7 +10,9 @@ This project is still in active development, so I haven't started versioning it 
 
 If install fails due to **missing dependencies**, download the `dependencies.zip` and install the ones for your CPU architecture.
 
-After initial setup is done, you **don't need to reinstall the certificate or dependencies** on newer releases.
+Sometimes it might fail because of the existing installation - this is a bug that I need to address - you will have to uninstall the old version and install the new one - but this will reset the settings and search history unfortunately.
+
+After initial setup is done, you **don't need to reinstall the certificate or dependencies** on newer releases. (Hopefully - this is sometimes buggy because I'm still getting used to UWP)
 
 ## Features
 - Seperate searches with tabs
@@ -20,20 +22,22 @@ After initial setup is done, you **don't need to reinstall the certificate or de
 - Image information displayed for every image (Resolution, File size, Other details...)
 - View **Ranking** (any category), **Bookmarks** (public/private), **Following** (public/private), **Recommended**
 - Search illustrations by Artist
+- Blacklist tags
+- Display search history
 - Other basic functionality (Bookmarking publicy and privately, Following artists)
 
 ## Planned Features and To-Do
-- Displaying search history
 - Showing searching status (if reached end, if error, if limit reached, ...)
 - Ability to reset any tab, not just searching tab
 - Sort by score on Artist page
 - Increasing searching limit (right now it's 5000) using older APIs and some tricks
-- Copying images and keeping PNG transparency
+- Keeping PNG transparency when copying images
 
 ## Hotkeys/Shortcuts
 - Use E/Q to navigate between illustrations
 - Use arrow keys or scroll wheel to navigate between images on illustrations with multiple images
 - To go back - use ESC, Backspace or the extra Mouse button for going back
+- Double-clicking on image in Details page has customizable functionality (check Settings page)
 - Click on the page counter in the top left corner to display a page slider (for quickly navigating between pages)
 
 ## Screenshots
