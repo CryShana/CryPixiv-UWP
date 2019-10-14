@@ -1,6 +1,8 @@
 # CryPixiv-UWP
 Complete redesign of CryPixiv on UWP platform using my own Pixiv API made from scratch
 
+## OUTDATED PROJECT
+
 ## Installation instructions
 1. Download `app.zip` from *Releases*
 2. Install certificate (`.cer` file) to **Trusted Root Certification Authorities** location (under **Local machine**))
