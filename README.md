@@ -1,7 +1,8 @@
 # CryPixiv-UWP
 Complete redesign of CryPixiv on UWP platform using my own Pixiv API made from scratch
 
-## OUTDATED PROJECT
+## OUTDATED PROJECT!
+This project is no longer being developed. It's also very outdated.
 
 ## Installation instructions
 1. Download `app.zip` from *Releases*
